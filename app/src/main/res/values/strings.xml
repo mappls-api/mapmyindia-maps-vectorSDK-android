@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Map Demo</string>
+    <string name="search">Search</string>
+    <string name="pleaseCheckInternetConnection">Please check Internet connection</string>
+    <string name="permission_grant_msg"><![CDATA[Please grant all the permissions to continue.  You can go to phone\'s settings >> Applications >> Orrder Driver and manually grant the permissions.]]></string>
+    <string name="permission_acceptance_msg">Please Accept all the permissions.</string>
+</resources>
