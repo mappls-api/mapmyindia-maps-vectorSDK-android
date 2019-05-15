@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('MapmyIndiaGLAndroidSDK_v6.7.3.aar'))
