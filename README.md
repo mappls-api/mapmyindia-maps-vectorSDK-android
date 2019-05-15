@@ -1,5 +1,5 @@
 ![MapmyIndia APIs](https://www.mapmyindia.com/api/img/mapmyindia-api.png)
- # **MapmyIndia Vector Map Android SDK**
+# MapmyIndia Vector Map Android SDK
 
 **Easy To Integrate Maps & Location APIs & SDKs For Web & Mobile Applications**
 
@@ -8,7 +8,7 @@ Powered with India's most comprehensive and robust mapping functionalities.
 
 1. You can get your api key to be used in this document here: [https://www.mapmyindia.com/api/signup](https://www.mapmyindia.com/api/signup)
 
-2. The sample code is provided to help you understand the basic functionality of MapmyIndia maps & REST APIs working on **android** native development platform.  
+2. The sample code is provided to help you understand the basic functionality of MapmyIndia maps & REST APIs working on **Android** native development platform.  
 
 ## Getting Started
 
@@ -18,9 +18,9 @@ Through customized tiles, you can add different map layers to your application a
 
 ## API Usage
 
-Your MapmyIndia Maps SDK usage needs a set of license keys (get them  [here](http://www.mapmyindia.com/api/signup)) and is governed by the API  [terms and conditions](http://www.mapmyindia.com/api/terms-&-conditions).. As part of the terms and conditions,  **you cannot remove or hide the MapmyIndia logo and copyright information** in your project.
+Your MapmyIndia Maps SDK usage needs a set of license keys (get them  [here](http://www.mapmyindia.com/api/signup)) and is governed by the API  [terms and conditions](http://www.mapmyindia.com/api/terms-&-conditions). As part of the terms and conditions,  **you cannot remove or hide the MapmyIndia logo and copyright information** in your project.
 
-The allowed SDK hits are described on the  [plans](http://www.mapmyindia.com/api/pricing)  page. Note that your usage is shared between platforms, so the API hits you make from a web application, Android app or an iOS app all add up to your allowed daily limit.
+The allowed SDK hits are described on the user dashboard (http://www.mapmyindia.com/api/dashboard) page. Note that your usage is shared between platforms, so the API hits you make from a web application, Android app or an iOS app all add up to your allowed daily limit.
 
 ## Setup your project
 
@@ -30,7 +30,7 @@ Follow these steps to add the SDK to your project –
 -   Import MapmyIndiaGLAndroidSDK_v{version}.aar file in your project.
 -   Add Following dependencies for the implementation
 
-```json
+```java
   
 implementation 'com.jakewharton.timber:timber:4.5.0'
 implementation 'com.google.code.gson:gson:2.8.0'
@@ -39,30 +39,51 @@ implementation 'com.squareup.retrofit2:retrofit:2.4.0'
 implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
 implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-implementation 'com.google.android.gms:play-services-location:15.0.1'(New)
+implementation 'com.google.android.gms:play-services-location:15.0.1' (New)
 implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:3.1.0'
 implementation 'com.mapbox.mapboxsdk:mapbox-android-gestures:0.3.0'
 implementation 'com.mapbox.mapboxsdk:mapbox-sdk-geojson:3.3.0'
 implementation 'com.mapbox.mapboxsdk:mapbox-android-core:0.2.1'(New)
 ```
 - Add these permissions in your project
-```json
+```java
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"   >
 <uses-permission android:name="android.permission.INTERNET" >
 ```
-###### Add your API keys to the SDK(in your application.s on Create or before using map)
+### Add your API keys to the SDK
+*Add your API keys to the SDK (in your application's onCreate() or before using map)*
+
+#### Java
+```java
+MapmyIndiaAccountManager.getInstance().setRestAPIKey(getRestAPIKey());  
+MapmyIndiaAccountManager.getInstance().setMapSDKKey(getMapSDKKey());  
+MapmyIndiaAccountManager.getInstance().setAtlasGrantType(getAtlasGrantType());  
+MapmyIndiaAccountManager.getInstance().setAtlasClientId(getAtlasClientId());  
+MapmyIndiaAccountManager.getInstance().setAtlasClientSecret(getAtlasClientSecret());  
+MapmyIndia.getInstance(getApplicationContext());
+```
+#### Kotlin
+```kotlin
+MapmyIndiaAccountManager.getInstance().restAPIKey = getRestAPIKey()  
+MapmyIndiaAccountManager.getInstance().mapSDKKey = getMapSDKKey()  
+MapmyIndiaAccountManager.getInstance().atlasGrantType = getAtlasGrantType()  
+MapmyIndiaAccountManager.getInstance().atlasClientId = getAtlasClientId()  
+MapmyIndiaAccountManager.getInstance().atlasClientSecret = getAtlasClientSecret()
+```
+*You cannot use the MapmyIndia Map Mobile SDK without these function calls. You will find your keys in your API Dashboard.*
+
 
 ## Add a MapmyIndia Map to your application
-```json
+```java
 <com.mapbox.mapboxsdk.maps.MapView
 android:id="@+id/mapView" 
 android:layout_width="match_parent"
 android:layout_height="match_parent" 
 />
 ```
-###### NOTE: All the lifecycle methods that need to be overridden:
+##### NOTE: All the lifecycle methods that need to be overridden:
 
-```json  
+```java
 onCreate(); 
 onStart(); 
 onResume(); 
@@ -106,24 +127,24 @@ Zoom controls the scale of the map and consumes any value between 0 and 22. At z
 -   Quickly tap twice on the map with a single finger to zoom in.
 -   Quickly tap twice on the map with a single finger and hold your finger down on the screen after the second tap.
 -   Then slide the finger up to zoom out and down to zoom out.
-```json
+```java
 CameraPosition position = new CameraPosition.Builder() 
 target(new LatLng(22.8978, 77.3245)) // Sets the new camera position
 zoom(14) // Sets the zoom to level 14 
 tilt(45) // Set the camera tilt to 45 degrees 
 build();
 ```
-###### **We can pass this camera positions to following functions**
-  ```json
-  moveCamera() 
-  easeCamera() 
-  animateCamera()
-  ```
+##### We can pass this camera positions to following functions
+```java
+moveCamera() 
+easeCamera() 
+animateCamera()
+```
 
 ## Map Events
 
 ##### **The SDK allows you to listen to certain events on the map. It sets a callback that is invoked when camera movement has started.**
-```json
+```java
 mapboxMap.setOnCameraMoveStartedListener(new MapboxMap.OnCameraMoveStartedListener()
 { 
 private final String[] REASONS = {"REASON_API_GESTURE", "REASON_DEVELOPER_ANIMATION", "REASON_API_ANIMATION"
