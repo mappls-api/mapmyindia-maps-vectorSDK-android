@@ -2,10 +2,12 @@ package com.mmi.sdk.demo.java.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.mapbox.core.constants.Constants;
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.utils.PolylineUtils;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
@@ -19,10 +21,15 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mmi.sdk.demo.R;
 import com.mmi.sdk.demo.java.utils.CheckInternet;
 import com.mmi.sdk.demo.java.utils.TransparentProgressDialog;
+import com.mmi.services.api.directions.DirectionsCriteria;
+import com.mmi.services.api.directions.MapmyIndiaDirections;
 import com.mmi.services.api.directions.legacy.MapmyIndiaDirectionsLegacy;
 import com.mmi.services.api.directions.legacy.model.LegacyRouteResponse;
 import com.mmi.services.api.directions.legacy.model.Results;
 import com.mmi.services.api.directions.legacy.model.Trip;
+import com.mmi.services.api.directions.models.DirectionsResponse;
+import com.mmi.services.api.directions.models.DirectionsRoute;
+import com.mmi.services.api.google.directions.model.Route;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,22 +93,28 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         transparentProgressDialog.dismiss();
     }
 
+
+
     private void getDirections() {
         progressDialogShow();
 
-        new MapmyIndiaDirectionsLegacy.Builder()
-                .setOrigin(Point.fromLngLat(77.202432, 28.594475))
-                .setDestination(Point.fromLngLat(77.186982, 28.554676))
-                .build().enqueueCall(new Callback<LegacyRouteResponse>() {
+        MapmyIndiaDirections.builder()
+                .origin(Point.fromLngLat(77.202432, 28.594475))
+                .destination(Point.fromLngLat(77.186982, 28.554676))
+                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .steps(true)
+                .alternatives(false)
+                .overview(DirectionsCriteria.OVERVIEW_FULL).build().enqueueCall(new Callback<DirectionsResponse>() {
             @Override
-            public void onResponse(Call<LegacyRouteResponse> call, Response<LegacyRouteResponse> response) {
+            public void onResponse(@NonNull Call<DirectionsResponse> call,@NonNull Response<DirectionsResponse> response) {
                 if (response.code() == 200) {
                     if (response.body() != null) {
-                        LegacyRouteResponse directionsResponse = response.body();
-                        Results results = directionsResponse.getResults();
-                        List<Trip> tripList = results.getTrips();
-                        if (tripList.size() > 0) {
-                            drawPath(tripList);
+                        DirectionsResponse directionsResponse = response.body();
+                        List<DirectionsRoute> results = directionsResponse.routes();
+
+                        if (results.size() > 0) {
+                            DirectionsRoute directionsRoute = results.get(0);
+                            drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6));
                         }
                     }
                 } else {
@@ -111,17 +124,18 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             }
 
             @Override
-            public void onFailure(Call<LegacyRouteResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<DirectionsResponse> call,@NonNull Throwable t) {
                 progressDialogHide();
             }
         });
 
+
+
     }
 
-    private void drawPath(List<Trip> waypoints) {
+    private void drawPath(List<Point> waypoints) {
         ArrayList<LatLng> listOfLatlang = new ArrayList<>();
-        List<Point> pointList = PolylineUtils.decode(waypoints.get(0).getPts(), 6);
-        for (Point point : pointList) {
+        for (Point point : waypoints) {
             listOfLatlang.add(new LatLng(point.latitude(), point.longitude()));
         }
 

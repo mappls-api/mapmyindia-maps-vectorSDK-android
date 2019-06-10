@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.mapbox.core.constants.Constants
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.utils.PolylineUtils
 import com.mapbox.mapboxsdk.annotations.PolylineOptions
@@ -17,9 +18,12 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mmi.sdk.demo.R
 import com.mmi.sdk.demo.java.utils.CheckInternet
 import com.mmi.sdk.demo.java.utils.TransparentProgressDialog
+import com.mmi.services.api.directions.DirectionsCriteria
+import com.mmi.services.api.directions.MapmyIndiaDirections
 import com.mmi.services.api.directions.legacy.MapmyIndiaDirectionsLegacy
 import com.mmi.services.api.directions.legacy.model.LegacyRouteResponse
 import com.mmi.services.api.directions.legacy.model.Trip
+import com.mmi.services.api.directions.models.DirectionsResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -77,18 +81,22 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getDirections() {
         progressDialogShow()
 
-        MapmyIndiaDirectionsLegacy.Builder<MapmyIndiaDirectionsLegacy.Builder<*>>()
-                .setOrigin(Point.fromLngLat(77.202432, 28.594475))
-                .setDestination(Point.fromLngLat(77.186982, 28.554676))
-                .build().enqueueCall(object : Callback<LegacyRouteResponse> {
-                    override fun onResponse(call: Call<LegacyRouteResponse>, response: Response<LegacyRouteResponse>) {
+        MapmyIndiaDirections.builder()
+                .origin(Point.fromLngLat(77.202432, 28.594475))
+                .destination(Point.fromLngLat(77.186982, 28.554676))
+                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .steps(true)
+                .alternatives(false)
+                .overview(DirectionsCriteria.OVERVIEW_FULL).build().enqueueCall(object : Callback<DirectionsResponse> {
+                    override fun onResponse(call: Call<DirectionsResponse>, response: Response<DirectionsResponse>) {
                         if (response.code() == 200) {
                             if (response.body() != null) {
                                 val directionsResponse = response.body()
-                                val results = directionsResponse!!.results
-                                val tripList = results.trips
-                                if (tripList.size > 0) {
-                                    drawPath(tripList)
+                                val results = directionsResponse!!.routes()
+
+                                if (results.size > 0) {
+                                    val directionsRoute = results[0]
+                                    drawPath(PolylineUtils.decode(directionsRoute.geometry()!!, Constants.PRECISION_6))
                                 }
                             }
                         } else {
@@ -97,23 +105,23 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback {
                         progressDialogHide()
                     }
 
-                    override fun onFailure(call: Call<LegacyRouteResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {
                         progressDialogHide()
                     }
                 })
 
+
     }
 
-    private fun drawPath(waypoints: List<Trip>) {
+    private fun drawPath(waypoints: List<Point>) {
         val listOfLatlang = ArrayList<LatLng>()
-        val pointList = PolylineUtils.decode(waypoints[0].pts, 6)
-        for (point in pointList) {
+        for (point in waypoints) {
             listOfLatlang.add(LatLng(point.latitude(), point.longitude()))
         }
 
-        mapboxMap!!.addPolyline(PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4f))
+        mapboxMap?.addPolyline(PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4f))
         val latLngBounds = LatLngBounds.Builder().includes(listOfLatlang).build()
-        mapboxMap!!.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30))
+        mapboxMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30))
     }
 
     override fun onMapError(i: Int, s: String) {
