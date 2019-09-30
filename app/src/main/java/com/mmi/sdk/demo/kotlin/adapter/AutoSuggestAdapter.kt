@@ -1,4 +1,4 @@
-package com.mmi.sdk.demo.kotlin.kotlin.adapter
+package com.mmi.sdk.demo.kotlin.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import java.util.*
 /**
  * Created by CEINFO on 26-02-2019.
  */
-class AutoSuggestAdapter(internal var list: ArrayList<ELocation>, internal var placeName: PlaceName) : RecyclerView.Adapter<AutoSuggestAdapter.MyViewholder>() {
+class AutoSuggestAdapter(private var list: ArrayList<ELocation>,private var placeName: PlaceName) : RecyclerView.Adapter<AutoSuggestAdapter.MyViewholder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewholder {

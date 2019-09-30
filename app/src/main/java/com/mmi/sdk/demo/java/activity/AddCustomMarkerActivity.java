@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.mapbox.mapboxsdk.annotations.Icon;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -37,9 +40,15 @@ public class AddCustomMarkerActivity extends AppCompatActivity implements OnMapR
 
         mapboxMap.setPadding(20, 20, 20, 20);
 
+
+        IconFactory iconFactory = IconFactory.getInstance(this);
+        Icon icon = iconFactory.fromResource(R.drawable.placeholder);
+        mapboxMap.addMarker(new MarkerOptions().position(new LatLng(
+          25.321684, 82.987289)).icon(icon));
+
         /* this is done for animating/moving camera to particular position */
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
-                14.5964879, 120.9095193)).zoom(8).tilt(0).build();
+          25.321684, 82.987289)).zoom(8).tilt(0).build();
         mapboxMap.setCameraPosition(cameraPosition);
     }
 

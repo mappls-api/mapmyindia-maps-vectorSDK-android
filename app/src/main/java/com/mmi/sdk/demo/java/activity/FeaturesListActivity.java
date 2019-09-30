@@ -33,7 +33,7 @@ public class FeaturesListActivity extends AppCompatActivity {
 
     private void init() {
         ArrayList<Features> featuresArrayList = new ArrayList<>();
-        featuresArrayList.add(new Features(1, "Camera Features", InfoWindowSymbolLayerActivity.class, "Description"));
+        featuresArrayList.add(new Features(1, "Camera Features", CameraActivity.class, "Description"));
         featuresArrayList.add(new Features(2, "Map Tap", MapClickActivity.class, "Description"));
         featuresArrayList.add(new Features(3, "Map Long Tap", MapLongClickActivity.class, "Description"));
         featuresArrayList.add(new Features(4, "Add Marker", AddMarkerActivity.class, "Description"));
@@ -47,6 +47,11 @@ public class FeaturesListActivity extends AppCompatActivity {
         featuresArrayList.add(new Features(12, "Nearby", NearByActivity.class, "Description"));
         featuresArrayList.add(new Features(13, "Get Direction", DirectionActivity.class, "Description"));
         featuresArrayList.add(new Features(14, "Get Distance", DistanceActivity.class, "Description"));
+        featuresArrayList.add(new Features(15, "Marker Rotation and Transition", MarkerRotationTransitionActivity.class, "Description"));
+        featuresArrayList.add(new Features(16, "Polyline with Gradient color", GradientPolylineActivity.class, "Description"));
+        featuresArrayList.add(new Features(17, "Semicircle polyline", SemiCirclePolylineActivity.class, "Description"));
+        featuresArrayList.add(new Features(18, "Animate Car", CarAnimationActivity.class, "Description"));
+        featuresArrayList.add(new Features(19, "Marker Dragging", MarkerDraggingActivity.class, "Description"));
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView);
         mLayoutManager = new LinearLayoutManager(FeaturesListActivity.this);

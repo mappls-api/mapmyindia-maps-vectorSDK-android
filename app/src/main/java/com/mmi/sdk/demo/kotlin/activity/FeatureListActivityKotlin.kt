@@ -41,9 +41,14 @@ class FeatureListActivityKotlin : AppCompatActivity() {
         featuresArrayList.add(Features(12, "Nearby", NearByActivity::class.java, "Description"))
         featuresArrayList.add(Features(13, "Get Direction", DirectionActivity::class.java, "Description"))
         featuresArrayList.add(Features(14, "Get Distance", DistanceActivity::class.java, "Description"))
+        featuresArrayList.add(Features(15, "Marker Rotation & Transition", MarkerRotationTransitionActivity::class.java, "Description"))
+        featuresArrayList.add(Features(16, "Polyline with Gradient color", GradientPolylineActivity::class.java, "Description"))
+        featuresArrayList.add(Features(17, "Semicircle Polyline", SemiCirclePolylineActivity::class.java, "Description"))
+        featuresArrayList.add(Features(18, "Animate Car", CarAnimationActivity::class.java, "Description"))
+        featuresArrayList.add(Features(19, "Marker Dragging", MarkerDraggingActivity::class.java, "Description"))
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView)
-        mLayoutManager = LinearLayoutManager(this@FeatureListActivityKotlin)
+        mLayoutManager = LinearLayoutManager(this)
         featuresRecycleView!!.layoutManager = mLayoutManager
         val featuresListAdapter = object : FeaturesListAdapter(featuresArrayList) {
             override fun redirectOnFeatureCallBack(features: Features) {
@@ -54,7 +59,7 @@ class FeatureListActivityKotlin : AppCompatActivity() {
     }
 
     private fun switchToActivity(featureActivityName: Class<*>?) {
-        val intent = Intent(this@FeatureListActivityKotlin, featureActivityName)
+        val intent = Intent(this, featureActivityName)
         startActivity(intent)
     }
 }

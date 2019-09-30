@@ -18,7 +18,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.SupportMapFragment
 import com.mmi.sdk.demo.R
 import com.mmi.sdk.demo.java.utils.CheckInternet
-import com.mmi.sdk.demo.kotlin.kotlin.adapter.AutoSuggestAdapter
+import com.mmi.sdk.demo.kotlin.adapter.AutoSuggestAdapter
 import com.mmi.sdk.demo.kotlin.kotlin.utility.TransparentProgressDialog
 import com.mmi.services.api.auth.MapmyIndiaAuthentication
 import com.mmi.services.api.auth.model.AtlasAuthToken
