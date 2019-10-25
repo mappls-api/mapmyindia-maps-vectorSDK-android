@@ -1,59 +1,59 @@
 package com.mmi.sdk.demo.java.activity;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mmi.sdk.demo.R;
+import com.mmi.sdk.demo.java.plugin.DashedPolylinePlugin;
+import com.mmi.sdk.demo.java.utils.SemiCirclePointsListHelper;
 
-/**
- * Created by CEINFO on 26-02-2019.
- */
+import java.util.List;
 
-public class AddCustomMarkerActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class SemiCirclePolylineActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
+    private List<LatLng> listOfLatLng;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.base_layout);
+        setContentView(R.layout.activity_semi_circle_polyline);
+
         mapView = findViewById(R.id.mapBoxId);
-        mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        listOfLatLng = SemiCirclePointsListHelper.showCurvedPolyline(new LatLng(28.7039, 77.101318), new LatLng(28.704248, 77.102370), 0.5);
     }
 
     @Override
     public void onMapReady(MapboxMap mapboxMap) {
+        LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                .includes(listOfLatLng)
+                .build();
 
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
 
+        DashedPolylinePlugin dashedPolylinePlugin = new DashedPolylinePlugin(mapboxMap, mapView);
+        dashedPolylinePlugin.createPolyline(listOfLatLng);
 
-        mapboxMap.setPadding(20, 20, 20, 20);
-
-
-        IconFactory iconFactory = IconFactory.getInstance(this);
-        Icon icon = iconFactory.fromResource(R.drawable.placeholder);
-        mapboxMap.addMarker(new MarkerOptions().position(new LatLng(
-          25.321684, 82.987289)).icon(icon));
-
-        /* this is done for animating/moving camera to particular position */
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
-          25.321684, 82.987289)).zoom(8).tilt(0).build();
-        mapboxMap.setCameraPosition(cameraPosition);
+//        PolylineOptions polylineOptions = new PolylineOptions()
+//                .addAll(listOfLatLng)
+//                .color(Color.parseColor("#3bb2d0"))
+//                .width(4);
+//
+//        mapboxMap.addPolyline(polylineOptions);
     }
 
     @Override
     public void onMapError(int i, String s) {
+
     }
 
     @Override

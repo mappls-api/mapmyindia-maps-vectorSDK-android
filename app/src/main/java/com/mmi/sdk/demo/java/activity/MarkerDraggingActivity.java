@@ -1,31 +1,38 @@
 package com.mmi.sdk.demo.java.activity;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint;
+import android.graphics.PointF;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
 
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.android.gestures.MoveGestureDetector;
+import com.mapbox.android.gestures.MultiFingerTapGestureDetector;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mmi.sdk.demo.R;
+import com.mmi.sdk.demo.java.plugin.MarkerPlugin;
 
-/**
- * Created by CEINFO on 26-02-2019.
- */
-
-public class AddCustomMarkerActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MarkerDraggingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
+    private MapboxMap mMapboxMap;
+    private LatLng latLng = new LatLng(28.705436, 77.100462);
+    private MarkerPlugin markerPlugin;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_layout);
+
         mapView = findViewById(R.id.mapBoxId);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
@@ -33,27 +40,21 @@ public class AddCustomMarkerActivity extends AppCompatActivity implements OnMapR
 
     @Override
     public void onMapReady(MapboxMap mapboxMap) {
+        this.mMapboxMap = mapboxMap;
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+        initMarker();
+    }
 
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
-
-
-        mapboxMap.setPadding(20, 20, 20, 20);
-
-
-        IconFactory iconFactory = IconFactory.getInstance(this);
-        Icon icon = iconFactory.fromResource(R.drawable.placeholder);
-        mapboxMap.addMarker(new MarkerOptions().position(new LatLng(
-          25.321684, 82.987289)).icon(icon));
-
-        /* this is done for animating/moving camera to particular position */
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
-          25.321684, 82.987289)).zoom(8).tilt(0).build();
-        mapboxMap.setCameraPosition(cameraPosition);
+    private void initMarker() {
+        markerPlugin = new MarkerPlugin(mMapboxMap, mapView);
+        markerPlugin.icon(getResources().getDrawable(R.drawable.placeholder));
+        markerPlugin.addMarker(latLng);
+        markerPlugin.draggable(true);
     }
 
     @Override
     public void onMapError(int i, String s) {
+
     }
 
     @Override

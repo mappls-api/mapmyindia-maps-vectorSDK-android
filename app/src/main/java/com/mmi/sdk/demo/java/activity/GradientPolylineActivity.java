@@ -1,59 +1,59 @@
 package com.mmi.sdk.demo.java.activity;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mmi.sdk.demo.R;
+import com.mmi.sdk.demo.java.plugin.GradientPolylinePlugin;
 
-/**
- * Created by CEINFO on 26-02-2019.
- */
+import java.util.ArrayList;
+import java.util.List;
 
-public class AddCustomMarkerActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class GradientPolylineActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private MapboxMap mMapboxMap;
     private MapView mapView;
+    private List<LatLng> listOfLatLng = new ArrayList<>();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.base_layout);
+        setContentView(R.layout.activity_gradient_polyline);
         mapView = findViewById(R.id.mapBoxId);
-        mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        listOfLatLng.add(new LatLng(28.705436, 77.100462));
+        listOfLatLng.add(new LatLng(28.705191, 77.100784));
+        listOfLatLng.add(new LatLng(28.704646, 77.101514));
+        listOfLatLng.add(new LatLng(28.704194, 77.101171));
+        listOfLatLng.add(new LatLng(28.704083, 77.101066));
+        listOfLatLng.add(new LatLng(28.703900, 77.101318));
+
     }
 
     @Override
     public void onMapReady(MapboxMap mapboxMap) {
 
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
-
-
         mapboxMap.setPadding(20, 20, 20, 20);
+        LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                .includes(listOfLatLng)
+                .build();
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10));
 
-
-        IconFactory iconFactory = IconFactory.getInstance(this);
-        Icon icon = iconFactory.fromResource(R.drawable.placeholder);
-        mapboxMap.addMarker(new MarkerOptions().position(new LatLng(
-          25.321684, 82.987289)).icon(icon));
-
-        /* this is done for animating/moving camera to particular position */
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
-          25.321684, 82.987289)).zoom(8).tilt(0).build();
-        mapboxMap.setCameraPosition(cameraPosition);
+        GradientPolylinePlugin animatedPolylinePlugin = new GradientPolylinePlugin(mapboxMap, mapView);
+        animatedPolylinePlugin.createPolyline(listOfLatLng);
     }
 
     @Override
     public void onMapError(int i, String s) {
+
     }
 
     @Override

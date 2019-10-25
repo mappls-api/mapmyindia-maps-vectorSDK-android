@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:tabBackground="@drawable/tab_item"
+        app:tabIndicatorColor="@null"
+        app:tabSelectedTextColor="@color/colorPrimary">
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_drive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_directions_car_black_24dp"
+            android:text="Drive" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_bike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_directions_bike_black_24dp"
+            android:text="Bike" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_walk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_directions_walk_black_24dp"
+            android:text="Walk" />
+
+
+    </android.support.design.widget.TabLayout>
+
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapBoxId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tab_layout_profile"
+        android:layout_above="@id/direction_details_layout"/>
+    <RadioGroup
+        android:id="@+id/rg_resource_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:minHeight="32dp"
+        android:background="@android:color/white"
+        android:layout_below="@id/tab_layout_profile"
+        android:layout_margin="16dp"
+        >
+
+        <RadioButton
+            android:id="@+id/rb_without_traffic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Non Traffic"/>
+
+        <RadioButton
+            android:id="@+id/rb_with_traffic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Traffic"/>
+
+        <RadioButton
+            android:id="@+id/rb_with_route_eta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Route ETA"/>
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/direction_details_layout"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:minHeight="64dp"
+        android:visibility="gone"
+        android:padding="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#D31027"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:text="Distance  : "/>
+
+        <TextView
+            android:id="@+id/tv_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:layout_marginLeft="4dp"
+            android:text="Duration"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
