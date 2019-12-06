@@ -71,4 +71,14 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onDestroy()
         mapBoxId.onDestroy()
     }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapBoxId.onLowMemory()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapBoxId.onSaveInstanceState(outState)
+    }
 }

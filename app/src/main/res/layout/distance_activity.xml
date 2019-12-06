@@ -3,25 +3,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapBoxId"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
+        android:layout_above="@id/distance_details_layout" />
+
+    <LinearLayout
+        android:id="@+id/distance_details_layout"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:minHeight="64dp"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:visibility="gone">
 
         <TextView
-            android:id="@+id/distance"
+            android:id="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="5dp" />
+            android:gravity="center"
+            android:text="Distance  : "
+            android:textColor="#D31027"
+            android:textSize="22sp" />
 
         <TextView
-            android:id="@+id/time"
+            android:id="@+id/tv_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="5dp" />
+            android:layout_marginLeft="4dp"
+            android:gravity="center"
+            android:text="Duration"
+            android:textSize="22sp" />
 
     </LinearLayout>
 

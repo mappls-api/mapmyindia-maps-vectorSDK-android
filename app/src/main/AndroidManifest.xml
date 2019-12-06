@@ -63,6 +63,10 @@
         <activity android:name=".java.InfoWindowSymbolLayerActivity" />
         <activity android:name=".kotlin.activity.MarkerRotationTransitionActivity" />
         <activity android:name=".kotlin.activity.CarAnimationActivity" />
+        <activity android:name=".java.activity.AddCustomInfoWindowActivity" />
+        <activity android:name=".java.activity.IndoorActivity" />
+        <activity android:name=".kotlin.activity.IndoorActivity" />
+        <activity android:name=".kotlin.activity.AddCustomInfoWindowActivity" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />

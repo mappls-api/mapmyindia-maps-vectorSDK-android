@@ -33,7 +33,6 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.turf.TurfMeasurement;
 import com.mmi.sdk.demo.R;
 
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +50,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacem
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 
@@ -401,7 +401,8 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
                 iconImage(CAR),
                 iconRotate(get(PROPERTY_BEARING)),
                 iconAllowOverlap(true),
-                iconIgnorePlacement(true)
+                iconIgnorePlacement(true),
+                iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
 
         );
         mapboxMap.addLayer(symbolLayer);

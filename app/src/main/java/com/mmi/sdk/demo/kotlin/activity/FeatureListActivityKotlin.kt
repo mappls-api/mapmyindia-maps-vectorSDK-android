@@ -31,6 +31,7 @@ class FeatureListActivityKotlin : AppCompatActivity() {
         featuresArrayList.add(Features(2, "Map Tap", MapClickActivity::class.java, "Description"))
         featuresArrayList.add(Features(3, "Map Long Tap", MapLongClickActivity::class.java, "Description"))
         featuresArrayList.add(Features(4, "Add Marker", AddMarkerActivity::class.java, "Description"))
+        featuresArrayList.add(Features(5, "Add Custom Infowindow", AddCustomInfoWindowActivity::class.java, "Description"))
         featuresArrayList.add(Features(5, "Add Custom Marker", AddCustomMarkerActivity::class.java, "Description"))
         featuresArrayList.add(Features(6, "Draw Polyline", PolylineActivity::class.java, "Description"))
         featuresArrayList.add(Features(7, "Draw Polygon", PolygonActivity::class.java, "Description"))
@@ -46,6 +47,7 @@ class FeatureListActivityKotlin : AppCompatActivity() {
         featuresArrayList.add(Features(17, "Semicircle Polyline", SemiCirclePolylineActivity::class.java, "Description"))
         featuresArrayList.add(Features(18, "Animate Car", CarAnimationActivity::class.java, "Description"))
         featuresArrayList.add(Features(19, "Marker Dragging", MarkerDraggingActivity::class.java, "Description"))
+        featuresArrayList.add(Features(20, "Indoor", IndoorActivity::class.java, "Description"))
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView)
         mLayoutManager = LinearLayoutManager(this)

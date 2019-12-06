@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.mmi.sdk.demo.R;
-import com.mmi.sdk.demo.java.InfoWindowSymbolLayerActivity;
 import com.mmi.sdk.demo.java.adapter.FeaturesListAdapter;
 import com.mmi.sdk.demo.java.model.Features;
 
@@ -37,6 +36,7 @@ public class FeaturesListActivity extends AppCompatActivity {
         featuresArrayList.add(new Features(2, "Map Tap", MapClickActivity.class, "Description"));
         featuresArrayList.add(new Features(3, "Map Long Tap", MapLongClickActivity.class, "Description"));
         featuresArrayList.add(new Features(4, "Add Marker", AddMarkerActivity.class, "Description"));
+        featuresArrayList.add(new Features(5, "Add Custom Infowindow", AddCustomInfoWindowActivity.class, "Description"));
         featuresArrayList.add(new Features(5, "Add Custom Marker", AddCustomMarkerActivity.class, "Description"));
         featuresArrayList.add(new Features(6, "Draw Polyline", PolylineActivity.class, "Description"));
         featuresArrayList.add(new Features(7, "Draw Polygon", PolygonActivity.class, "Description"));
@@ -52,6 +52,7 @@ public class FeaturesListActivity extends AppCompatActivity {
         featuresArrayList.add(new Features(17, "Semicircle polyline", SemiCirclePolylineActivity.class, "Description"));
         featuresArrayList.add(new Features(18, "Animate Car", CarAnimationActivity.class, "Description"));
         featuresArrayList.add(new Features(19, "Marker Dragging", MarkerDraggingActivity.class, "Description"));
+        featuresArrayList.add(new Features(20, "Indoor", IndoorActivity.class, "Description"));
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView);
         mLayoutManager = new LinearLayoutManager(FeaturesListActivity.this);

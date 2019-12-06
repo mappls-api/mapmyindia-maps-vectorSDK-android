@@ -2,6 +2,7 @@ package com.mmi.sdk.demo.kotlin.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.Toast
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.camera.CameraPosition
@@ -12,11 +13,15 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mmi.sdk.demo.R
 import com.mmi.sdk.demo.java.utils.CheckInternet
 import com.mmi.sdk.demo.java.utils.TransparentProgressDialog
-import com.mmi.services.api.distance.legacy.MapmyIndiaDistanceLegacy
-import com.mmi.services.api.distance.legacy.model.LegacyDistanceResponse
+import com.mmi.services.api.directions.DirectionsCriteria
+import com.mmi.services.api.distance.MapmyIndiaDistanceMatrix
+import com.mmi.services.api.distance.models.DistanceResponse
+import com.mmi.services.api.distance.models.DistanceResults
+import kotlinx.android.synthetic.main.distance_activity.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.DecimalFormat
 import java.util.*
 
 /**
@@ -28,7 +33,7 @@ class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.base_layout)
+        setContentView(R.layout.distance_activity)
         mapView = findViewById(R.id.mapBoxId)
         mapView!!.onCreate(savedInstanceState)
         mapView!!.getMapAsync(this)
@@ -68,28 +73,106 @@ class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun calculateDistance(pointList: List<Point>) {
         progressDialogShow()
-        MapmyIndiaDistanceLegacy.Builder<MapmyIndiaDistanceLegacy.Builder<*>>()
-                .setCoordinates(pointList)
-                .setCenter(Point.fromLngLat(77.234230, 28.582864))
+        MapmyIndiaDistanceMatrix.builder()
+                .coordinates(pointList)
+                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .resource(DirectionsCriteria.RESOURCE_DISTANCE_ETA)
                 .build()
-                .enqueueCall(object : Callback<LegacyDistanceResponse> {
-                    override fun onResponse(call: Call<LegacyDistanceResponse>, response: Response<LegacyDistanceResponse>) {
+                .enqueueCall(object : Callback<DistanceResponse> {
+                    override fun onResponse(call: Call<DistanceResponse>, response: Response<DistanceResponse>) {
                         progressDialogHide()
                         if (response.code() == 200) {
                             val legacyDistanceResponse = response.body()
-                            val distanceList = legacyDistanceResponse!!.results
-                            if (distanceList.size > 0) {
-                                val distance = distanceList[0]
-                                Toast.makeText(this@DistanceActivity, "Distance: " + distance.length, Toast.LENGTH_SHORT).show()
+                            val distanceList = legacyDistanceResponse!!.results()
+
+                            if (distanceList != null) {
+                                val distances = distanceList.distances()
+                                updateData(distanceList)
+                                Toast.makeText(this@DistanceActivity, "Distance: " + distances!![0][1], Toast.LENGTH_SHORT).show()
                             } else {
-                                Toast.makeText(this@DistanceActivity, "Failed: " + legacyDistanceResponse.responseCode, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@DistanceActivity, "Failed: " + legacyDistanceResponse.responseCode(), Toast.LENGTH_SHORT).show()
                             }
+//
                         }
                     }
 
-                    override fun onFailure(call: Call<LegacyDistanceResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<DistanceResponse>, t: Throwable) {
                         progressDialogHide()
                     }
                 })
     }
+
+
+    private fun updateData(distanceList: DistanceResults) {
+        distance_details_layout!!.visibility = View.VISIBLE
+        tv_duration!!.text = "(" + getFormattedDuration(distanceList.durations()!![0][1]) + ")"
+        tv_distance!!.text = getFormattedDistance(distanceList.distances()!![0][1])
+    }
+
+    /**
+     * Get Formatted Distance
+     *
+     * @param distance route distance
+     * @return distance in Kms if distance > 1000 otherwise in mtr
+     */
+    private fun getFormattedDistance(distance: Double): String {
+        return if (distance / 1000 < 1) ("" + distance + "mtr.")
+        else {
+            val deimalFormatter = DecimalFormat("#.#")
+            deimalFormatter.format(distance / 1000) + "Km."
+        }
+    }
+
+    /**
+     * Get Formatted Duration
+     *
+     * @param duration route duration
+     * @return formatted duration
+     */
+    private fun getFormattedDuration(duration: Double): String {
+        val min: Long = (duration % 3600 / 60).toLong()
+        val hour: Long = (duration % 86400 / 3600).toLong()
+        val days: Long = (duration / 86400).toLong()
+        return if (days > 0L) "" + days + " " + (if (days > 1L) "Days" else "Day") + " " + hour + " hr" + (if (min > 0L) " " + min + " min" else "")
+        else {
+            if (hour > 0L) "" + hour + " hr" + (if (min > 0L) " " + min + "min" else "") else "" + min + "min"
+        }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        mapView!!.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView!!.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView!!.onDestroy()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView!!.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView!!.onResume()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView!!.onLowMemory()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView!!.onSaveInstanceState(outState)
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.mmi.sdk.demo.kotlin.plugin
 
+
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.TypeEvaluator
@@ -17,7 +18,6 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import android.widget.Toast
-
 import com.google.gson.JsonObject
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
@@ -26,31 +26,16 @@ import com.mapbox.mapboxsdk.annotations.BubbleLayout
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.style.layers.Layer
+import com.mapbox.mapboxsdk.style.expressions.Expression.*
 import com.mapbox.mapboxsdk.style.layers.Property
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.turf.TurfMeasurement
 import com.mmi.sdk.demo.R
-
-
-import java.lang.ref.WeakReference
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.Objects
-
 import timber.log.Timber
-
-import com.mapbox.mapboxsdk.style.expressions.Expression.eq
-import com.mapbox.mapboxsdk.style.expressions.Expression.get
-import com.mapbox.mapboxsdk.style.expressions.Expression.literal
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility
+import java.lang.ref.WeakReference
+import java.util.*
 
 
 class AnimatedCarPlugin(private val context: Context, mapView: MapView, private val mapboxMap: MapboxMap?) : MapView.OnMapChangedListener {
@@ -189,6 +174,7 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
         car = Car(feature, nextPoint)
         mapboxMap!!.addImage(CAR,
                 (context.resources.getDrawable(R.drawable.placeholder, null) as BitmapDrawable).bitmap)
+
 
 
         carSource = GeoJsonSource(CAR_SOURCE, featureCollection)
@@ -360,7 +346,8 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
                 iconImage(CAR),
                 iconRotate(get(PROPERTY_BEARING)),
                 iconAllowOverlap(true),
-                iconIgnorePlacement(true)
+                iconIgnorePlacement(true),
+                iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
 
         )
         mapboxMap!!.addLayer(symbolLayer)
