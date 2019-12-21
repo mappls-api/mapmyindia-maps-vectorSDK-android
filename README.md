@@ -1,3 +1,4 @@
+
 ![MapmyIndia APIs](https://www.mapmyindia.com/api/img/mapmyindia-api.png)
 # MapmyIndia Vector Map Android SDK
 
@@ -31,7 +32,6 @@ Follow these steps to add the SDK to your project –
 -   Add Following dependencies for the implementation
 
 ```java
-  
 implementation 'com.jakewharton.timber:timber:4.5.0'
 implementation 'com.google.code.gson:gson:2.8.0'
 implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -47,15 +47,15 @@ implementation 'com.mapbox.mapboxsdk:mapbox-android-core:0.2.1'(New)
 implementation 'com.facebook.soloader:soloader:0.6.1'
 ```
 - Add these permissions in your project
-```java
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"   >
-<uses-permission android:name="android.permission.INTERNET" >
+```xml
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.INTERNET"/>
 ```
 ### Add Java 8 Support to the project
 
  *add following lines in your app module's build.gradle*
 
-```
+```groovy
 compileOptions {
       sourceCompatibility 1.8
       targetCompatibility 1.8
@@ -86,12 +86,11 @@ MapmyIndiaAccountManager.getInstance().atlasClientSecret = getAtlasClientSecret(
 
 
 ## Add a MapmyIndia Map to your application
-```java
-<com.mapbox.mapboxsdk.maps.MapView
-android:id="@+id/mapView" 
-android:layout_width="match_parent"
-android:layout_height="match_parent" 
-/>
+```xml
+<com.mapbox.mapboxsdk.maps.MapView  
+  android:id="@id/mapView"  
+  android:layout_width="match_parent"  
+  android:layout_height="match_parent" />
 ```
 ##### NOTE: All the lifecycle methods that need to be overridden:
 
@@ -140,11 +139,11 @@ Zoom controls the scale of the map and consumes any value between 0 and 22. At z
 -   Quickly tap twice on the map with a single finger and hold your finger down on the screen after the second tap.
 -   Then slide the finger up to zoom out and down to zoom out.
 ```java
-CameraPosition position = new CameraPosition.Builder() 
-target(new LatLng(22.8978, 77.3245)) // Sets the new camera position
-zoom(14) // Sets the zoom to level 14 
-tilt(45) // Set the camera tilt to 45 degrees 
-build();
+CameraPosition position = new CameraPosition.Builder()
+      .target(new LatLng(22.8978, 77.3245)) // Sets the new camera position
+      .zoom(14) // Sets the zoom to level 14
+      .tilt(45) // Set the camera tilt to 45 degrees
+      .build();
 ```
 ##### We can pass this camera positions to following functions
 ```java
@@ -157,193 +156,173 @@ animateCamera()
 
 ##### **The SDK allows you to listen to certain events on the map. It sets a callback that is invoked when camera movement has started.**
 ```java
-mapboxMap.setOnCameraMoveStartedListener(new MapboxMap.OnCameraMoveStartedListener()
-{ 
-private final String[] REASONS = {"REASON_API_GESTURE", "REASON_DEVELOPER_ANIMATION", "REASON_API_ANIMATION"
-  }; 
-@Override 
-public void onCameraMoveStarted(int reason) { 
-String string = String.format(Locale.US, 
-"OnCameraMoveStarted: %s", REASONS[reason - 1])
-Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show();
-}
-}); 
+mapboxMap.setOnCameraMoveStartedListener(new MapboxMap.OnCameraMoveStartedListener() {  
+  private final String[] REASONS = {  
+    "REASON_API_GESTURE",  
+  "REASON_DEVELOPER_ANIMATION",  
+  "REASON_API_ANIMATION"};  
+  @Override  
+  public void onCameraMoveStarted(int reason) {  
+    String string = String.format(Locale.US,   
+ "OnCameraMoveStarted: %s", REASONS[reason - 1]);  
+  Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show();  
+  }  
+});
 ```
 ##### It sets a callback that is invoked when camera movement was cancelled.
-```json
-mapboxMap.setOnCameraMoveCancelListener(new
-MapboxMap.OnCameraMoveCanceledListener() 
-{ 
-@Override
-public void onCameraMoveCanceled() { 
-Toast.makeText(MainActivity.this, "onCameraMoveCanceled", Toast.LENGTH_LONG).show(); 
-       } 
- });
+```java
+mapboxMap.setOnCameraMoveCancelListener(new MapboxMap.OnCameraMoveCanceledListener() {  
+  @Override  
+  public void onCameraMoveCanceled() {  
+    Toast.makeText(MainActivity.this, "onCameraMoveCanceled", Toast.LENGTH_LONG).show();  
+  }  
+});
 ```
 ##### It sets a callback that is invoked when camera movement has ended.
 ```json
-  
-mapboxMap.setOnCameraIdleListener(new MapboxMap.OnCameraIdleListener()
- { 
-@Override
-public void onCameraIdle() { 
-Toast.makeText(MainActivity.this, "onCameraIdle", Toast.LENGTH_LONG).show(); 
-        } 
- });
+ mapboxMap.setOnCameraIdleListener(new MapboxMap.OnCameraIdleListener() {  
+  @Override  
+  public void onCameraIdle() {  
+    Toast.makeText(MainActivity.this, "onCameraIdle", Toast.LENGTH_LONG).show();  
+  }  
+});
 ```
 ### Map Click/Long Press
 
 If you want to respond to a user tapping on a point on the map, you can use a MapEventsOverlay which you need to add on the map as an Overlay.
 
 It sets a callback that's invoked when the user clicks on the map view.
-```json
-mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() 
-  { 
-@Override 
-public void onMapClick(@NonNull LatLng point) { 
-String string = String.format(Locale.US, "User clicked at: %s", point.toString()) 
-Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show();
-   } 
-   });
+```java
+mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {  
+  @Override  
+  public void onMapClick(@NonNull LatLng point) {  
+    String string = String.format(Locale.US, "User clicked at: %s", point.toString())  
+    Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show();  
+  }  
+});
 ```
 ###### Sets a callback that's invoked when the user long clicks on the map view.
-```json
-mapboxMap.setOnCameraIdleListener(new MapboxMap.OnCameraIdleListener()
-  { 
-@Override 
-public void onCameraIdle() { 
-Toast.makeText(MainActivity.this, "onCameraIdle", Toast.LENGTH_LONG).show(); 
-       } 
- });
+```java
+mapboxMap.setOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {  
+  @Override  
+  public void onMapLongClick(@NonNull LatLng point) {  
+    String string = String.format(Locale.US, "User long clicked at: %s", point.toString());  
+  Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show();  
+  }  
+});
 ```
-### Map Click/Long Press
 
-##### If you want to respond to a user tapping on a point on the map, you can use a MapEventsOverlay which you need to add on the map as an Overlay.
-
-##### It sets a callback that's invoked when the user clicks on the map view.
-```json
-mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() { 
-@Override 
-public void onMapClick(@NonNull LatLng point) { 
-String string = String.format(Locale.US, "User clicked at: %s", point.toString()) 
-Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show(); 
- } 
- });
-```
-##### Sets a callback that's invoked when the user long clicks on the map view.
-```json
-mapboxMap.setOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() { 
-@Override 
-public void onMapLongClick(@NonNull LatLng point) { 
-String string = String.format(Locale.US, "User clicked at: %s", point.toString()) 
-Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show(); 
- } 
- });
-```
 ## Map Overlays
 
 ### Add A Marker
 
 ##### Add markers to the map by following these steps –
-```json
-MarkerOptions markerOptions = new MarkerOptions().position(point).icon(icon); 
-Marker marker1 = map.addMarker(markerOptions); 
-markerOptions.setTitle(""); 
-markerOptions.setSnippet("");
+```java
+MarkerOptions markerOptions = new MarkerOptions().position(point).icon(IconFactory.getInstance(SimpleMapActivity.this).fromResource(R.drawable.ic_android));  
+markerOptions.setTitle("Marker");  
+markerOptions.setSnippet("This is a Marker");  
+Marker marker = mapboxMap.addMarker(markerOptions);
 ```
 ### Remove A Marker
-```json
+```java
 mapboxMap.removeMarker()
 ```
 ### Customize A Marker
-```json
-MarkerOptions markerOptions = new   MarkerOptions().position(point).icon(icon); 
-Marker marker = mapBoxMap.addMarker(markerOptions); 
-String tittle = “abc”; 
-marker.setTitle(tittle);
-mapboxMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() { 
-@Nullable 
-@Override 
-public View getInfoWindow(@NonNull Marker marker) { 
-View view = (context).getLayoutInflater() 
-.inflate(R.layout.layout, null); 
-TextView text = (TextView)view.findViewById(R.id.text); 
-text.setText(marker.getTitle()); 
-return view; 
- } 
- });
+```java
+MarkerOptions markerOptions = new MarkerOptions().position(point).icon(IconFactory.getInstance(context).fromResource(R.drawable.ic_android));  
+Marker marker = mapboxMap.addMarker(markerOptions);  
+marker.setTitle("title");  
+mapboxMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {  
+  @Nullable  
+ @Override  public View getInfoWindow(@NonNull Marker marker) {  
+    View view = getLayoutInflater()  
+      .inflate(R.layout.layout, null);  
+  TextView text = view.findViewById(R.id.text);  
+  text.setText(marker.getTitle());  
+ return view;  
+  }  
+});
 ```
 ### Add A Polyline
 ##### Draw polyline on the map
-```json
-mapboxMap.addPolyline(new PolylineOptions() 
-.addAll(points)//list of LatLng 
-.color(Color.parseColor("#3bb2d0")) 
-.width(2));
+```java
+mapboxMap.addPolyline(new PolylineOptions()  
+  .addAll(points)//list of LatLng   
+  .color(Color.parseColor("#3bb2d0"))  
+  .width(2));
 ```
 ### Add A Polygon
 
 ##### Draw a polygon on the map
-```json
-mapboxMap.addPolygon(new PolygonOptions() 
-.addAll(polygon)//list of LatLng.fillColor(Color.parseColor("#3bb2d0")));
+```java
+mapboxMap.addPolygon(new PolygonOptions()  
+    .addAll(polygon)//list of LatLng.  
+    .fillColor(Color.parseColor("#3bb2d0")));
 ```
 ### Show User Location
 
 ##### Show the current user location
-```json
-LocationComponentOptions options = LocationComponentOptions.builder(this)
-.trackingGesturesManagement(true)
-.accuracyColor(ContextCompat.getColor(this, R.color.colorAccent))
-.build();
-// Get an instance of the component LocationComponent 
-locationComponent = mapboxMap.getLocationComponent(); 
-// Activate with options 
-locationComponent.activateLocationComponent(this, options); 
-// Enable to make component visible 
-locationComponent.setLocationComponentEnabled(true); 
-locationEngine = locationComponent.getLocationEngine(); '
-locationEngine.addLocationEngineListener(this); 
-// Set the component's camera mode 
-locationComponent.setCameraMode(CameraMode.TRACKING); 
-locationComponent.setRenderMode(RenderMode.COMPASS); 
-@Override 
-public void onConnected() { 
-locationEngine.requestLocationUpdates(); 
-} 
-@Override 
-public void onLocationChanged(Location location) {
-mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom( 
-new LatLng(location.getLatitude(), location.getLongitude()), 16)); 
-locationEngine.removeLocationEngineListener(this); 
- }
-@Override 
-protected void onResume() {
-super.onResume(); 
-if (locationEngine != null) { 
-locationEngine.removeLocationEngineListener(this); 
-locationEngine.addLocationEngineListener(this); 
- } 
- } 
-@Override 
-protected void onPause() { 
-super.onPause(); 
-if (locationEngine != null) 
-locationEngine.removeLocationEngineListener(this); 
- }
-@Override 
-protected void onStop() { 
-super.onStop(); 
-if (locationEngine != null) { 
-locationEngine.removeLocationEngineListener(this); 
-locationEngine.removeLocationUpdates(); 
- } 
- } 
-@Override 
-protected void onDestroy() { 
-super.onDestroy(); 
-if (locationEngine != null) { 
-locationEngine.deactivate(); 
+```java
+LocationComponentOptions options = LocationComponentOptions.builder(context)  
+  .trackingGesturesManagement(true)  
+  .accuracyColor(ContextCompat.getColor(this, R.color.colorAccent))  
+  .build();  
+// Get an instance of the component LocationComponent  
+locationComponent = mapboxMap.getLocationComponent();  
+// Activate with options  
+locationComponent.activateLocationComponent(context, options);  
+// Enable to make component visible  
+locationComponent.setLocationComponentEnabled(true);  
+locationEngine = locationComponent.getLocationEngine();  
+  
+locationEngine.addLocationEngineListener(this);  
+// Set the component's camera mode  
+locationComponent.setCameraMode(CameraMode.TRACKING);  
+locationComponent.setRenderMode(RenderMode.COMPASS);
+
+@Override  
+public void onConnected() {  
+  locationEngine.requestLocationUpdates();  
+}  
+  
+@Override  
+public void onLocationChanged(Location location) {  
+  mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(  
+    new LatLng(location.getLatitude(), location.getLongitude()), 16));  
+  locationEngine.removeLocationEngineListener(this);  
+}  
+  
+@Override  
+protected void onResume() {  
+  super.onResume();  
+ if (locationEngine != null) {  
+    locationEngine.removeLocationEngineListener(this);  
+  locationEngine.addLocationEngineListener(this);  
+  }  
+}  
+  
+@Override  
+protected void onPause() {  
+  super.onPause();  
+ if (locationEngine != null)  
+    locationEngine.removeLocationEngineListener(this);  
+}  
+  
+@Override  
+protected void onStop() {  
+  super.onStop();  
+ if (locationEngine != null) {  
+    locationEngine.removeLocationEngineListener(this);  
+  locationEngine.removeLocationUpdates();  
+  }  
+}  
+  
+@Override  
+protected void onDestroy() {  
+  super.onDestroy();  
+ if (locationEngine != null) {  
+    locationEngine.deactivate();  
+  }  
 }
 ```
 ### Proguard
