@@ -51,6 +51,17 @@ implementation 'com.facebook.soloader:soloader:0.6.1'
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"   >
 <uses-permission android:name="android.permission.INTERNET" >
 ```
+### Add Java 8 Support to the project
+
+ *add following lines in your app module's build.gradle*
+
+```
+compileOptions {
+      sourceCompatibility 1.8
+      targetCompatibility 1.8
+  }
+  ```
+    
 ### Add your API keys to the SDK
 *Add your API keys to the SDK (in your application's onCreate() or before using map)*
 
