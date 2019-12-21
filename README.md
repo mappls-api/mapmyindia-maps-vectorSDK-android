@@ -179,7 +179,7 @@ mapboxMap.setOnCameraMoveCancelListener(new MapboxMap.OnCameraMoveCanceledListen
 });
 ```
 ##### It sets a callback that is invoked when camera movement has ended.
-```json
+```java
  mapboxMap.setOnCameraIdleListener(new MapboxMap.OnCameraIdleListener() {  
   @Override  
   public void onCameraIdle() {  
@@ -326,7 +326,7 @@ protected void onDestroy() {
 }
 ```
 ### Proguard
-```json
+```
 # Retrofit 2 
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform 
