@@ -44,6 +44,7 @@ implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:3.1.0'
 implementation 'com.mapbox.mapboxsdk:mapbox-android-gestures:0.3.0'
 implementation 'com.mapbox.mapboxsdk:mapbox-sdk-geojson:3.3.0'
 implementation 'com.mapbox.mapboxsdk:mapbox-android-core:0.2.1'(New)
+implementation 'com.facebook.soloader:soloader:0.6.1'
 ```
 - Add these permissions in your project
 ```java
