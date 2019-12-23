@@ -39,11 +39,11 @@ implementation 'com.squareup.retrofit2:retrofit:2.4.0'
 implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
 implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-implementation 'com.google.android.gms:play-services-location:15.0.1' (New)
+implementation 'com.google.android.gms:play-services-location:15.0.1'
 implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:3.1.0'
 implementation 'com.mapbox.mapboxsdk:mapbox-android-gestures:0.3.0'
 implementation 'com.mapbox.mapboxsdk:mapbox-sdk-geojson:3.3.0'
-implementation 'com.mapbox.mapboxsdk:mapbox-android-core:0.2.1'(New)
+implementation 'com.mapbox.mapboxsdk:mapbox-android-core:0.2.1'
 implementation 'com.facebook.soloader:soloader:0.6.1'
 ```
 - Add these permissions in your project
