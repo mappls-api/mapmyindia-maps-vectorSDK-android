@@ -22,29 +22,5 @@ public class MapApplication extends Application {
         MapmyIndia.getInstance(this);
     }
 
-    private String getAtlasClientId() {
-      return "KD98lApAgPU3F9rwBrx6neKKjZgI4OpoM--iaN8Nt1c=";
-    }
-
-    private String getAtlasClientSecret() {
-      return "90pO9mH1t7Os22lNAKk4njqmBiGl49u-sRWYhoKOcEeTPc-ayohaKA==";
-    }
-
-    private String getAtlasGrantType() {
-        return "client_credentials";
-    }
-
-  String getMapSDKKey() {
-
-    return "ef50c498865ccc2e9b1407982c390511";
-
-  }
-
-  String getRestAPIKey() {
-
-    return "72416e8fb4860ca6f742af1152324e4f";
-
-  }
-
-
+   
 }

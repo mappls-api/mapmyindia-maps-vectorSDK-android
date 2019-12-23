@@ -1,4 +1,4 @@
-package com.mmi.sdk.demo;
+package com.mapmyindia.sdk.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mmi.sdk.demo.java.activity.FeaturesListActivity;
-import com.mmi.sdk.demo.kotlin.activity.FeatureListActivityKotlin;
+import com.mapmyindia.sdk.demo.java.activity.FeaturesListActivity;
+import com.mapmyindia.sdk.demo.kotlin.activity.FeatureListActivityKotlin;
 
 /**
  * Created by CEINFO on 19-07-2018.
