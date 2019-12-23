@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.mmi.sdk.demo"
+        applicationId "com.mapmyindia.sdk.demo"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1

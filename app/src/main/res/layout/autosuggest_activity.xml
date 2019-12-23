@@ -7,7 +7,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/mapBoxId"
+      android:id="@+id/map_view"
         android:layout_above="@+id/layoutBottom"
         android:name="com.mapbox.mapboxsdk.maps.SupportMapFragment"/>
 
