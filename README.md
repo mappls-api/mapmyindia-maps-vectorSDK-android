@@ -1,4 +1,4 @@
-![build status](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android-sample-withREST-beta/workflows/.github/workflows/android.yml/badge.svg)
+![build status](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android-sample-withREST-beta/.github/workflows/android.yml/badge.svg)
 
 ![MapmyIndia APIs](https://www.mapmyindia.com/api/img/mapmyindia-api.png)
 # MapmyIndia Vector Map Android SDK
