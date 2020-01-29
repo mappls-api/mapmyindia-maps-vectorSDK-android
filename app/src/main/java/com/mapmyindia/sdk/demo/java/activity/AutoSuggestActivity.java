@@ -22,8 +22,6 @@ import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.adapter.AutoSuggestAdapter;
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet;
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog;
-import com.mmi.services.api.auth.MapmyIndiaAuthentication;
-import com.mmi.services.api.auth.model.AtlasAuthToken;
 import com.mmi.services.api.autosuggest.MapmyIndiaAutoSuggest;
 import com.mmi.services.api.autosuggest.model.AutoSuggestAtlasResponse;
 import com.mmi.services.api.autosuggest.model.ELocation;
@@ -75,11 +73,6 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setVisibility(View.GONE);
 
-        if (CheckInternet.isNetworkAvailable(AutoSuggestActivity.this)) {
-            getAuthToken();
-        } else {
-            showToast(getString(R.string.pleaseCheckInternetConnection));
-        }
 
         transparentProgressDialog = new TransparentProgressDialog(this, R.drawable.circle_loader, "");
         handler = new Handler();
@@ -227,19 +220,6 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
     public void afterTextChanged(Editable s) {
     }
 
-    private void getAuthToken() {
 
-        new MapmyIndiaAuthentication.Builder().build().enqueueCall(new Callback<AtlasAuthToken>() {
-            @Override
-            public void onResponse(Call<AtlasAuthToken> call, Response<AtlasAuthToken> response) {
-            }
-
-            @Override
-            public void onFailure(Call<AtlasAuthToken> call, Throwable t) {
-
-            }
-        });
-
-    }
 
 }

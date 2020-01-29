@@ -20,8 +20,6 @@ import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet
 import com.mapmyindia.sdk.demo.kotlin.adapter.AutoSuggestAdapter
 import com.mapmyindia.sdk.demo.kotlin.kotlin.utility.TransparentProgressDialog
-import com.mmi.services.api.auth.MapmyIndiaAuthentication
-import com.mmi.services.api.auth.model.AtlasAuthToken
 import com.mmi.services.api.autosuggest.MapmyIndiaAutoSuggest
 import com.mmi.services.api.autosuggest.model.AutoSuggestAtlasResponse
 import com.mmi.services.api.geocoding.GeoCodeResponse
@@ -100,11 +98,7 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
         recyclerView.layoutManager = mLayoutManager
         recyclerView.visibility = View.GONE
 
-        if (CheckInternet.isNetworkAvailable(this@AutoSuggestActivity)) {
-            getAuthToken()
-        } else {
-            showToast(getString(R.string.pleaseCheckInternetConnection))
-        }
+
 
         handler = Handler()
         autoSuggestText.addTextChangedListener(this)
@@ -189,24 +183,6 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
                 })
     }
 
-    private fun getAuthToken() {
-
-        MapmyIndiaAuthentication.Builder<MapmyIndiaAuthentication.Builder<*>>()
-                .build()
-                .enqueueCall(object : Callback<AtlasAuthToken> {
-                    override fun onResponse(call: Call<AtlasAuthToken>, response: Response<AtlasAuthToken>) {
-                        if (response.code() == 200) {
-                            authToken = response.body()!!.getAccessToken()
-                            tokenType = response.body()!!.getTokenType()
-                        }
-
-                    }
-
-                    override fun onFailure(call: Call<AtlasAuthToken>, t: Throwable) {
-
-                    }
-                })
-    }
 
     fun show() {
         transparentDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
