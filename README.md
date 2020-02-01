@@ -1,3 +1,4 @@
+
 ![build status](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android-sample-withREST-beta/.github/workflows/android.yml/badge.svg)
 
 ![MapmyIndia APIs](https://www.mapmyindia.com/api/img/mapmyindia-api.png)
@@ -32,7 +33,7 @@ Follow these steps to add the SDK to your project –
 -   Import MapmyIndiaGLAndroidSDK_v{version}.aar file in your project.
 -   Add Following dependencies for the implementation
 
-```java
+```groovy
 implementation 'com.jakewharton.timber:timber:4.5.0'
 implementation 'com.google.code.gson:gson:2.8.0'
 implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -87,23 +88,67 @@ MapmyIndiaAccountManager.getInstance().atlasClientSecret = getAtlasClientSecret(
 
 
 ## Add a MapmyIndia Map to your application
+
+
 ```xml
 <com.mapbox.mapboxsdk.maps.MapView  
-  android:id="@id/mapView"  
+  android:id="@id/map_view"  
   android:layout_width="match_parent"  
   android:layout_height="match_parent" />
 ```
 ##### NOTE: All the lifecycle methods that need to be overridden:
 
+Initialize the mapView 
 ```java
-onCreate(); 
-onStart(); 
-onResume(); 
-onPause(); 
-onStop(); 
-onSaveInstanceState(); 
-onLowMemory(); 
-onDestroy();
+@Override  
+protected void onCreate(@Nullable Bundle savedInstanceState) {  
+    super.onCreate(savedInstanceState);  
+    setContentView(R.layout.base_layout);  
+    mapView = findViewById(R.id.map_view);  
+    mapView.onCreate(savedInstanceState);  
+}
+
+@Override  
+protected void onStart() {  
+    super.onStart();  
+    mapView.onStart();  
+}  
+  
+@Override  
+protected void onStop() {  
+    super.onStop();  
+    mapView.onStop();  
+}  
+  
+@Override  
+protected void onDestroy() {  
+    super.onDestroy();  
+    mapView.onDestroy();
+}  
+  
+@Override  
+protected void onPause() {  
+    super.onPause();  
+    mapView.onPause();  
+}  
+  
+@Override  
+protected void onResume() {  
+    super.onResume();  
+    mapView.onResume();  
+}  
+  
+@Override  
+public void onLowMemory() {  
+    super.onLowMemory();  
+    mapView.onLowMemory();  
+}  
+  
+@Override  
+protected void onSaveInstanceState(Bundle outState) {  
+    super.onSaveInstanceState(outState);  
+    mapView.onSaveInstanceState(outState);  
+}
 ```
 ## Map Interactions
 
@@ -133,46 +178,49 @@ The camera's default bearing is 0 degrees (i.e. "true north") causing the map co
 
 ### Zoom
 
-Zoom controls the scale of the map and consumes any value between 0 and 22. At zoom level 0, the viewport shows continents and other world features. A middle value of 11 will show city level details, and at a higher zoom level, the map will begin to show buildings and points of interest. The camera can zoom in the following ways:
+Zoom controls scale of the map and consumes any value between 0 and 22. At zoom level 0, viewport shows continents and other world features. A middle value of 11 will show city level details.At a higher zoom level, map will begin to show buildings and points of interest. Camera can zoom in following ways:
 
 -   Pinch motion two fingers to zoom in and out.
 -   Quickly tap twice on the map with a single finger to zoom in.
 -   Quickly tap twice on the map with a single finger and hold your finger down on the screen after the second tap.
 -   Then slide the finger up to zoom out and down to zoom out.
+
+ Sdk provides a OnMapReadyCallback, implements this callback and override it's onMapReady() and set the Camera position inside this method 
 ```java
 CameraPosition position = new CameraPosition.Builder()
       .target(new LatLng(22.8978, 77.3245)) // Sets the new camera position
       .zoom(14) // Sets the zoom to level 14
       .tilt(45) // Set the camera tilt to 45 degrees
       .build();
+mapmyIndiaMap.setCameraPosition(position)
 ```
-##### We can pass this camera positions to following functions
+##### Sdk allows various method to Move, ease,animate Camera to a particular location  :
 ```java
-moveCamera() 
-easeCamera() 
-animateCamera()
+mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.8978,77.3245),14)
+mapmyIndiaMap.easeCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.8978,77.3245),14)
+mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.8978,77.3245),14)
 ```
 
 ## Map Events
 
 ##### **The SDK allows you to listen to certain events on the map. It sets a callback that is invoked when camera movement has started.**
 ```java
-mapboxMap.setOnCameraMoveStartedListener(new MapboxMap.OnCameraMoveStartedListener() {  
-  private final String[] REASONS = {  
-    "REASON_API_GESTURE",  
-  "REASON_DEVELOPER_ANIMATION",  
-  "REASON_API_ANIMATION"};  
+mapmyIndiaMap.setOnCameraMoveStartedListener(new MapboxMap.OnCameraMoveStartedListener() {  
+    private final String[] REASONS = {  
+            "REASON_API_GESTURE",  
+            "REASON_DEVELOPER_ANIMATION",  
+            "REASON_API_ANIMATION"};  
+  
   @Override  
   public void onCameraMoveStarted(int reason) {  
-    String string = String.format(Locale.US,   
- "OnCameraMoveStarted: %s", REASONS[reason - 1]);  
-  Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show();  
+        String string = String.format(Locale.US, "OnCameraMoveStarted: %s", REASONS[reason - 1]);  
+        Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show();  
   }  
 });
 ```
 ##### It sets a callback that is invoked when camera movement was cancelled.
 ```java
-mapboxMap.setOnCameraMoveCancelListener(new MapboxMap.OnCameraMoveCanceledListener() {  
+mapmyIndiaMap.setOnCameraMoveCancelListener(new MapboxMap.OnCameraMoveCanceledListener() {  
   @Override  
   public void onCameraMoveCanceled() {  
     Toast.makeText(MainActivity.this, "onCameraMoveCanceled", Toast.LENGTH_LONG).show();  
@@ -181,7 +229,7 @@ mapboxMap.setOnCameraMoveCancelListener(new MapboxMap.OnCameraMoveCanceledListen
 ```
 ##### It sets a callback that is invoked when camera movement has ended.
 ```java
- mapboxMap.setOnCameraIdleListener(new MapboxMap.OnCameraIdleListener() {  
+ mapmyIndiaMap.setOnCameraIdleListener(new MapboxMap.OnCameraIdleListener() {  
   @Override  
   public void onCameraIdle() {  
     Toast.makeText(MainActivity.this, "onCameraIdle", Toast.LENGTH_LONG).show();  
@@ -194,7 +242,7 @@ If you want to respond to a user tapping on a point on the map, you can use a Ma
 
 It sets a callback that's invoked when the user clicks on the map view.
 ```java
-mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {  
+mapmyIndiaMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {  
   @Override  
   public void onMapClick(@NonNull LatLng point) {  
     String string = String.format(Locale.US, "User clicked at: %s", point.toString())  
@@ -204,11 +252,11 @@ mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
 ```
 ###### Sets a callback that's invoked when the user long clicks on the map view.
 ```java
-mapboxMap.setOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {  
+mapmyIndiaMap.setOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {  
   @Override  
   public void onMapLongClick(@NonNull LatLng point) {  
     String string = String.format(Locale.US, "User long clicked at: %s", point.toString());  
-  Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show();  
+    Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show();  
   }  
 });
 ```
@@ -222,32 +270,32 @@ mapboxMap.setOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {
 MarkerOptions markerOptions = new MarkerOptions().position(point).icon(IconFactory.getInstance(SimpleMapActivity.this).fromResource(R.drawable.ic_android));  
 markerOptions.setTitle("Marker");  
 markerOptions.setSnippet("This is a Marker");  
-Marker marker = mapboxMap.addMarker(markerOptions);
+Marker marker = mapmyIndiaMap.addMarker(markerOptions);
 ```
 ### Remove A Marker
 ```java
-mapboxMap.removeMarker()
+mapmyIndiaMap.removeMarker()
 ```
 ### Customize A Marker
 ```java
 MarkerOptions markerOptions = new MarkerOptions().position(point).icon(IconFactory.getInstance(context).fromResource(R.drawable.ic_android));  
-Marker marker = mapboxMap.addMarker(markerOptions);  
+Marker marker = mapmyIndiaMap.addMarker(markerOptions);  
 marker.setTitle("title");  
-mapboxMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {  
+mapmyIndiaMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {  
   @Nullable  
- @Override  public View getInfoWindow(@NonNull Marker marker) {  
-    View view = getLayoutInflater()  
-      .inflate(R.layout.layout, null);  
-  TextView text = view.findViewById(R.id.text);  
-  text.setText(marker.getTitle());  
- return view;  
+  @Override
+  public View getInfoWindow(@NonNull Marker marker) {  
+     View view = getLayoutInflater().inflate(R.layout.layout, null);  
+     TextView text = view.findViewById(R.id.text);  
+     text.setText(marker.getTitle());  
+     return view;  
   }  
 });
 ```
 ### Add A Polyline
 ##### Draw polyline on the map
 ```java
-mapboxMap.addPolyline(new PolylineOptions()  
+mapmyIndiaMap.addPolyline(new PolylineOptions()  
   .addAll(points)//list of LatLng   
   .color(Color.parseColor("#3bb2d0"))  
   .width(2));
@@ -256,20 +304,21 @@ mapboxMap.addPolyline(new PolylineOptions()
 
 ##### Draw a polygon on the map
 ```java
-mapboxMap.addPolygon(new PolygonOptions()  
+mapmyIndiaMap.addPolygon(new PolygonOptions()  
     .addAll(polygon)//list of LatLng.  
     .fillColor(Color.parseColor("#3bb2d0")));
 ```
 ### Show User Location
 
-##### Show the current user location
+##### Show the current user location 
+Implement LocationEngineListener and override it's method 
 ```java
 LocationComponentOptions options = LocationComponentOptions.builder(context)  
   .trackingGesturesManagement(true)  
   .accuracyColor(ContextCompat.getColor(this, R.color.colorAccent))  
   .build();  
 // Get an instance of the component LocationComponent  
-locationComponent = mapboxMap.getLocationComponent();  
+locationComponent = mapmyIndiaMap.getLocationComponent();  
 // Activate with options  
 locationComponent.activateLocationComponent(context, options);  
 // Enable to make component visible  
@@ -288,40 +337,40 @@ public void onConnected() {
   
 @Override  
 public void onLocationChanged(Location location) {  
-  mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(  
-    new LatLng(location.getLatitude(), location.getLongitude()), 16));  
+  mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));  
   locationEngine.removeLocationEngineListener(this);  
 }  
   
 @Override  
 protected void onResume() {  
   super.onResume();  
- if (locationEngine != null) {  
+  if (locationEngine != null) {  
     locationEngine.removeLocationEngineListener(this);  
-  locationEngine.addLocationEngineListener(this);  
+    locationEngine.addLocationEngineListener(this);  
   }  
 }  
   
 @Override  
 protected void onPause() {  
   super.onPause();  
- if (locationEngine != null)  
+  if (locationEngine != null)  
     locationEngine.removeLocationEngineListener(this);  
-}  
+  } 
+} 
   
 @Override  
 protected void onStop() {  
   super.onStop();  
- if (locationEngine != null) {  
+  if (locationEngine != null) {  
     locationEngine.removeLocationEngineListener(this);  
-  locationEngine.removeLocationUpdates();  
+    locationEngine.removeLocationUpdates();  
   }  
 }  
   
 @Override  
 protected void onDestroy() {  
   super.onDestroy();  
- if (locationEngine != null) {  
+  if (locationEngine != null) {  
     locationEngine.deactivate();  
   }  
 }
