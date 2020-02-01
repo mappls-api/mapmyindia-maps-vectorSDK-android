@@ -31,7 +31,7 @@ import retrofit2.Response;
 
 public class ReverseGeocodeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapboxMap mapboxMap;
+    private MapboxMap mapmyIndiaMap;
     private MapView mapView;
     private TransparentProgressDialog transparentProgressDialog;
 
@@ -46,19 +46,17 @@ public class ReverseGeocodeActivity extends AppCompatActivity implements OnMapRe
     }
 
     @Override
-    public void onMapReady(final MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(final MapboxMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
-        mapboxMap.setCameraPosition(setCameraAndTilt());
-        mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
+        mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
+        mapmyIndiaMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
-                mapboxMap.clear();
+                mapmyIndiaMap.clear();
                 if (CheckInternet.isNetworkAvailable(ReverseGeocodeActivity.this)) {
                     reverseGeocode(latLng.getLatitude(), latLng.getLongitude());
                     addMarker(latLng.getLatitude(), latLng.getLongitude());
@@ -86,7 +84,7 @@ public class ReverseGeocodeActivity extends AppCompatActivity implements OnMapRe
 
     private void reverseGeocode(Double latitude, Double longitude) {
         progressDialogShow();
-        new MapmyIndiaReverseGeoCode.Builder()
+        MapmyIndiaReverseGeoCode.builder()
                 .setLocation(latitude, longitude)
                 .build().enqueueCall(new Callback<PlaceResponse>() {
             @Override
@@ -117,7 +115,7 @@ public class ReverseGeocodeActivity extends AppCompatActivity implements OnMapRe
     }
 
     private void addMarker(double latitude, double longitude) {
-        mapboxMap.addMarker(new MarkerOptions().position(new LatLng(
+        mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(
                 latitude, longitude)));
     }
 

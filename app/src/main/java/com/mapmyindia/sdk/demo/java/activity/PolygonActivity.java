@@ -38,15 +38,12 @@ public class PolygonActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
 
-        mapboxMap.setCameraPosition(setCameraAndTilt());
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+      mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+      mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
         listOfLatlang.add(new LatLng(28.703900, 77.101318));
@@ -54,12 +51,12 @@ public class PolygonActivity extends AppCompatActivity implements OnMapReadyCall
         listOfLatlang.add(new LatLng(28.703905, 77.102761));
         listOfLatlang.add(new LatLng(28.704248, 77.102370));
 
-        mapboxMap.addPolygon(new PolygonOptions().addAll(listOfLatlang).fillColor(Color.parseColor("#753bb2d0")));
+      mapmyIndiaMap.addPolygon(new PolygonOptions().addAll(listOfLatlang).fillColor(Color.parseColor("#753bb2d0")));
 
 
         /* this is done for move camera focus to particular position */
         LatLngBounds latLngBounds = new LatLngBounds.Builder().includes(listOfLatlang).build();
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70));
+      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70));
 
 
     }

@@ -69,7 +69,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
     private static final String FILTER_TEXT = "filter_text";
     private static final String PROPERTY_ADDRESS = "address";
 
-    private MapboxMap mapboxMap;
+  private MapboxMap mapmyIndiaMap;
     private Car car;
     private GeoJsonSource carSource;
     private LatLng nextPoint;
@@ -109,12 +109,12 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
         isClearAllCallBacks = false;
     }
 
-    public AnimatedCarPlugin(Context context, MapView mapView, MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
+  public AnimatedCarPlugin(Context context, MapView mapView, MapboxMap mapmyIndiaMap) {
+    this.mapmyIndiaMap = mapmyIndiaMap;
         this.context = context;
         updateState();
         mapView.addOnMapChangedListener(this);
-        this.mapboxMap.addOnMapClickListener(this::handleClickIcon);
+    this.mapmyIndiaMap.addOnMapClickListener(this::handleClickIcon);
     }
 
     /**
@@ -207,12 +207,12 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
         featureCollection = FeatureCollection.fromFeatures(new Feature[]{feature});
 
         car = new Car(feature, nextPoint);
-        mapboxMap.addImage(CAR,
+      mapmyIndiaMap.addImage(CAR,
                 ((BitmapDrawable) context.getResources().getDrawable(R.drawable.placeholder)).getBitmap());
 
 
         carSource = new GeoJsonSource(CAR_SOURCE, featureCollection);
-        mapboxMap.addSource(carSource);
+      mapmyIndiaMap.addSource(carSource);
 
         new GenerateViewIconTask(new WeakReference<>(this).get()).execute(featureCollection);
     }
@@ -313,7 +313,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
      * @param screenPoint the point on screen clicked
      */
     private void handleClickIcon(LatLng screenPoint) {
-        List<Feature> features = mapboxMap.queryRenderedFeatures(this.mapboxMap.getProjection().toScreenLocation(screenPoint), CAR_LAYER, SOURCE_LAYER_INFO_WINDOW);
+      List<Feature> features = mapmyIndiaMap.queryRenderedFeatures(this.mapmyIndiaMap.getProjection().toScreenLocation(screenPoint), CAR_LAYER, SOURCE_LAYER_INFO_WINDOW);
         if (!features.isEmpty()) {
             String name = features.get(0).getStringProperty(PROPERTY_NAME);
             List<Feature> featureList = featureCollection.features();
@@ -335,9 +335,9 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
      * @param imageMap Hashmap of images
      */
     private void setImageGenResults(HashMap<String, Bitmap> imageMap) {
-        if (mapboxMap != null) {
+      if (mapmyIndiaMap != null) {
             // calling addImages is faster as separate addImage calls for each bitmap.
-            mapboxMap.addImages(imageMap);
+        mapmyIndiaMap.addImages(imageMap);
         }
     }
 
@@ -354,7 +354,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
      * Update the state of the marker.
      */
     private void updateState() {
-        GeoJsonSource source = (GeoJsonSource) mapboxMap.getSource(CAR_SOURCE);
+      GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(CAR_SOURCE);
         if (source == null) {
             initialise();
             return;
@@ -375,7 +375,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
     private void setVisibility(boolean visible) {
         if (layerIds == null)
             return;
-        List<Layer> layers = mapboxMap.getLayers();
+      List<Layer> layers = mapmyIndiaMap.getLayers();
         if (layers.size() > 0) {
             for (Layer layer : layers) {
                 if (layerIds.contains(layer.getId())) {
@@ -405,7 +405,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
                 iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
 
         );
-        mapboxMap.addLayer(symbolLayer);
+      mapmyIndiaMap.addLayer(symbolLayer);
         layerIds.add(symbolLayer.getId());
 
         //Symbol layer for Info Window
@@ -426,7 +426,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
                 /* setData a filter to show only when selected feature property is true */
                 .withFilter(eq((get(PROPERTY_SELECTED)), literal(true)));
 
-        mapboxMap.addLayer(symbolLayerInfoWindow);
+      mapmyIndiaMap.addLayer(symbolLayerInfoWindow);
         layerIds.add(symbolLayerInfoWindow.getId());
     }
 

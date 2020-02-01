@@ -29,13 +29,13 @@ class MapClickActivity : AppCompatActivity(), OnMapReadyCallback {
                 28.551087, 77.257373)).zoom(14.0).tilt(0.0).build()
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.cameraPosition = setCameraAndTilt()
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+        mapmyIndiaMap.cameraPosition = setCameraAndTilt()
 
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
-        mapboxMap.setPadding(20, 20, 20, 20)
-        mapboxMap.addOnMapClickListener { latLng -> Toast.makeText(this@MapClickActivity, latLng.toString(), Toast.LENGTH_LONG).show() }
+
+
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
+        mapmyIndiaMap.addOnMapClickListener { latLng -> Toast.makeText(this@MapClickActivity, latLng.toString(), Toast.LENGTH_LONG).show() }
     }
 
     override fun onMapError(i: Int, s: String) {

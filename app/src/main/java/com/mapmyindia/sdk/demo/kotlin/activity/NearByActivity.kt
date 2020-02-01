@@ -29,7 +29,7 @@ import java.util.*
  * Created by CEINFO on 26-02-2019.
  */
 class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
-    private var mapboxMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapboxMap? = null
     private var mapView: MapView? = null
     private var transparentProgressDialog: TransparentProgressDialog? = null
     private var recyclerView: RecyclerView? = null
@@ -66,20 +66,20 @@ class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
         transparentProgressDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        this.mapboxMap = mapboxMap
-
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap
 
 
 
-        mapboxMap.setPadding(20, 20, 20, 20)
 
 
-        mapboxMap.cameraPosition = setCameraAndTilt()
-        mapboxMap.addOnMapClickListener { latLng ->
-            mapboxMap.clear()
+
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
+
+
+        mapmyIndiaMap.cameraPosition = setCameraAndTilt()
+        mapmyIndiaMap.addOnMapClickListener { latLng ->
+            mapmyIndiaMap.clear()
             if (CheckInternet.isNetworkAvailable(this@NearByActivity)) {
                 getNearBy(latLng.latitude, latLng.longitude)
             } else {
@@ -106,11 +106,11 @@ class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun getNearBy(latitude: Double, longitude: Double) {
-        mapboxMap!!.clear()
+        mapmyIndiaMap!!.clear()
         progressDialogShow()
-        MapmyIndiaNearby.Builder<MapmyIndiaNearby.Builder<*>>()
+        MapmyIndiaNearby.builder()
                 .setLocation(latitude, longitude)
-                .setKeyword("Tea")
+                .keyword("Tea")
                 .build()
                 .enqueueCall(object : Callback<NearbyAtlasResponse> {
                     override fun onResponse(call: Call<NearbyAtlasResponse>, response: Response<NearbyAtlasResponse>) {
@@ -140,7 +140,7 @@ class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun addMarker(nearByList: ArrayList<NearbyAtlasResult>) {
         for (marker in nearByList) {
-            mapboxMap!!.addMarker(MarkerOptions().position(LatLng(marker.latitude, marker.longitude)).title(marker.placeName))
+            mapmyIndiaMap!!.addMarker(MarkerOptions().position(LatLng(marker.latitude, marker.longitude)).title(marker.placeName))
         }
 
         recyclerView!!.adapter = NearByAdapter(nearByList)

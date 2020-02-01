@@ -34,7 +34,7 @@ import retrofit2.Response;
 
 public class NearByActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapboxMap mapboxMap;
+    private MapboxMap mapmyIndiaMap;
     private MapView mapView;
     private TransparentProgressDialog transparentProgressDialog;
     private RecyclerView recyclerView;
@@ -73,19 +73,16 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onMapReady(final MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(final MapboxMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
-        mapboxMap.setCameraPosition(setCameraAndTilt());
-        mapboxMap.addOnMapClickListener(latLng -> {
-            mapboxMap.clear();
+        mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
+        mapmyIndiaMap.addOnMapClickListener(latLng -> {
+            mapmyIndiaMap.clear();
             if (CheckInternet.isNetworkAvailable(NearByActivity.this)) {
                 getNearBy(latLng.getLatitude(), latLng.getLongitude());
             } else {
@@ -114,11 +111,11 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void getNearBy(double latitude, double longitude) {
-        mapboxMap.clear();
+        mapmyIndiaMap.clear();
         progressDialogShow();
-        new MapmyIndiaNearby.Builder()
+        MapmyIndiaNearby.builder()
                 .setLocation(latitude, longitude)
-                .setKeyword("Tea")
+          .keyword("Tea")
                 .build()
                 .enqueueCall(new Callback<NearbyAtlasResponse>() {
                     @Override
@@ -150,7 +147,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private void addMarker(ArrayList<NearbyAtlasResult> nearByList) {
         for (NearbyAtlasResult marker : nearByList) {
-            mapboxMap.addMarker(new MarkerOptions().position(new LatLng(marker.getLatitude(), marker.getLongitude())).title(marker.getPlaceName()));
+            mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(marker.getLatitude(), marker.getLongitude())).title(marker.getPlaceName()));
         }
 
         recyclerView.setAdapter(new NearByAdapter(nearByList));

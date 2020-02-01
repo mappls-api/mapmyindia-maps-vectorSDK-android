@@ -46,7 +46,7 @@ import retrofit2.Response;
 
 public class DirectionActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapboxMap mapboxMap;
+  private MapboxMap mapmyIndiaMap;
     private MapView mapView;
     private TransparentProgressDialog transparentProgressDialog;
     private String profile = DirectionsCriteria.PROFILE_DRIVING;
@@ -72,7 +72,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         profileTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (mapboxMap == null) {
+              if (mapmyIndiaMap == null) {
                     if (profileTabLayout.getTabAt(0) != null) {
                         Objects.requireNonNull(profileTabLayout.getTabAt(0)).select();
                         return;
@@ -141,17 +141,14 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
+      this.mapmyIndiaMap = mapmyIndiaMap;
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+      mapmyIndiaMap.setPadding(20, 20, 20, 20);
 //        profileTabLayout.setVisibility(View.VISIBLE);
 
-        mapboxMap.setCameraPosition(setCameraAndTilt());
+      mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
         if (CheckInternet.isNetworkAvailable(DirectionActivity.this)) {
             getDirections();
         } else {
@@ -205,7 +202,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                         List<DirectionsRoute> results = directionsResponse.routes();
 
                         if (results.size() > 0) {
-                            mapboxMap.clear();
+                          mapmyIndiaMap.clear();
                             DirectionsRoute directionsRoute = results.get(0);
                             if (directionsRoute != null && directionsRoute.geometry() != null) {
                                 drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6));
@@ -287,15 +284,15 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         }
 
         if(directionPolylinePlugin == null) {
-            directionPolylinePlugin = new DirectionPolylinePlugin(mapboxMap, mapView, profile);
+          directionPolylinePlugin = new DirectionPolylinePlugin(mapmyIndiaMap, mapView, profile);
             directionPolylinePlugin.createPolyline(listOfLatLng);
         } else {
             directionPolylinePlugin.updatePolyline(profile, listOfLatLng);
 
         }
-//        mapboxMap.addPolyline(new PolylineOptions().addAll(listOfLatLng).color(Color.parseColor("#3bb2d0")).width(4));
+//        mapmyIndiaMap.addPolyline(new PolylineOptions().addAll(listOfLatLng).color(Color.parseColor("#3bb2d0")).width(4));
         LatLngBounds latLngBounds = new LatLngBounds.Builder().includes(listOfLatLng).build();
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30));
+      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30));
     }
 
     @Override

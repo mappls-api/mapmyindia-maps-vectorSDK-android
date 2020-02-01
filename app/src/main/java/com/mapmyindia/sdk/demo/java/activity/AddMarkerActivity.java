@@ -30,22 +30,19 @@ public class AddMarkerActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+      mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
-        mapboxMap.addMarker(new MarkerOptions().position(new LatLng(
+      mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(
                 25.321684, 82.987289)).title("XYZ"));
 
         /* this is done for animating/moving camera to particular position */
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
                 25.321684, 82.987289)).zoom(10).tilt(0).build();
-        mapboxMap.setCameraPosition(cameraPosition);
+      mapmyIndiaMap.setCameraPosition(cameraPosition);
     }
 
     @Override

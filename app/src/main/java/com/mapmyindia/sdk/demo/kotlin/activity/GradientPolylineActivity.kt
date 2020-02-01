@@ -34,15 +34,15 @@ class GradientPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
 
-        mapboxMap.setPadding(20, 20, 20, 20)
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
         val latLngBounds = LatLngBounds.Builder()
                 .includes(listOfLatLng)
                 .build()
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10))
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10))
 
-        val animatedPolylinePlugin = GradientPolylinePlugin(mapboxMap, map_view!!)
+        val animatedPolylinePlugin = GradientPolylinePlugin(mapmyIndiaMap, map_view!!)
         animatedPolylinePlugin.createPolyline(listOfLatLng)
     }
 

@@ -19,9 +19,9 @@ import java.util.*
 /**
  * Created by Saksham on 20/9/19.
  */
-class DirectionPolylinePlugin(mapboxMap: MapboxMap, mapView: MapView, private var directionsCriteria: String?) : MapView.OnMapChangedListener {
+class DirectionPolylinePlugin(mapmyIndiaMap: MapboxMap, mapView: MapView, private var directionsCriteria: String?) : MapView.OnMapChangedListener {
 
-    private var mapboxMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapboxMap? = null
 
     private var featureCollection: FeatureCollection? = null
     private var latLngs: List<LatLng>? = null
@@ -33,8 +33,8 @@ class DirectionPolylinePlugin(mapboxMap: MapboxMap, mapView: MapView, private va
     private var lineLayer: LineLayer? = null
 
     init {
-        this.mapboxMap = mapboxMap
-        this.mapboxMap = mapboxMap
+        this.mapmyIndiaMap = mapmyIndiaMap
+        this.mapmyIndiaMap = mapmyIndiaMap
 
         updateSource()
         mapView.addOnMapChangedListener(this)
@@ -95,14 +95,14 @@ class DirectionPolylinePlugin(mapboxMap: MapboxMap, mapView: MapView, private va
     private fun initSources(featureCollection: FeatureCollection) {
         polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
                 GeoJsonOptions().withLineMetrics(true).withBuffer(2))
-        mapboxMap!!.addSource(polylineSource!!)
+        mapmyIndiaMap!!.addSource(polylineSource!!)
     }
 
     /**
      * Update Source and GeoJson properties
      */
     private fun updateSource() {
-        val source = mapboxMap!!.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
+        val source = mapmyIndiaMap!!.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
         if (source == null) {
             create()
             return
@@ -120,7 +120,7 @@ class DirectionPolylinePlugin(mapboxMap: MapboxMap, mapView: MapView, private va
                 lineCap(Property.LINE_CAP_ROUND),
                 lineJoin(Property.LINE_JOIN_ROUND),
                 lineWidth(5f))
-        mapboxMap!!.addLayer(lineLayer!!)
+        mapmyIndiaMap!!.addLayer(lineLayer!!)
 
 
         if (directionsCriteria!!.equals(DirectionsCriteria.PROFILE_WALKING, ignoreCase = true)) {

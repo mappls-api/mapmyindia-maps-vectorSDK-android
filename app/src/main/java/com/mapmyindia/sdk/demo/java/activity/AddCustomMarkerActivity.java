@@ -32,24 +32,21 @@ public class AddCustomMarkerActivity extends AppCompatActivity implements OnMapR
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+      mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
         IconFactory iconFactory = IconFactory.getInstance(this);
         Icon icon = iconFactory.fromResource(R.drawable.placeholder);
-        mapboxMap.addMarker(new MarkerOptions().position(new LatLng(
+      mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(
           25.321684, 82.987289)).icon(icon));
 
         /* this is done for animating/moving camera to particular position */
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
           25.321684, 82.987289)).zoom(8).tilt(0).build();
-        mapboxMap.setCameraPosition(cameraPosition);
+      mapmyIndiaMap.setCameraPosition(cameraPosition);
     }
 
     @Override

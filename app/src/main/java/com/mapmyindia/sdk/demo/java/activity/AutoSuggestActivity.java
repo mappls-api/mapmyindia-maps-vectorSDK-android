@@ -42,7 +42,7 @@ import retrofit2.Response;
 
 public class AutoSuggestActivity extends AppCompatActivity implements OnMapReadyCallback, TextWatcher {
 
-    private MapboxMap mapboxMap;
+    private MapboxMap mapmyIndiaMap;
     private EditText autoSuggestText;
     private RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -79,17 +79,14 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
-        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+        mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                 22.553147478403194,
                 77.23388671875), 4));
     }
@@ -108,7 +105,7 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
 
     private void getGeoCode(String geocodeText) {
         show();
-        new MapmyIndiaGeoCoding.Builder()
+        MapmyIndiaGeoCoding.builder()
                 .setAddress(geocodeText)
                 .build().enqueueCall(new Callback<GeoCodeResponse>() {
             @Override
@@ -138,15 +135,15 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void addMarker(double latitude, double longitude) {
-        mapboxMap.clear();
-        mapboxMap.addMarker(new MarkerOptions().position(new LatLng(
+        mapmyIndiaMap.clear();
+        mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(
                 latitude, longitude)));
     }
 
 
     private void callAutoSuggestApi(String searchString) {
-        new MapmyIndiaAutoSuggest.Builder()
-                .setQuery(searchString)
+        MapmyIndiaAutoSuggest.builder()
+          .query(searchString)
                 .build()
                 .enqueueCall(new Callback<AutoSuggestAtlasResponse>() {
                     @Override

@@ -22,7 +22,7 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils
 /**
  * Created by Saksham on 3/9/19.
  */
-class MarkerPlugin(private val mapboxMap: MapboxMap, val mapView: MapView) : MapView.OnMapChangedListener {
+class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) : MapView.OnMapChangedListener {
 
     private var feature : Feature? = null
     private var position : LatLng? = null
@@ -58,7 +58,7 @@ class MarkerPlugin(private val mapboxMap: MapboxMap, val mapView: MapView) : Map
                         isMarkerPosition = isMarkerPosition(PointF(motionEvent.x, motionEvent.y))
                     } else if(motionEvent!!.action == MotionEvent.ACTION_MOVE) {
                         if(isMarkerPosition) {
-                            updateMarkerPosition(mapboxMap.projection.fromScreenLocation(PointF(motionEvent.x, motionEvent.y)))
+                            updateMarkerPosition(mapmyIndiaMap.projection.fromScreenLocation(PointF(motionEvent.x, motionEvent.y)))
                         }
                     }
                 }
@@ -81,7 +81,7 @@ class MarkerPlugin(private val mapboxMap: MapboxMap, val mapView: MapView) : Map
      * @return check is pointF is the marker
      */
     private fun isMarkerPosition(pointF: PointF) : Boolean{
-        val features: List<Feature> = mapboxMap.queryRenderedFeatures(pointF, LAYER_ID)
+        val features: List<Feature> = mapmyIndiaMap.queryRenderedFeatures(pointF, LAYER_ID)
         return features.isNotEmpty()
     }
 
@@ -89,7 +89,7 @@ class MarkerPlugin(private val mapboxMap: MapboxMap, val mapView: MapView) : Map
      * Update the state of the marker
      */
     private fun updateState() {
-        val source : GeoJsonSource? = mapboxMap.getSource(SOURCE_ID) as GeoJsonSource?
+        val source: GeoJsonSource? = mapmyIndiaMap.getSource(SOURCE_ID) as GeoJsonSource?
         if(source == null) {
             initialise()
             return
@@ -136,9 +136,9 @@ class MarkerPlugin(private val mapboxMap: MapboxMap, val mapView: MapView) : Map
         isRemoveCallback = false
         this.position = position
         feature = Feature.fromGeometry(Point.fromLngLat(position.longitude, position.latitude))
-        mapboxMap.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(icon))
+        mapmyIndiaMap.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(icon))
         markerSource = GeoJsonSource(SOURCE_ID, feature)
-        mapboxMap.addSource(markerSource!!)
+        mapmyIndiaMap.addSource(markerSource!!)
     }
 
     /**
@@ -155,8 +155,8 @@ class MarkerPlugin(private val mapboxMap: MapboxMap, val mapView: MapView) : Map
         valueAnimatorTransition.addUpdateListener {
             if(!isRemoveCallback) {
                 val latLng: LatLng = it.animatedValue as LatLng
-                if(!mapboxMap.projection.visibleRegion.latLngBounds.contains(latLng)) {
-                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0))
+                if (!mapmyIndiaMap.projection.visibleRegion.latLngBounds.contains(latLng)) {
+                    mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0))
                 }
                 updateMarkerPosition(latLng)
             }
@@ -204,7 +204,7 @@ class MarkerPlugin(private val mapboxMap: MapboxMap, val mapView: MapView) : Map
                         iconIgnorePlacement(true)
                 )
 
-        mapboxMap.addLayer(symbolLayer)
+        mapmyIndiaMap.addLayer(symbolLayer)
     }
 
     override fun onMapChanged(change: Int) {

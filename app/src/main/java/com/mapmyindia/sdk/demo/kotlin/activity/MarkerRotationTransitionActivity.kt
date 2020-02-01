@@ -39,15 +39,15 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onMapReady(mapboxMap: MapboxMap?) {
-        this.mMapboxMap = mapboxMap
+    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+        this.mMapboxMap = mapmyIndiaMap
 
         val latLngBounds: LatLngBounds = LatLngBounds.Builder()
                 .include(latLngStart)
                 .include(latLngEnd)
                 .build()
 
-        mapboxMap!!.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
+        mapmyIndiaMap!!.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
 
         initMarker()
     }

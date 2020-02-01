@@ -33,7 +33,7 @@ import retrofit2.Response
  */
 class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher {
 
-    lateinit var mapboxMap: MapboxMap
+    lateinit var mapmyIndiaMap: MapboxMap
     private lateinit var autoSuggestText: EditText
     lateinit var recyclerView: RecyclerView
     lateinit var handler: Handler
@@ -52,13 +52,13 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
         initReference()
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap?) {
-        this.mapboxMap = mapboxMap!!
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
+    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+        this.mapmyIndiaMap = mapmyIndiaMap!!
 
-        mapboxMap.setPadding(20, 20, 20, 20)
-        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
+
+
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
+        mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
                 22.553147478403194,
                 77.23388671875), 4.0))
     }
@@ -117,7 +117,7 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
 
     private fun getGeoCode(geocodeText: String) {
         show()
-        MapmyIndiaGeoCoding.Builder<MapmyIndiaGeoCoding.Builder<*>>()
+        MapmyIndiaGeoCoding.builder()
                 .setAddress(geocodeText)
                 .build().enqueueCall(object : Callback<GeoCodeResponse> {
                     override fun onResponse(call: Call<GeoCodeResponse>, response: Response<GeoCodeResponse>) {
@@ -144,17 +144,17 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
     }
 
     private fun addMarker(latitude: Double, longitude: Double) {
-        mapboxMap.clear()
-        mapboxMap.addMarker(MarkerOptions().position(LatLng(
+        mapmyIndiaMap.clear()
+        mapmyIndiaMap.addMarker(MarkerOptions().position(LatLng(
                 latitude, longitude)))
     }
 
     @Synchronized
     private fun callAutoSuggestApi(searchString: String) {
 
-        MapmyIndiaAutoSuggest.Builder<MapmyIndiaAutoSuggest.Builder<*>>()
-                .setQuery(searchString)
-                .setTokenizeAddress(true)
+        MapmyIndiaAutoSuggest.builder()
+                .query(searchString)
+                .tokenizeAddress(true)
                 .build()
                 .enqueueCall(object : Callback<AutoSuggestAtlasResponse> {
                     override fun onResponse(call: Call<AutoSuggestAtlasResponse>, response: Response<AutoSuggestAtlasResponse>) {

@@ -30,16 +30,13 @@ public class MapLongClickActivity extends AppCompatActivity implements OnMapRead
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+      mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
-        mapboxMap.setCameraPosition(setCameraAndTilt());
-        mapboxMap.addOnMapLongClickListener(latLng -> Toast.makeText(MapLongClickActivity.this, latLng.toString(), Toast.LENGTH_LONG).show());
+      mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
+      mapmyIndiaMap.addOnMapLongClickListener(latLng -> Toast.makeText(MapLongClickActivity.this, latLng.toString(), Toast.LENGTH_LONG).show());
     }
 
     protected CameraPosition setCameraAndTilt() {

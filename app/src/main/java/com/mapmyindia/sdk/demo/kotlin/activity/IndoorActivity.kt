@@ -31,16 +31,16 @@ class IndoorActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap?) {
-        map = mapboxMap
+    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+        map = mapmyIndiaMap
         //To turn on layer control
-        mapboxMap?.uiSettings?.isLayerControlEnabled = true
-        mapboxMap?.setMinZoomPreference(4.5)
-        mapboxMap?.setMaxZoomPreference(18.5)
+        mapmyIndiaMap?.uiSettings?.isLayerControlEnabled = true
+
+
 
         val iconFactory: IconFactory = IconFactory.getInstance(this)
         val icon: Icon = iconFactory.fromResource(R.drawable.placeholder)
-        mapboxMap?.addMarker(MarkerOptions()
+        mapmyIndiaMap?.addMarker(MarkerOptions()
                 .position(LatLng(28.5425071, 77.1560724))
                 .icon(icon))
 
@@ -50,7 +50,7 @@ class IndoorActivity : AppCompatActivity(), OnMapReadyCallback {
                 .tilt(0.0)
                 .build()
 
-        mapboxMap?.cameraPosition = cameraPosition
+        mapmyIndiaMap?.cameraPosition = cameraPosition
     }
 
     override fun onStart() {

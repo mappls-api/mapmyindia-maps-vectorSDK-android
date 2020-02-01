@@ -47,15 +47,15 @@ public class MarkerRotationTransitionActivity extends AppCompatActivity implemen
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
 
-        this.mMapboxMap = mapboxMap;
+      this.mMapboxMap = mapmyIndiaMap;
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .include(latLngStart)
                 .include(latLngEnd)
                 .build();
 
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
+      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
 
         initMarker();
 

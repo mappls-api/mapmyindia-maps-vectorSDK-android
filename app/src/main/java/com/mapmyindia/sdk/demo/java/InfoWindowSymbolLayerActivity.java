@@ -55,7 +55,7 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
     private static final String PROPERTY_NAME = "name";
     private static final String PROPERTY_CAPITAL = "capital";
     private MapView mapView;
-    private MapboxMap mapboxMap;
+    private MapboxMap mapmyIndiaMap;
     private String geojsonSourceId = "geojsonSourceId";
     private GeoJsonSource source;
     private FeatureCollection featureCollection;
@@ -75,10 +75,10 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
         new LoadGeoJsonDataTask(this).execute();
-        mapboxMap.addOnMapClickListener(this);
+        mapmyIndiaMap.addOnMapClickListener(this);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-        handleClickIcon(mapboxMap.getProjection().toScreenLocation(point));
+        handleClickIcon(mapmyIndiaMap.getProjection().toScreenLocation(point));
     }
 
     /**
@@ -96,7 +96,7 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
      * @param collection the FeatureCollection to set equal to the globally-declared FeatureCollection
      */
     public void setUpData(final FeatureCollection collection) {
-        if (mapboxMap == null) {
+        if (mapmyIndiaMap == null) {
             return;
         }
         featureCollection = collection;
@@ -111,7 +111,7 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
      */
     private void setupSource() {
         source = new GeoJsonSource(geojsonSourceId, featureCollection);
-        mapboxMap.addSource(source);
+        mapmyIndiaMap.addSource(source);
     }
 
     /**
@@ -120,7 +120,7 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
     private void setUpImage() {
         Bitmap icon = BitmapFactory.decodeResource(
                 this.getResources(), R.drawable.ic_map_marker_blue);
-        mapboxMap.addImage(MARKER_IMAGE_ID, icon);
+        mapmyIndiaMap.addImage(MARKER_IMAGE_ID, icon);
     }
 
     /**
@@ -136,7 +136,7 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
      * Setup a layer with maki icons, eg. west coast city.
      */
     private void setUpMarkerLayer() {
-        mapboxMap.addLayer(new SymbolLayer(MARKER_LAYER_ID, geojsonSourceId)
+        mapmyIndiaMap.addLayer(new SymbolLayer(MARKER_LAYER_ID, geojsonSourceId)
                 .withProperties(
                         iconImage(MARKER_IMAGE_ID),
                         iconAllowOverlap(true)
@@ -150,7 +150,7 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
      * </p>
      */
     private void setUpInfoWindowLayer() {
-        mapboxMap.addLayer(new SymbolLayer(CALLOUT_LAYER_ID, geojsonSourceId)
+        mapmyIndiaMap.addLayer(new SymbolLayer(CALLOUT_LAYER_ID, geojsonSourceId)
                 .withProperties(
                         /* show image with id title based on the value of the name feature property */
                         iconImage("{name}"),
@@ -177,7 +177,7 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
      * @param screenPoint the point on screen clicked
      */
     private void handleClickIcon(PointF screenPoint) {
-        List<Feature> features = mapboxMap.queryRenderedFeatures(screenPoint, MARKER_LAYER_ID);
+        List<Feature> features = mapmyIndiaMap.queryRenderedFeatures(screenPoint, MARKER_LAYER_ID);
         if (!features.isEmpty()) {
             String name = features.get(0).getStringProperty(PROPERTY_NAME);
             List<Feature> featureList = featureCollection.features();
@@ -231,9 +231,9 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
      * Invoked when the bitmaps have been generated from a view.
      */
     public void setImageGenResults(HashMap<String, View> viewMap, HashMap<String, Bitmap> imageMap) {
-        if (mapboxMap != null) {
+        if (mapmyIndiaMap != null) {
             // calling addImages is faster as separate addImage calls for each bitmap.
-            mapboxMap.addImages(imageMap);
+            mapmyIndiaMap.addImages(imageMap);
         }
         // need to store reference to views to be able to use them as hitboxes for click events.
         this.viewMap = viewMap;
@@ -278,8 +278,8 @@ public class InfoWindowSymbolLayerActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mapboxMap != null) {
-            mapboxMap.removeOnMapClickListener(this);
+        if (mapmyIndiaMap != null) {
+            mapmyIndiaMap.removeOnMapClickListener(this);
         }
         mapView.onDestroy();
     }

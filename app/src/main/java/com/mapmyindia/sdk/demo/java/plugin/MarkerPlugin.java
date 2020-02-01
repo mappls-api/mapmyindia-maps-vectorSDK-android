@@ -30,7 +30,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
  */
 public class MarkerPlugin implements MapView.OnMapChangedListener {
 
-    private MapboxMap mapboxMap;
+  private MapboxMap mapmyIndiaMap;
     private Feature feature;
     private static final String SOURCE_ID = "SOURCE_ID";
     private static final String ICON_ID = "ICON_ID";
@@ -46,8 +46,8 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
     private String PROPERTY_ROTATION = "rotation";
 
 
-    public MarkerPlugin(MapboxMap mapboxMap, MapView mapView) {
-        this.mapboxMap = mapboxMap;
+  public MarkerPlugin(MapboxMap mapmyIndiaMap, MapView mapView) {
+    this.mapmyIndiaMap = mapmyIndiaMap;
         this.mMapView = mapView;
         updateState();
         mapView.addOnMapChangedListener(this);
@@ -66,7 +66,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
                     isMarkerPosition = isMarkerPosition(new PointF(motionEvent.getX(), motionEvent.getY()));
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                     if (isMarkerPosition)
-                        updateMarkerPosition(mapboxMap.getProjection().fromScreenLocation(new PointF(motionEvent.getX(), motionEvent.getY())));
+                      updateMarkerPosition(mapmyIndiaMap.getProjection().fromScreenLocation(new PointF(motionEvent.getX(), motionEvent.getY())));
                 }
             }
 
@@ -81,7 +81,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
      * @return check is pointF is the marker
      */
     private boolean isMarkerPosition(PointF pointF) {
-        List<Feature> features = mapboxMap.queryRenderedFeatures(pointF, LAYER_ID);
+      List<Feature> features = mapmyIndiaMap.queryRenderedFeatures(pointF, LAYER_ID);
         return !features.isEmpty();
     }
 
@@ -104,15 +104,15 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
         isRemoveCallbacks = false;
         this.position = position;
         feature = Feature.fromGeometry(Point.fromLngLat(position.getLongitude(), position.getLatitude()));
-        mapboxMap.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(drawable));
-        mapboxMap.addSource(markerSource = new GeoJsonSource(SOURCE_ID, feature));
+      mapmyIndiaMap.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(drawable));
+      mapmyIndiaMap.addSource(markerSource = new GeoJsonSource(SOURCE_ID, feature));
     }
 
     /**
      * Update the state of the marker
      */
     private void updateState() {
-        GeoJsonSource source = (GeoJsonSource) mapboxMap.getSource(SOURCE_ID);
+      GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(SOURCE_ID);
         if (source == null) {
             initialise();
             return;
@@ -133,7 +133,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
                 iconAllowOverlap(true),
                 iconIgnorePlacement(false)
         );
-        mapboxMap.addLayer(symbolLayer);
+      mapmyIndiaMap.addLayer(symbolLayer);
     }
 
     /**
@@ -195,8 +195,8 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
         valueAnimator.addUpdateListener(valueAnimator1 -> {
             if(!isRemoveCallbacks) {
                 LatLng latLng = (LatLng) valueAnimator1.getAnimatedValue();
-                if(!mapboxMap.getProjection().getVisibleRegion().latLngBounds.contains(latLng)) {
-                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+              if (!mapmyIndiaMap.getProjection().getVisibleRegion().latLngBounds.contains(latLng)) {
+                mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
                 }
                 updateMarkerPosition(latLng);
             }

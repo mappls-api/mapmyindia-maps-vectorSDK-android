@@ -23,7 +23,7 @@ import retrofit2.Response
  */
 class ReverseGeocodeActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private var mapboxMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapboxMap? = null
     private var mapView: MapView? = null
     private var transparentProgressDialog: TransparentProgressDialog? = null
 
@@ -36,20 +36,15 @@ class ReverseGeocodeActivity : AppCompatActivity(), OnMapReadyCallback {
         transparentProgressDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        this.mapboxMap = mapboxMap
-        mapboxMap.cameraPosition = setCameraAndTilt()
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap
+        mapmyIndiaMap.cameraPosition = setCameraAndTilt()
 
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
-
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
 
 
-        mapboxMap.setPadding(20, 20, 20, 20)
-
-
-        mapboxMap.addOnMapClickListener { latLng ->
-            mapboxMap.clear()
+        mapmyIndiaMap.addOnMapClickListener { latLng ->
+            mapmyIndiaMap.clear()
             if (CheckInternet.isNetworkAvailable(this@ReverseGeocodeActivity)) {
                 reverseGeocode(latLng.latitude, latLng.longitude)
                 addMarker(latLng.latitude, latLng.longitude)
@@ -74,7 +69,7 @@ class ReverseGeocodeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun reverseGeocode(latitude: Double?, longitude: Double?) {
         progressDialogShow()
-        MapmyIndiaReverseGeoCode.Builder<MapmyIndiaReverseGeoCode.Builder<*>>()
+        MapmyIndiaReverseGeoCode.builder()
                 .setLocation(latitude!!, longitude!!)
                 .build().enqueueCall(object : Callback<PlaceResponse> {
                     override fun onResponse(call: Call<PlaceResponse>, response: Response<PlaceResponse>) {
@@ -102,7 +97,7 @@ class ReverseGeocodeActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun addMarker(latitude: Double, longitude: Double) {
-        mapboxMap!!.addMarker(MarkerOptions().position(LatLng(
+        mapmyIndiaMap!!.addMarker(MarkerOptions().position(LatLng(
                 latitude, longitude)))
     }
 

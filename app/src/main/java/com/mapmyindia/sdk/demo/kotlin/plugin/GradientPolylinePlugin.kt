@@ -19,7 +19,7 @@ import java.util.*
 /**
  * Created by Saksham on 20/9/19.
  */
-class GradientPolylinePlugin(private val mapboxMap: MapboxMap, mapView: MapView) : MapView.OnMapChangedListener {
+class GradientPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapView) : MapView.OnMapChangedListener {
 
     private var featureCollection: FeatureCollection? = null
     private var startColor = Color.parseColor("#3dd2d0")
@@ -71,7 +71,7 @@ class GradientPolylinePlugin(private val mapboxMap: MapboxMap, mapView: MapView)
      * Add Line layer to map
      */
     private fun create() {
-        mapboxMap.addLayer(LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+        mapmyIndiaMap.addLayer(LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
                 //                lineColor(Color.RED),
                 lineCap(Property.LINE_CAP_ROUND),
                 lineJoin(Property.LINE_JOIN_BEVEL),
@@ -89,7 +89,7 @@ class GradientPolylinePlugin(private val mapboxMap: MapboxMap, mapView: MapView)
     private fun initSources(featureCollection: FeatureCollection) {
         polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
                 GeoJsonOptions().withLineMetrics(true).withBuffer(2))
-        mapboxMap.addSource(polylineSource!!)
+        mapmyIndiaMap.addSource(polylineSource!!)
     }
 
     override fun onMapChanged(i: Int) {
@@ -103,7 +103,7 @@ class GradientPolylinePlugin(private val mapboxMap: MapboxMap, mapView: MapView)
      * Update the source of the polyline
      */
     private fun updateSource() {
-        val source = mapboxMap.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
+        val source = mapmyIndiaMap.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
         if (source == null) {
             create()
             return

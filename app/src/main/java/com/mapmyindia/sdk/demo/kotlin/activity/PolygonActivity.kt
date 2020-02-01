@@ -29,14 +29,14 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView!!.getMapAsync(this)
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
 
-        mapboxMap.cameraPosition = setCameraAndTilt()
+        mapmyIndiaMap.cameraPosition = setCameraAndTilt()
 
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
 
-        mapboxMap.setPadding(20, 20, 20, 20)
+
+
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
 
 
         listOfLatlang.add(LatLng(28.703900, 77.101318))
@@ -44,12 +44,12 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
         listOfLatlang.add(LatLng(28.703905, 77.102761))
         listOfLatlang.add(LatLng(28.704248, 77.102370))
 
-        mapboxMap.addPolygon(PolygonOptions().addAll(listOfLatlang).fillColor(Color.parseColor("#753bb2d0")))
+        mapmyIndiaMap.addPolygon(PolygonOptions().addAll(listOfLatlang).fillColor(Color.parseColor("#753bb2d0")))
 
 
         /* this is done for move camera focus to particular position */
         val latLngBounds = LatLngBounds.Builder().includes(listOfLatlang).build()
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70))
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70))
 
 
     }

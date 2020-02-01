@@ -42,15 +42,15 @@ public class CarAnimationActivity extends AppCompatActivity implements OnMapRead
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .includes(listOfLatlang)
                 .build();
 
-//        this.mapboxMap = mapboxMap;
-        animatedCarPlugin = new AnimatedCarPlugin(getApplicationContext(), mapView, mapboxMap);
-        mapboxMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4));
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
+//        this.mapmyIndiaMap = mapmyIndiaMap;
+      animatedCarPlugin = new AnimatedCarPlugin(getApplicationContext(), mapView, mapmyIndiaMap);
+      mapmyIndiaMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4));
+      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
         animatedCarPlugin.addMainCar(listOfLatlang.get(index), true);
         animatedCarPlugin.animateCar();
 
@@ -65,7 +65,7 @@ public class CarAnimationActivity extends AppCompatActivity implements OnMapRead
             }
         });
 
-//        mapboxMap.addMarker(new MarkerOptions().position(listOfLatlang.get(listOfLatlang.size() - 1)).title("Destination"));
+//        mapmyIndiaMap.addMarker(new MarkerOptions().position(listOfLatlang.get(listOfLatlang.size() - 1)).title("Destination"));
 
     }
 

@@ -38,15 +38,15 @@ public class GradientPolylineActivity extends AppCompatActivity implements OnMap
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+      mapmyIndiaMap.setPadding(20, 20, 20, 20);
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .includes(listOfLatLng)
                 .build();
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10));
+      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10));
 
-        GradientPolylinePlugin animatedPolylinePlugin = new GradientPolylinePlugin(mapboxMap, mapView);
+      GradientPolylinePlugin animatedPolylinePlugin = new GradientPolylinePlugin(mapmyIndiaMap, mapView);
         animatedPolylinePlugin.createPolyline(listOfLatLng);
     }
 

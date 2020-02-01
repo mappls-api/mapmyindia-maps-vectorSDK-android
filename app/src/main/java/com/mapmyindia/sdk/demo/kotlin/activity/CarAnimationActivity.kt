@@ -36,16 +36,16 @@ class CarAnimationActivity: AppCompatActivity(),OnMapReadyCallback {
         map_view!!.getMapAsync(this)
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
 
         val latLngBounds: LatLngBounds = LatLngBounds.Builder()
                 .includes(listOfLatlang)
                 .build()
 
-        mapboxMap!!.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
+        mapmyIndiaMap!!.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
 
-        animatedCarPlugin = AnimatedCarPlugin(applicationContext, map_view!!, mapboxMap)
-        mapboxMap.addPolyline(PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4f))
+        animatedCarPlugin = AnimatedCarPlugin(applicationContext, map_view!!, mapmyIndiaMap)
+        mapmyIndiaMap.addPolyline(PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4f))
 
         animatedCarPlugin!!.addMainCar(listOfLatlang[index], true)
         animatedCarPlugin!!.animateCar()

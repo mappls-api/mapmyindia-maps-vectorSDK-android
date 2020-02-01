@@ -29,22 +29,19 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapError(p0: Int, p1: String?) {}
 
-    override fun onMapReady(mapboxMap: MapboxMap?) {
-        mapboxMap?.setMinZoomPreference(4.5)
-        mapboxMap?.setMaxZoomPreference(18.5)
+    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
 
 
+        mapmyIndiaMap?.setPadding(20, 20, 20, 20)
 
-        mapboxMap?.setPadding(20, 20, 20, 20)
 
-
-        mapboxMap?.addMarker(MarkerOptions().position(LatLng(
+        mapmyIndiaMap?.addMarker(MarkerOptions().position(LatLng(
                 25.321684, 82.987289)).title("XYZ"))
 
         /* this is done for animating/moving camera to particular position */
         val cameraPosition = CameraPosition.Builder().target(LatLng(
                 25.321684, 82.987289)).zoom(10.0).tilt(0.0).build()
-        mapboxMap?.cameraPosition = cameraPosition
+        mapmyIndiaMap?.cameraPosition = cameraPosition
     }
 
     override fun onStart() {

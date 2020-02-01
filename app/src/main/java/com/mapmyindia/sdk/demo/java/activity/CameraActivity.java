@@ -19,7 +19,7 @@ import com.mapmyindia.sdk.demo.R;
 
 public class CameraActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, MapboxMap.OnCameraMoveListener, MapboxMap.OnCameraIdleListener, MapboxMap.OnCameraMoveCanceledListener {
 
-    private MapboxMap mapboxMap;
+    private MapboxMap mapmyIndiaMap;
     private MapView mapView;
     private TextView moveCamera, easeCamera, animateCamera;
 
@@ -50,24 +50,21 @@ public class CameraActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
                 25.321684, 82.987289)).zoom(14).tilt(0).build();
-        mapboxMap.setCameraPosition(cameraPosition);
+        mapmyIndiaMap.setCameraPosition(cameraPosition);
 
         //Map related listeners
-        mapboxMap.addOnCameraMoveListener(this);
-        mapboxMap.addOnCameraIdleListener(this);
-        mapboxMap.addOnCameraMoveCancelListener(this);
+        mapmyIndiaMap.addOnCameraMoveListener(this);
+        mapmyIndiaMap.addOnCameraIdleListener(this);
+        mapmyIndiaMap.addOnCameraMoveCancelListener(this);
     }
 
     @Override
@@ -94,17 +91,17 @@ public class CameraActivity extends AppCompatActivity implements OnMapReadyCallb
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.moveCamera:
-                mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+                mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                         22.553147478403194,
                         77.23388671875), 14));
 
                 break;
             case R.id.easeCamera:
-                mapboxMap.easeCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+                mapmyIndiaMap.easeCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                         28.704268, 77.103045), 14));
                 break;
             case R.id.animateCamera:
-                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+                mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                         28.698791, 77.121243), 14));
                 break;
         }

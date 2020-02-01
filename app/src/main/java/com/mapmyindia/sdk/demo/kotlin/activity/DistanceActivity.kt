@@ -34,18 +34,18 @@ class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.distance_activity)
-        mapView = findViewById(R.id.mapBoxId)
+        mapView = findViewById(R.id.map_view)
         mapView!!.onCreate(savedInstanceState)
         mapView!!.getMapAsync(this)
         transparentProgressDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
-        mapboxMap.setPadding(20, 20, 20, 20)
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
 
-        mapboxMap.cameraPosition = setCameraAndTilt()
+
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
+
+        mapmyIndiaMap.cameraPosition = setCameraAndTilt()
         val coordinatesPoint = ArrayList<Point>()
         coordinatesPoint.add(Point.fromLngLat(77.257373, 28.551087))
         coordinatesPoint.add(Point.fromLngLat(77.234230, 28.582864))

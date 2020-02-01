@@ -30,7 +30,7 @@ import retrofit2.Response;
 
 public class GeoCodeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapboxMap mapboxMap;
+    private MapboxMap mapmyIndiaMap;
     private MapView mapView;
     private TransparentProgressDialog transparentProgressDialog;
 
@@ -45,17 +45,14 @@ public class GeoCodeActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
-        mapboxMap.setCameraPosition(setCameraAndTilt());
+        mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
         if (CheckInternet.isNetworkAvailable(GeoCodeActivity.this)) {
             getGeoCode("saket");
         } else {
@@ -81,7 +78,7 @@ public class GeoCodeActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void getGeoCode(String geocodeText) {
         progressDialogShow();
-        new MapmyIndiaGeoCoding.Builder()
+        MapmyIndiaGeoCoding.builder()
                 .setAddress(geocodeText)
                 .build().enqueueCall(new Callback<GeoCodeResponse>() {
             @Override
@@ -111,7 +108,7 @@ public class GeoCodeActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void addMarker(double latitude, double longitude) {
-        mapboxMap.addMarker(new MarkerOptions().position(new LatLng(
+        mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(
                 latitude, longitude)));
     }
 

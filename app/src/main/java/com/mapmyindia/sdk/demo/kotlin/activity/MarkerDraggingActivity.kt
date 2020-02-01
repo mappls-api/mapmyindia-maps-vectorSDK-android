@@ -29,9 +29,9 @@ class MarkerDraggingActivity : AppCompatActivity(), OnMapReadyCallback {
         map_view!!.getMapAsync(this)
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        this.mMapboxMap = mapboxMap
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0))
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+        this.mMapboxMap = mapmyIndiaMap
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0))
         initMarker()
     }
 

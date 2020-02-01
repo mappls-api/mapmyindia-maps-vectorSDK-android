@@ -45,7 +45,7 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.distance_activity);
-        mapView = findViewById(R.id.mapBoxId);
+        mapView = findViewById(R.id.map_view);
         directionDetailsLayout = findViewById(R.id.distance_details_layout);
         tvDistance = findViewById(R.id.tv_distance);
         tvDuration = findViewById(R.id.tv_duration);
@@ -55,16 +55,13 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
-        mapboxMap.setCameraPosition(setCameraAndTilt());
+        mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
 
         List<Point> coordinatesPoint = new ArrayList<Point>();
         coordinatesPoint.add(Point.fromLngLat(77.257373, 28.551087));

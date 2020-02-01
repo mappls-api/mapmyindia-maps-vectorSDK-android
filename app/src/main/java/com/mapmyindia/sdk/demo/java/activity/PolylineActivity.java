@@ -36,28 +36,25 @@ public class PolylineActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+      mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
-        mapboxMap.setCameraPosition(setCameraAndTilt());
+      mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
         listOfLatlang.add(new LatLng(28.705436, 77.100462));
         listOfLatlang.add(new LatLng(28.705191, 77.100784));
         listOfLatlang.add(new LatLng(28.704646, 77.101514));
         listOfLatlang.add(new LatLng(28.704194, 77.101171));
         listOfLatlang.add(new LatLng(28.704083, 77.101066));
         listOfLatlang.add(new LatLng(28.703900, 77.101318));
-        mapboxMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4));
+      mapmyIndiaMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4));
 
         /* this is done for animating/moving camera to particular position */
 
         LatLngBounds latLngBounds = new LatLngBounds.Builder().includes(listOfLatlang).build();
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70));
+      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70));
     }
 
     protected CameraPosition setCameraAndTilt() {

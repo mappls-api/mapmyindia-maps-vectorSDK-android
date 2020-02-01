@@ -37,22 +37,22 @@ class AddCustomInfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap?) {
-        mapboxMap?.setMinZoomPreference(4.5)
-        mapboxMap?.setMaxZoomPreference(18.5)
+    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+
+
 
         latLngList.forEach {
-            mapboxMap?.addMarker(MarkerOptions().position(it).setTitle("XYZ"))
+            mapmyIndiaMap?.addMarker(MarkerOptions().position(it).setTitle("XYZ"))
         }
 
-        mapboxMap?.setInfoWindowAdapter {
+        mapmyIndiaMap?.setInfoWindowAdapter {
             val view: View? = LayoutInflater.from(this@AddCustomInfoWindowActivity).inflate(R.layout.custom_info_window_layout, null)
             val textView: TextView = view?.findViewById(R.id.text)!!
             textView.text = it.title
             return@setInfoWindowAdapter view
         }
 
-        mapboxMap?.setOnMarkerClickListener {
+        mapmyIndiaMap?.setOnMarkerClickListener {
             Toast.makeText(this, it.position.toString(), Toast.LENGTH_SHORT).show()
             return@setOnMarkerClickListener false
         }
@@ -61,7 +61,7 @@ class AddCustomInfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
                 .includes(latLngList)
                 .build()
 
-        mapboxMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100, 10, 100, 10))
+        mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100, 10, 100, 10))
 
     }
 

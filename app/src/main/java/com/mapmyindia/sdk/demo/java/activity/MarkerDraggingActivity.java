@@ -29,9 +29,9 @@ public class MarkerDraggingActivity extends AppCompatActivity implements OnMapRe
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-        this.mMapboxMap = mapboxMap;
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
+      this.mMapboxMap = mapmyIndiaMap;
+      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
         initMarker();
     }
 

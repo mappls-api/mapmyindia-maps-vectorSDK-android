@@ -31,7 +31,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 public class DirectionPolylinePlugin implements MapView.OnMapChangedListener {
     private static final String UPPER_SOURCE_ID = "line-source-upper-id";
 
-    private MapboxMap mapboxMap;
+  private MapboxMap mapmyIndiaMap;
 
     private FeatureCollection featureCollection;
     private static final String LAYER_ID = "line-layer-upper-id";
@@ -45,8 +45,8 @@ public class DirectionPolylinePlugin implements MapView.OnMapChangedListener {
     private GeoJsonSource polylineSource;
     private LineLayer lineLayer;
 
-    public DirectionPolylinePlugin(MapboxMap mapboxMap, MapView mapView, String directionsCriteria) {
-        this.mapboxMap = mapboxMap;
+  public DirectionPolylinePlugin(MapboxMap mapmyIndiaMap, MapView mapView, String directionsCriteria) {
+    this.mapmyIndiaMap = mapmyIndiaMap;
         this.directionsCriteria = directionsCriteria;
 
         updateSource();
@@ -106,7 +106,7 @@ public class DirectionPolylinePlugin implements MapView.OnMapChangedListener {
      * Add various sources to the map.
      */
     private void initSources(@NonNull FeatureCollection featureCollection) {
-        mapboxMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+      mapmyIndiaMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
                 new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
     }
 
@@ -114,7 +114,7 @@ public class DirectionPolylinePlugin implements MapView.OnMapChangedListener {
      * Update Source and GeoJson properties
      */
     private void updateSource() {
-        GeoJsonSource source = (GeoJsonSource) mapboxMap.getSource(UPPER_SOURCE_ID);
+      GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(UPPER_SOURCE_ID);
         if(source == null) {
             create();
             return;
@@ -128,7 +128,7 @@ public class DirectionPolylinePlugin implements MapView.OnMapChangedListener {
      * Add Line layer on map
      */
     private void create() {
-        mapboxMap.addLayer(lineLayer = new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+      mapmyIndiaMap.addLayer(lineLayer = new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
                 lineCap(Property.LINE_CAP_ROUND),
                 lineJoin(Property.LINE_JOIN_ROUND),
                 lineWidth(5f)));

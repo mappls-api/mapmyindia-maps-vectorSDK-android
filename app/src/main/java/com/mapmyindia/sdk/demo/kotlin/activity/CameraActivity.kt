@@ -18,7 +18,7 @@ import com.mapmyindia.sdk.demo.R
  */
 class CameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListener, MapboxMap.OnCameraMoveListener, MapboxMap.OnCameraIdleListener, MapboxMap.OnCameraMoveCanceledListener {
 
-    private var mapboxMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapboxMap? = null
     private var mapView: MapView? = null
     private var moveCamera: TextView? = null
     private var easeCamera: TextView? = null
@@ -49,22 +49,22 @@ class CameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickList
         animateCamera = findViewById(R.id.animateCamera)
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        this.mapboxMap = mapboxMap
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap
 
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
 
-        mapboxMap.setPadding(20, 20, 20, 20)
+
+
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
 
         val cameraPosition = CameraPosition.Builder().target(LatLng(
                 25.321684, 82.987289)).zoom(14.0).tilt(0.0).build()
-        mapboxMap.cameraPosition = cameraPosition
+        mapmyIndiaMap.cameraPosition = cameraPosition
 
         //Map related listeners
-        mapboxMap.addOnCameraMoveListener(this)
-        mapboxMap.addOnCameraIdleListener(this)
-        mapboxMap.addOnCameraMoveCancelListener(this)
+        mapmyIndiaMap.addOnCameraMoveListener(this)
+        mapmyIndiaMap.addOnCameraIdleListener(this)
+        mapmyIndiaMap.addOnCameraMoveCancelListener(this)
     }
 
     override fun onMapError(i: Int, s: String) {
@@ -85,12 +85,12 @@ class CameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickList
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.moveCamera -> mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
+            R.id.moveCamera -> mapmyIndiaMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
                     22.553147478403194,
                     77.23388671875), 14.0))
-            R.id.easeCamera -> mapboxMap!!.easeCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
+            R.id.easeCamera -> mapmyIndiaMap!!.easeCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
                     28.704268, 77.103045), 14.0))
-            R.id.animateCamera -> mapboxMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
+            R.id.animateCamera -> mapmyIndiaMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
                     28.698791, 77.121243), 14.0))
         }
     }

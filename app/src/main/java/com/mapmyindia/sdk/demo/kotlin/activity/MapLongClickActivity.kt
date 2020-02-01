@@ -24,13 +24,13 @@ class MapLongClickActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView!!.getMapAsync(this)
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.cameraPosition = setCameraAndTilt()
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+        mapmyIndiaMap.cameraPosition = setCameraAndTilt()
 
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
-        mapboxMap.setPadding(20, 20, 20, 20)
-        mapboxMap.addOnMapLongClickListener { latLng -> Toast.makeText(this@MapLongClickActivity, latLng.toString(), Toast.LENGTH_LONG).show() }
+
+
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
+        mapmyIndiaMap.addOnMapLongClickListener { latLng -> Toast.makeText(this@MapLongClickActivity, latLng.toString(), Toast.LENGTH_LONG).show() }
     }
 
     protected fun setCameraAndTilt(): CameraPosition {

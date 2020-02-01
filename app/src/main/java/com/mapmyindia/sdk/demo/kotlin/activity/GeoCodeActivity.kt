@@ -24,7 +24,7 @@ import retrofit2.Response
 class GeoCodeActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
-    private var mapboxMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapboxMap? = null
     private var mapView: MapView? = null
     private var transparentProgressDialog: TransparentProgressDialog? = null
 
@@ -37,15 +37,15 @@ class GeoCodeActivity : AppCompatActivity(), OnMapReadyCallback {
         transparentProgressDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        this.mapboxMap = mapboxMap
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap
 
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
 
-        mapboxMap.setPadding(20, 20, 20, 20)
 
-        mapboxMap.cameraPosition = setCameraAndTilt()
+
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
+
+        mapmyIndiaMap.cameraPosition = setCameraAndTilt()
         if (CheckInternet.isNetworkAvailable(this@GeoCodeActivity)) {
             getGeoCode("saket")
         } else {
@@ -70,7 +70,7 @@ class GeoCodeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun getGeoCode(geocodeText: String) {
         progressDialogShow()
-        MapmyIndiaGeoCoding.Builder<MapmyIndiaGeoCoding.Builder<*>>()
+        MapmyIndiaGeoCoding.builder()
                 .setAddress(geocodeText)
                 .build().enqueueCall(object : Callback<GeoCodeResponse> {
                     override fun onResponse(call: Call<GeoCodeResponse>, response: Response<GeoCodeResponse>) {
@@ -98,7 +98,7 @@ class GeoCodeActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun addMarker(latitude: Double, longitude: Double) {
-        mapboxMap!!.addMarker(MarkerOptions().position(LatLng(
+        mapmyIndiaMap!!.addMarker(MarkerOptions().position(LatLng(
                 latitude, longitude)))
     }
 

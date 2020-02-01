@@ -34,7 +34,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
     private static final String UPPER_SOURCE_ID = "line-source-upper-id";
 
-    private MapboxMap mapboxMap;
+  private MapboxMap mapmyIndiaMap;
 
     private FeatureCollection featureCollection;
     private int startColor = Color.parseColor("#3dd2d0");
@@ -44,8 +44,8 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
 
     private GeoJsonSource polylineSource;
 
-    public GradientPolylinePlugin(MapboxMap mapboxMap, MapView mapView) {
-        this.mapboxMap = mapboxMap;
+  public GradientPolylinePlugin(MapboxMap mapmyIndiaMap, MapView mapView) {
+    this.mapmyIndiaMap = mapmyIndiaMap;
 
         updateSource();
         mapView.addOnMapChangedListener(this);
@@ -89,7 +89,7 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
      * Add Line layer to map
      */
     private void create() {
-        mapboxMap.addLayer(new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+      mapmyIndiaMap.addLayer(new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
 //                lineColor(Color.RED),
                 lineCap(Property.LINE_CAP_ROUND),
                 lineJoin(Property.LINE_JOIN_BEVEL),
@@ -106,7 +106,7 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
      * Add various sources to the map.
      */
     private void initSources(@NonNull FeatureCollection featureCollection) {
-        mapboxMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+      mapmyIndiaMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
                 new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
     }
 
@@ -122,7 +122,7 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
      * Update the source of the polyline
      */
     private void updateSource() {
-        GeoJsonSource source = (GeoJsonSource) mapboxMap.getSource(UPPER_SOURCE_ID);
+      GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(UPPER_SOURCE_ID);
         if(source == null) {
             create();
             return;

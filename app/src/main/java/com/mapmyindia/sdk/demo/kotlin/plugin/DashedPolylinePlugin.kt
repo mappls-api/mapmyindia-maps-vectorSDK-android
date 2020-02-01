@@ -19,7 +19,7 @@ import java.util.*
 /**
  * Created by Saksham on 20/9/19.
  */
-class DashedPolylinePlugin(private val mapboxMap: MapboxMap, mapView: MapView) : MapView.OnMapChangedListener {
+class DashedPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapView) : MapView.OnMapChangedListener {
 
     private var featureCollection: FeatureCollection? = null
     private val mStyle: Style? = null
@@ -58,14 +58,14 @@ class DashedPolylinePlugin(private val mapboxMap: MapboxMap, mapView: MapView) :
     private fun initSources(featureCollection: FeatureCollection) {
         polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
                 GeoJsonOptions().withLineMetrics(true).withBuffer(2))
-        mapboxMap.addSource(polylineSource!!)
+        mapmyIndiaMap.addSource(polylineSource!!)
     }
 
     /**
      * Update Source of the polyline
      */
     private fun updateSource() {
-        val source = mapboxMap.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
+        val source = mapmyIndiaMap.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
         if (source == null) {
             create()
             return
@@ -79,7 +79,7 @@ class DashedPolylinePlugin(private val mapboxMap: MapboxMap, mapView: MapView) :
      * Add Layer on map
      */
     private fun create() {
-        mapboxMap.addLayer(LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+        mapmyIndiaMap.addLayer(LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
                 lineColor(Color.RED),
                 lineDasharray(arrayOf<Float>(widthDash, gapDash)),
                 lineCap(Property.LINE_CAP_ROUND),

@@ -36,7 +36,7 @@ import java.util.*
  */
 class DirectionActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private var mapboxMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapboxMap? = null
     private var mapView: MapView? = null
     private var transparentProgressDialog: TransparentProgressDialog? = null
 
@@ -54,7 +54,7 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback {
 
         tab_layout_profile!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (mapboxMap == null) {
+                if (mapmyIndiaMap == null) {
                     if (tab_layout_profile.getTabAt(0) != null) {
                         (tab_layout_profile.getTabAt(0))!!.select()
                         return
@@ -106,16 +106,16 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        this.mapboxMap = mapboxMap
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap
 
 
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
 
-        mapboxMap.setPadding(20, 20, 20, 20)
 
-        mapboxMap.cameraPosition = setCameraAndTilt()
+
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
+
+        mapmyIndiaMap.cameraPosition = setCameraAndTilt()
         if (CheckInternet.isNetworkAvailable(this)) {
             getDirections()
         } else {
@@ -168,7 +168,7 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback {
                                 val results = directionsResponse!!.routes()
 
                                 if (results.size > 0) {
-                                    mapboxMap!!.clear()
+                                    mapmyIndiaMap!!.clear()
                                     val directionsRoute = results[0]
                                     drawPath(PolylineUtils.decode(directionsRoute.geometry()!!, Constants.PRECISION_6))
                                     updateData(directionsRoute)
@@ -239,15 +239,15 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         if(directionPolylinePlugin == null) {
-            directionPolylinePlugin = DirectionPolylinePlugin(mapboxMap!!, mapView!!, profile)
+            directionPolylinePlugin = DirectionPolylinePlugin(mapmyIndiaMap!!, mapView!!, profile)
             directionPolylinePlugin!!.createPolyline(listOfLatlang)
         } else {
             directionPolylinePlugin!!.updatePolyline(profile, listOfLatlang)
         }
 
-//        mapboxMap?.addPolyline(PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4f))
+//        mapmyIndiaMap?.addPolyline(PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4f))
         val latLngBounds = LatLngBounds.Builder().includes(listOfLatlang).build()
-        mapboxMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30))
+        mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30))
     }
 
     override fun onMapError(i: Int, s: String) {

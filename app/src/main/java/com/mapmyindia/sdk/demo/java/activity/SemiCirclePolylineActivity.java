@@ -32,14 +32,14 @@ public class SemiCirclePolylineActivity extends AppCompatActivity implements OnM
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .includes(listOfLatLng)
                 .build();
 
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
+      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
 
-        DashedPolylinePlugin dashedPolylinePlugin = new DashedPolylinePlugin(mapboxMap, mapView);
+      DashedPolylinePlugin dashedPolylinePlugin = new DashedPolylinePlugin(mapmyIndiaMap, mapView);
         dashedPolylinePlugin.createPolyline(listOfLatLng);
 
 //        PolylineOptions polylineOptions = new PolylineOptions()
@@ -47,7 +47,7 @@ public class SemiCirclePolylineActivity extends AppCompatActivity implements OnM
 //                .color(Color.parseColor("#3bb2d0"))
 //                .width(4);
 //
-//        mapboxMap.addPolyline(polylineOptions);
+//        mapmyIndiaMap.addPolyline(polylineOptions);
     }
 
     @Override

@@ -31,7 +31,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 public class DashedPolylinePlugin  implements MapView.OnMapChangedListener{
     private static final String UPPER_SOURCE_ID = "line-source-upper-id";
 
-    private MapboxMap mapboxMap;
+  private MapboxMap mapmyIndiaMap;
 
     private FeatureCollection featureCollection;
     private Style mStyle;
@@ -43,8 +43,8 @@ public class DashedPolylinePlugin  implements MapView.OnMapChangedListener{
 
     private GeoJsonSource polylineSource;
 
-    public DashedPolylinePlugin(MapboxMap mapboxMap, MapView mapView) {
-        this.mapboxMap = mapboxMap;
+  public DashedPolylinePlugin(MapboxMap mapmyIndiaMap, MapView mapView) {
+    this.mapmyIndiaMap = mapmyIndiaMap;
 
         updateSource();
         mapView.addOnMapChangedListener(this);
@@ -71,7 +71,7 @@ public class DashedPolylinePlugin  implements MapView.OnMapChangedListener{
      * Add various sources to the map.
      */
     private void initSources(@NonNull FeatureCollection featureCollection) {
-        mapboxMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+      mapmyIndiaMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
                 new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
     }
 
@@ -79,7 +79,7 @@ public class DashedPolylinePlugin  implements MapView.OnMapChangedListener{
      * Update Source of the Polyline
      */
     private void updateSource() {
-        GeoJsonSource source = (GeoJsonSource) mapboxMap.getSource(UPPER_SOURCE_ID);
+      GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(UPPER_SOURCE_ID);
         if(source == null) {
             create();
             return;
@@ -93,7 +93,7 @@ public class DashedPolylinePlugin  implements MapView.OnMapChangedListener{
      * Add Layer on map
      */
     private void create() {
-        mapboxMap.addLayer(new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+      mapmyIndiaMap.addLayer(new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
                 lineColor(Color.RED),
                 lineDasharray(new Float[] {widthDash, gapDash}),
                 lineCap(Property.LINE_CAP_ROUND),

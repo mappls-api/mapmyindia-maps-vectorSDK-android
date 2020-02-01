@@ -28,14 +28,14 @@ class SemiCirclePolylineActivity : AppCompatActivity(), OnMapReadyCallback {
         listOfLatLng = SemiCirclePointsListHelper.showCurvedPolyline(LatLng(28.7039, 77.101318), LatLng(28.704248, 77.102370), 0.5)
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
         val latLngBounds = LatLngBounds.Builder()
                 .includes(listOfLatLng)
                 .build()
 
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
 
-        val dashedPolylinePlugin = DashedPolylinePlugin(mapboxMap, map_view!!)
+        val dashedPolylinePlugin = DashedPolylinePlugin(mapmyIndiaMap, map_view!!)
         dashedPolylinePlugin.createPolyline(listOfLatLng!!)
 
 

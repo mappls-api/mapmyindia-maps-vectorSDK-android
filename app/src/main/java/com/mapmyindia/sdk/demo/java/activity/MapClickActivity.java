@@ -36,17 +36,14 @@ public class MapClickActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
 
 
-        mapboxMap.setPadding(20, 20, 20, 20);
+      mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
-        mapboxMap.setCameraPosition(setCameraAndTilt());
-        mapboxMap.addOnMapClickListener(latLng -> Toast.makeText(MapClickActivity.this, latLng.toString(), Toast.LENGTH_LONG).show());
+      mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
+      mapmyIndiaMap.addOnMapClickListener(latLng -> Toast.makeText(MapClickActivity.this, latLng.toString(), Toast.LENGTH_LONG).show());
     }
 
     @Override

@@ -19,7 +19,7 @@ import com.mapmyindia.sdk.demo.R
  */
 class CurrentLocationActivity : AppCompatActivity(), OnMapReadyCallback, LocationEngineListener {
 
-    private var mapboxMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapboxMap? = null
     private var mapView: MapView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,20 +30,20 @@ class CurrentLocationActivity : AppCompatActivity(), OnMapReadyCallback, Locatio
         mapView!!.getMapAsync(this)
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        this.mapboxMap = mapboxMap
+    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap
 
-        mapboxMap.setMinZoomPreference(4.5)
-        mapboxMap.setMaxZoomPreference(18.5)
 
-        mapboxMap.setPadding(20, 20, 20, 20)
+
+
+        mapmyIndiaMap.setPadding(20, 20, 20, 20)
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return
         }
-        mapboxMap.locationComponent.activateLocationComponent(this)
-        mapboxMap.locationComponent.isLocationComponentEnabled = true
+        mapmyIndiaMap.locationComponent.activateLocationComponent(this)
+        mapmyIndiaMap.locationComponent.isLocationComponentEnabled = true
 
     }
 
@@ -54,7 +54,7 @@ class CurrentLocationActivity : AppCompatActivity(), OnMapReadyCallback, Locatio
     }
 
     override fun onLocationChanged(location: Location) {
-        mapboxMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(
+        mapmyIndiaMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 LatLng(location.latitude, location.longitude), 16.0))
 
     }

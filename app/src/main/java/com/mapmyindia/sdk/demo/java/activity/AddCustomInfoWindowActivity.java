@@ -34,7 +34,7 @@ public class AddCustomInfoWindowActivity extends AppCompatActivity implements On
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_layout);
-        mapView = findViewById(R.id.mapBoxId);
+        mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
@@ -45,17 +45,17 @@ public class AddCustomInfoWindowActivity extends AppCompatActivity implements On
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-        mapboxMap.setMinZoomPreference(4.5);
-        mapboxMap.setMaxZoomPreference(18.5);
+    public void onMapReady(MapboxMap mapmyIndiaMap) {
+
+
 
         for (LatLng latLng : latLngList) {
-            mapboxMap.addMarker(new MarkerOptions()
+            mapmyIndiaMap.addMarker(new MarkerOptions()
                     .position(latLng)
                     .title("XYZ"));
         }
 
-        mapboxMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
+        mapmyIndiaMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
             @Nullable
             @Override
             public View getInfoWindow(@NonNull Marker marker) {
@@ -66,7 +66,7 @@ public class AddCustomInfoWindowActivity extends AppCompatActivity implements On
             }
         });
 
-        mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
+        mapmyIndiaMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
 
@@ -78,7 +78,7 @@ public class AddCustomInfoWindowActivity extends AppCompatActivity implements On
                 .includes(latLngList)
                 .build();
 
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100, 10, 100, 10));
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100, 10, 100, 10));
     }
 
     @Override

@@ -31,24 +31,21 @@ class AddCustomMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapError(p0: Int, p1: String?) {}
 
-    override fun onMapReady(mapboxMap: MapboxMap?) {
-        mapboxMap?.setMinZoomPreference(4.5)
-        mapboxMap?.setMaxZoomPreference(18.5)
+    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
 
 
-
-        mapboxMap?.setPadding(20, 20, 20, 20)
+        mapmyIndiaMap?.setPadding(20, 20, 20, 20)
 
 
         var iconFactory = IconFactory.getInstance(this)
         var icon: Icon = iconFactory.fromResource(R.drawable.placeholder)
-        mapboxMap?.addMarker(MarkerOptions().position(LatLng(
+        mapmyIndiaMap?.addMarker(MarkerOptions().position(LatLng(
                 25.321684, 82.987289)).icon(icon))
 
         /* this is done for animating/moving camera to particular position */
         val cameraPosition = CameraPosition.Builder().target(LatLng(
                 25.321684, 82.987289)).zoom(14.0).tilt(0.0).build()
-        mapboxMap?.cameraPosition = cameraPosition
+        mapmyIndiaMap?.cameraPosition = cameraPosition
     }
 
     override fun onStart() {

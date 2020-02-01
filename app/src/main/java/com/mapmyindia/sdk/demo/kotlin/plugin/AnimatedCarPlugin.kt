@@ -38,7 +38,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 
-class AnimatedCarPlugin(private val context: Context, mapView: MapView, private val mapboxMap: MapboxMap?) : MapView.OnMapChangedListener {
+class AnimatedCarPlugin(private val context: Context, mapView: MapView, private val mapmyIndiaMap: MapboxMap?) : MapView.OnMapChangedListener {
     private var car: Car? = null
     private var carSource: GeoJsonSource? = null
     private var nextPoint: LatLng? = null
@@ -81,7 +81,7 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
     init {
         updateState()
         mapView.addOnMapChangedListener(this)
-        this.mapboxMap!!.addOnMapClickListener {
+        this.mapmyIndiaMap!!.addOnMapClickListener {
             this.handleClickIcon(it)
         }
     }
@@ -172,13 +172,13 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
         featureCollection = FeatureCollection.fromFeatures(arrayOf(feature))
 
         car = Car(feature, nextPoint)
-        mapboxMap!!.addImage(CAR,
+        mapmyIndiaMap!!.addImage(CAR,
                 (context.resources.getDrawable(R.drawable.placeholder, null) as BitmapDrawable).bitmap)
 
 
 
         carSource = GeoJsonSource(CAR_SOURCE, featureCollection)
-        mapboxMap.addSource(carSource!!)
+        mapmyIndiaMap.addSource(carSource!!)
 
         GenerateViewIconTask(WeakReference(this).get()!!).execute(featureCollection)
     }
@@ -264,7 +264,7 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
      * @param screenPoint the point on screen clicked
      */
     private fun handleClickIcon(screenPoint: LatLng) {
-        val features = mapboxMap!!.queryRenderedFeatures(this.mapboxMap.projection.toScreenLocation(screenPoint), CAR_LAYER, SOURCE_LAYER_INFO_WINDOW)
+        val features = mapmyIndiaMap!!.queryRenderedFeatures(this.mapmyIndiaMap.projection.toScreenLocation(screenPoint), CAR_LAYER, SOURCE_LAYER_INFO_WINDOW)
         if (!features.isEmpty()) {
             val name = features[0].getStringProperty(PROPERTY_NAME)
             val featureList = featureCollection!!.features()
@@ -286,7 +286,7 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
      * @param imageMap Hashmap of images
      */
     private fun setImageGenResults(imageMap: HashMap<String, Bitmap>) {
-        mapboxMap?.addImages(imageMap)
+        mapmyIndiaMap?.addImages(imageMap)
     }
 
 
@@ -303,7 +303,7 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
      * Update the state of the Marker.
      */
     private fun updateState() {
-        val source = mapboxMap!!.getSource(CAR_SOURCE) as GeoJsonSource?
+        val source = mapmyIndiaMap!!.getSource(CAR_SOURCE) as GeoJsonSource?
         if (source == null) {
             initialise()
             return
@@ -324,7 +324,7 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
     private fun setVisibility(visible: Boolean) {
         if (layerIds == null)
             return
-        val layers = mapboxMap!!.layers
+        val layers = mapmyIndiaMap!!.layers
         if (layers.size > 0) {
             for (layer in layers) {
                 if (layerIds!!.contains(layer.id)) {
@@ -350,7 +350,7 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
                 iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
 
         )
-        mapboxMap!!.addLayer(symbolLayer)
+        mapmyIndiaMap!!.addLayer(symbolLayer)
         layerIds!!.add(symbolLayer.id)
 
         val symbolLayerInfoWindow = SymbolLayer(SOURCE_LAYER_INFO_WINDOW, CAR_SOURCE)
@@ -370,7 +370,7 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
                 /* setData a filter to show only when selected feature property is true */
                 .withFilter(eq(get(PROPERTY_SELECTED), literal(true)))
 
-        mapboxMap.addLayer(symbolLayerInfoWindow)
+        mapmyIndiaMap.addLayer(symbolLayerInfoWindow)
         layerIds!!.add(symbolLayerInfoWindow.id)
     }
 
