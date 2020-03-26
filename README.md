@@ -1,6 +1,5 @@
 
 
-![build status](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android-sample-withREST-beta/.github/workflows/android.yml/badge.svg)
 
 ![MapmyIndia APIs](https://www.mapmyindia.com/api/img/mapmyindia-api.png)
 # MapmyIndia Vector Map Android SDK
@@ -31,23 +30,21 @@ The allowed SDK hits are described on the user dashboard (http://www.mapmyindia.
 Follow these steps to add the SDK to your project –
 
 -   Create a new project in Android Studio
--   Import MapmyIndiaGLAndroidSDK_v{version}.aar file in your project.
--   Add Following dependencies for the implementation
+-  Add MapmyIndia repository in your project level `build.gradle`
+~~~groovy
+ allprojects {  
+    repositories {  
+    
+        maven {  
+            url 'https://maven.mapmyindia.com/repository/mapmyindia/' 
+        }  
+    }  
+}
+~~~
+-   Add below dependency in your app-level `build.gradle`
 
 ```groovy
-implementation 'com.jakewharton.timber:timber:4.5.0'
-implementation 'com.google.code.gson:gson:2.8.0'
-implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
-implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-implementation 'com.google.android.gms:play-services-location:15.0.1'
-implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:3.1.0'
-implementation 'com.mapbox.mapboxsdk:mapbox-android-gestures:0.3.0'
-implementation 'com.mapbox.mapboxsdk:mapbox-sdk-geojson:3.3.0'
-implementation 'com.mapbox.mapboxsdk:mapbox-android-core:0.2.1'
-implementation 'com.facebook.soloader:soloader:0.6.1'
+implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.7.12'
 ```
 - Add these permissions in your project
 ```xml
