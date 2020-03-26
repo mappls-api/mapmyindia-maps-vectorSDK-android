@@ -81,6 +81,7 @@ MapmyIndiaAccountManager.getInstance().mapSDKKey = getMapSDKKey()
 MapmyIndiaAccountManager.getInstance().atlasGrantType = getAtlasGrantType()  
 MapmyIndiaAccountManager.getInstance().atlasClientId = getAtlasClientId()  
 MapmyIndiaAccountManager.getInstance().atlasClientSecret = getAtlasClientSecret()
+MapmyIndia.getInstance(applicationContext)
 ```
 *You cannot use the MapmyIndia Map Mobile SDK without these function calls. You will find your keys in your API Dashboard.*
 
