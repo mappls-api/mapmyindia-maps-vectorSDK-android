@@ -1,10 +1,10 @@
 package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.Toast
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
@@ -32,10 +32,10 @@ class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mapmyIndiaMap: MapboxMap? = null
     private var mapView: MapView? = null
     private var transparentProgressDialog: TransparentProgressDialog? = null
-    private var recyclerView: RecyclerView? = null
+    private var recyclerView: androidx.recyclerview.widget.RecyclerView? = null
     private var count = 0
     private var floatingActionButton: FloatingActionButton? = null
-    private var mLayoutManager: LinearLayoutManager? = null
+    private var mLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +45,7 @@ class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView!!.getMapAsync(this)
         Toast.makeText(this, "Please click on map to get nearby.", Toast.LENGTH_SHORT).show()
         recyclerView = findViewById(R.id.nearByRecyclerview)
-        mLayoutManager = LinearLayoutManager(this@NearByActivity)
+        mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@NearByActivity)
         recyclerView!!.layoutManager = mLayoutManager
 
         floatingActionButton = findViewById(R.id.marker_list)

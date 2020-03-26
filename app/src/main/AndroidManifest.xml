@@ -1,78 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  package="com.mapmyindia.sdk.demo">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mapmyindia.sdk.demo">
 
-  <uses-permission android:name="android.permission.INTERNET" />
-  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <application
+        android:name=".MapApplication"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".kotlin.activity.HeatMapActivity"></activity>
+        <activity android:name=".java.activity.HeatMapActivity" />
+        <activity android:name=".java.activity.MarkerDraggingActivity" />
+        <activity android:name=".java.activity.CarAnimationActivity" />
+        <activity android:name=".java.activity.SemiCirclePolylineActivity" />
+        <activity android:name=".java.activity.GradientPolylineActivity" />
+        <activity android:name=".java.activity.MarkerRotationTransitionActivity" />
+        <activity android:name=".kotlin.activity.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-  <application
-    android:name=".MapApplication"
-    android:allowBackup="false"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:roundIcon="@mipmap/ic_launcher_round"
-    android:supportsRtl="true"
-    android:theme="@style/AppTheme"
-    tools:ignore="GoogleAppIndexingWarning">
-    <activity android:name=".java.activity.MarkerDraggingActivity" />
-    <activity android:name=".java.activity.CarAnimationActivity" />
-    <activity android:name=".java.activity.SemiCirclePolylineActivity" />
-    <activity android:name=".java.activity.GradientPolylineActivity" />
-    <activity android:name=".java.activity.MarkerRotationTransitionActivity" />
-    <activity android:name=".kotlin.activity.SplashActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".kotlin.activity.FeatureListActivityKotlin" />
+        <activity android:name=".kotlin.activity.AddCustomMarkerActivity" />
+        <activity android:name=".kotlin.activity.AddMarkerActivity" />
+        <activity android:name=".kotlin.activity.CameraActivity" />
+        <activity android:name=".kotlin.activity.MapClickActivity" />
+        <activity android:name=".kotlin.activity.MapLongClickActivity" />
+        <activity android:name=".kotlin.activity.PolylineActivity" />
+        <activity android:name=".kotlin.activity.PolygonActivity" />
+        <activity android:name=".kotlin.activity.CurrentLocationActivity" />
+        <activity android:name=".kotlin.activity.AutoSuggestActivity" />
+        <activity android:name=".kotlin.activity.GeoCodeActivity" />
+        <activity android:name=".kotlin.activity.ReverseGeocodeActivity" />
+        <activity android:name=".kotlin.activity.NearByActivity" />
+        <activity android:name=".kotlin.activity.DirectionActivity" />
+        <activity android:name=".kotlin.activity.DistanceActivity" />
+        <activity android:name=".kotlin.activity.GradientPolylineActivity" />
+        <activity android:name=".kotlin.activity.MarkerDraggingActivity" />
+        <activity android:name=".kotlin.activity.SemiCirclePolylineActivity" />
+        <activity android:name=".java.activity.CameraActivity" />
+        <activity android:name=".java.activity.FeaturesListActivity" />
+        <activity android:name=".java.activity.MapClickActivity" />
+        <activity android:name=".java.activity.MapLongClickActivity" />
+        <activity android:name=".java.activity.AddMarkerActivity" />
+        <activity android:name=".java.activity.AddCustomMarkerActivity" />
+        <activity android:name=".java.activity.PolylineActivity" />
+        <activity android:name=".java.activity.PolygonActivity" />
+        <activity android:name=".java.activity.CurrentLocationActivity" />
+        <activity android:name=".java.activity.AutoSuggestActivity" />
+        <activity android:name=".java.activity.GeoCodeActivity" />
+        <activity android:name=".java.activity.ReverseGeocodeActivity" />
+        <activity android:name=".java.activity.NearByActivity" />
+        <activity
+            android:name=".java.activity.DirectionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".java.activity.DistanceActivity" />
+        <activity android:name=".java.InfoWindowSymbolLayerActivity" />
+        <activity android:name=".kotlin.activity.MarkerRotationTransitionActivity" />
+        <activity android:name=".kotlin.activity.CarAnimationActivity" />
+        <activity android:name=".java.activity.AddCustomInfoWindowActivity" />
+        <activity android:name=".java.activity.IndoorActivity" />
+        <activity android:name=".kotlin.activity.IndoorActivity" />
+        <activity android:name=".kotlin.activity.AddCustomInfoWindowActivity" />
+    </application>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
-    <activity android:name=".MainActivity" />
-    <activity android:name=".kotlin.activity.FeatureListActivityKotlin" />
-    <activity android:name=".kotlin.activity.AddCustomMarkerActivity" />
-    <activity android:name=".kotlin.activity.AddMarkerActivity" />
-    <activity android:name=".kotlin.activity.CameraActivity" />
-    <activity android:name=".kotlin.activity.MapClickActivity" />
-    <activity android:name=".kotlin.activity.MapLongClickActivity" />
-    <activity android:name=".kotlin.activity.PolylineActivity" />
-    <activity android:name=".kotlin.activity.PolygonActivity" />
-    <activity android:name=".kotlin.activity.CurrentLocationActivity" />
-    <activity android:name=".kotlin.activity.AutoSuggestActivity" />
-    <activity android:name=".kotlin.activity.GeoCodeActivity" />
-    <activity android:name=".kotlin.activity.ReverseGeocodeActivity" />
-    <activity android:name=".kotlin.activity.NearByActivity" />
-    <activity android:name=".kotlin.activity.DirectionActivity" />
-    <activity android:name=".kotlin.activity.DistanceActivity" />
-    <activity android:name=".kotlin.activity.GradientPolylineActivity" />
-    <activity android:name=".kotlin.activity.MarkerDraggingActivity" />
-    <activity android:name=".kotlin.activity.SemiCirclePolylineActivity" />
-    <activity android:name=".java.activity.CameraActivity" />
-    <activity android:name=".java.activity.FeaturesListActivity" />
-    <activity android:name=".java.activity.MapClickActivity" />
-    <activity android:name=".java.activity.MapLongClickActivity" />
-    <activity android:name=".java.activity.AddMarkerActivity" />
-    <activity android:name=".java.activity.AddCustomMarkerActivity" />
-    <activity android:name=".java.activity.PolylineActivity" />
-    <activity android:name=".java.activity.PolygonActivity" />
-    <activity android:name=".java.activity.CurrentLocationActivity" />
-    <activity android:name=".java.activity.AutoSuggestActivity" />
-    <activity android:name=".java.activity.GeoCodeActivity" />
-    <activity android:name=".java.activity.ReverseGeocodeActivity" />
-    <activity android:name=".java.activity.NearByActivity" />
-    <activity
-      android:name=".java.activity.DirectionActivity"
-      android:theme="@style/AppTheme.NoActionBar" />
-    <activity android:name=".java.activity.DistanceActivity" />
-    <activity android:name=".java.InfoWindowSymbolLayerActivity" />
-    <activity android:name=".kotlin.activity.MarkerRotationTransitionActivity" />
-    <activity android:name=".kotlin.activity.CarAnimationActivity" />
-    <activity android:name=".java.activity.AddCustomInfoWindowActivity" />
-    <activity android:name=".java.activity.IndoorActivity" />
-    <activity android:name=".kotlin.activity.IndoorActivity" />
-    <activity android:name=".kotlin.activity.AddCustomInfoWindowActivity" />
-  </application>
-
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
 </manifest>

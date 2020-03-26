@@ -2,10 +2,10 @@ package com.mapmyindia.sdk.demo.java.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.adapter.FeaturesListAdapter;
@@ -53,6 +53,7 @@ public class FeaturesListActivity extends AppCompatActivity {
         featuresArrayList.add(new Features(18, "Animate Car", CarAnimationActivity.class, "Description"));
         featuresArrayList.add(new Features(19, "Marker Dragging", MarkerDraggingActivity.class, "Description"));
         featuresArrayList.add(new Features(20, "Indoor", IndoorActivity.class, "Description"));
+        featuresArrayList.add(new Features(21, "Show Heatmap data", HeatMapActivity.class, "Description"));
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView);
         mLayoutManager = new LinearLayoutManager(FeaturesListActivity.this);

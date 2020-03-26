@@ -3,9 +3,9 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.kotlin.adapter.FeaturesListAdapter
 import com.mapmyindia.sdk.demo.kotlin.model.Features
@@ -16,8 +16,8 @@ import java.util.*
  */
 class FeatureListActivityKotlin : AppCompatActivity() {
 
-    private var featuresRecycleView: RecyclerView? = null
-    private var mLayoutManager: LinearLayoutManager? = null
+    private var featuresRecycleView: androidx.recyclerview.widget.RecyclerView? = null
+    private var mLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,9 +48,10 @@ class FeatureListActivityKotlin : AppCompatActivity() {
         featuresArrayList.add(Features(18, "Animate Car", CarAnimationActivity::class.java, "Description"))
         featuresArrayList.add(Features(19, "Marker Dragging", MarkerDraggingActivity::class.java, "Description"))
         featuresArrayList.add(Features(20, "Indoor", IndoorActivity::class.java, "Description"))
+        featuresArrayList.add(Features(21, "Show Heatmap data", HeatMapActivity::class.java, "Description"))
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView)
-        mLayoutManager = LinearLayoutManager(this)
+        mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         featuresRecycleView!!.layoutManager = mLayoutManager
         val featuresListAdapter = object : FeaturesListAdapter(featuresArrayList) {
             override fun redirectOnFeatureCallBack(features: Features) {

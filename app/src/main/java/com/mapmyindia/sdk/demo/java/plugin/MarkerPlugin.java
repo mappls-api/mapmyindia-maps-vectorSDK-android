@@ -30,7 +30,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
  */
 public class MarkerPlugin implements MapView.OnMapChangedListener {
 
-  private MapboxMap mapmyIndiaMap;
+    private MapboxMap mapmyIndiaMap;
     private Feature feature;
     private static final String SOURCE_ID = "SOURCE_ID";
     private static final String ICON_ID = "ICON_ID";
@@ -46,8 +46,8 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
     private String PROPERTY_ROTATION = "rotation";
 
 
-  public MarkerPlugin(MapboxMap mapmyIndiaMap, MapView mapView) {
-    this.mapmyIndiaMap = mapmyIndiaMap;
+    public MarkerPlugin(MapboxMap mapmyIndiaMap, MapView mapView) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
         this.mMapView = mapView;
         updateState();
         mapView.addOnMapChangedListener(this);
@@ -60,13 +60,13 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
     @SuppressLint("ClickableViewAccessibility")
     private void initialiseForDraggingMarker() {
         mMapView.setOnTouchListener((view, motionEvent) -> {
-            if(isDraggable) {
+            if (isDraggable) {
 
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     isMarkerPosition = isMarkerPosition(new PointF(motionEvent.getX(), motionEvent.getY()));
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                     if (isMarkerPosition)
-                      updateMarkerPosition(mapmyIndiaMap.getProjection().fromScreenLocation(new PointF(motionEvent.getX(), motionEvent.getY())));
+                        updateMarkerPosition(mapmyIndiaMap.getProjection().fromScreenLocation(new PointF(motionEvent.getX(), motionEvent.getY())));
                 }
             }
 
@@ -81,7 +81,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
      * @return check is pointF is the marker
      */
     private boolean isMarkerPosition(PointF pointF) {
-      List<Feature> features = mapmyIndiaMap.queryRenderedFeatures(pointF, LAYER_ID);
+        List<Feature> features = mapmyIndiaMap.queryRenderedFeatures(pointF, LAYER_ID);
         return !features.isEmpty();
     }
 
@@ -104,15 +104,15 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
         isRemoveCallbacks = false;
         this.position = position;
         feature = Feature.fromGeometry(Point.fromLngLat(position.getLongitude(), position.getLatitude()));
-      mapmyIndiaMap.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(drawable));
-      mapmyIndiaMap.addSource(markerSource = new GeoJsonSource(SOURCE_ID, feature));
+        mapmyIndiaMap.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(drawable));
+        mapmyIndiaMap.addSource(markerSource = new GeoJsonSource(SOURCE_ID, feature));
     }
 
     /**
      * Update the state of the marker
      */
     private void updateState() {
-      GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(SOURCE_ID);
+        GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(SOURCE_ID);
         if (source == null) {
             initialise();
             return;
@@ -133,7 +133,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
                 iconAllowOverlap(true),
                 iconIgnorePlacement(false)
         );
-      mapmyIndiaMap.addLayer(symbolLayer);
+        mapmyIndiaMap.addLayer(symbolLayer);
     }
 
     /**
@@ -144,7 +144,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 360);
         valueAnimator.setDuration(1000);
         valueAnimator.addUpdateListener(valueAnimator1 -> {
-            if(!isRemoveCallbacks) {
+            if (!isRemoveCallbacks) {
                 Float bearing = (Float) valueAnimator1.getAnimatedValue();
                 rotate(bearing);
             }
@@ -168,7 +168,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
      * @param rotate bearing
      */
     public void rotate(float rotate) {
-        if(feature!=null && feature.properties()!=null) {
+        if (feature != null && feature.properties() != null) {
             feature.properties().addProperty(PROPERTY_ROTATION, rotate);
         }
         updateState();
@@ -186,17 +186,17 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
      * Only move from start point to end point
      *
      * @param latLngStart Start Point
-     * @param latLngEnd End point
+     * @param latLngEnd   End point
      */
     public void startTransition(LatLng latLngStart, LatLng latLngEnd) {
         isRemoveCallbacks = false;
         ValueAnimator valueAnimator = ValueAnimator.ofObject(new LatLngEvaluator(), latLngStart, latLngEnd);
         valueAnimator.setDuration(15000);
         valueAnimator.addUpdateListener(valueAnimator1 -> {
-            if(!isRemoveCallbacks) {
+            if (!isRemoveCallbacks) {
                 LatLng latLng = (LatLng) valueAnimator1.getAnimatedValue();
-              if (!mapmyIndiaMap.getProjection().getVisibleRegion().latLngBounds.contains(latLng)) {
-                mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+                if (!mapmyIndiaMap.getProjection().getVisibleRegion().latLngBounds.contains(latLng)) {
+                    mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
                 }
                 updateMarkerPosition(latLng);
             }
@@ -206,7 +206,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
 
     @Override
     public void onMapChanged(int change) {
-        if(change == MapView.DID_FINISH_LOADING_STYLE) {
+        if (change == MapView.DID_FINISH_LOADING_STYLE) {
             updateState();
             addMarker(position);
         }

@@ -22,6 +22,9 @@ buildscript {
 
 allprojects {
     repositories {
+        maven {
+            url 'https://maven.mapmyindia.com/repository/mapmyindia/'
+        }
         maven { url "https://maven.google.com" }
         google()
         jcenter()

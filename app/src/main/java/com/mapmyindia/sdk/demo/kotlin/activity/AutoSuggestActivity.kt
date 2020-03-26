@@ -2,9 +2,9 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.os.Bundle
 import android.os.Handler
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -35,9 +35,9 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
 
     lateinit var mapmyIndiaMap: MapboxMap
     private lateinit var autoSuggestText: EditText
-    lateinit var recyclerView: RecyclerView
+    lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
     lateinit var handler: Handler
-    private var mLayoutManager: LinearLayoutManager? = null
+    private var mLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
     private lateinit var transparentDialog: TransparentProgressDialog
     lateinit var authToken: String
     lateinit var tokenType: String
@@ -94,7 +94,7 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
         recyclerView = findViewById(R.id.recyclerview)
         autoSuggestText = findViewById(R.id.auto_suggest)
 
-        mLayoutManager = LinearLayoutManager(this@AutoSuggestActivity)
+        mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@AutoSuggestActivity)
         recyclerView.layoutManager = mLayoutManager
         recyclerView.visibility = View.GONE
 

@@ -1,6 +1,6 @@
 package com.mapmyindia.sdk.demo.kotlin.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import java.util.*
 /**
  * Created by CEINFO on 26-02-2019.
  */
-abstract class FeaturesListAdapter(private val list: ArrayList<Features>) : RecyclerView.Adapter<FeaturesListAdapter.MyViewHolder>() {
+abstract class FeaturesListAdapter(private val list: ArrayList<Features>) : androidx.recyclerview.widget.RecyclerView.Adapter<FeaturesListAdapter.MyViewHolder>() {
 
     abstract fun redirectOnFeatureCallBack(features: Features)
 
@@ -30,7 +30,7 @@ abstract class FeaturesListAdapter(private val list: ArrayList<Features>) : Recy
         return list.size
     }
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
         var viewName: TextView
 

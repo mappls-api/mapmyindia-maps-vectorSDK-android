@@ -1,6 +1,6 @@
 package com.mapmyindia.sdk.demo.kotlin.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import java.util.*
 /**
  * Created by CEINFO on 26-02-2019.
  */
-class AutoSuggestAdapter(private var list: ArrayList<ELocation>,private var placeName: PlaceName) : RecyclerView.Adapter<AutoSuggestAdapter.MyViewholder>() {
+class AutoSuggestAdapter(private var list: ArrayList<ELocation>,private var placeName: PlaceName) : androidx.recyclerview.widget.RecyclerView.Adapter<AutoSuggestAdapter.MyViewholder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewholder {
@@ -34,7 +34,7 @@ class AutoSuggestAdapter(private var list: ArrayList<ELocation>,private var plac
         fun nameOfPlace(name: String)
     }
 
-    inner class MyViewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MyViewholder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
         var viewName: TextView
 
