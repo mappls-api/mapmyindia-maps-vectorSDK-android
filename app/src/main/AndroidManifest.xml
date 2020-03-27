@@ -12,13 +12,38 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".kotlin.activity.HeatMapActivity"></activity>
+        <activity android:name=".kotlin.activity.FullModeActivity"
+            android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity"/>
+        <activity android:name=".kotlin.activity.CardModeActivity"
+            android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity"/>
+        <activity
+            android:name=".kotlin.activity.FullModeFragmentAutocompleteActivity"
+            android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
+        <activity
+            android:name=".kotlin.activity.CardModeFragmentAutocompleteActivity"
+            android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
+        <activity android:name=".kotlin.activity.PlaceAutoCompleteActivity" />
+        <activity android:name=".kotlin.activity.HeatMapActivity" />
         <activity android:name=".java.activity.HeatMapActivity" />
         <activity android:name=".java.activity.MarkerDraggingActivity" />
         <activity android:name=".java.activity.CarAnimationActivity" />
         <activity android:name=".java.activity.SemiCirclePolylineActivity" />
         <activity android:name=".java.activity.GradientPolylineActivity" />
         <activity android:name=".java.activity.MarkerRotationTransitionActivity" />
+        <activity android:name=".java.activity.PlaceAutoCompleteActivity" />
+        <activity
+            android:name=".java.activity.CardModeFragmentAutocompleteActivity"
+            android:parentActivityName=".java.activity.PlaceAutoCompleteActivity"
+            />
+        <activity
+            android:name=".java.activity.CardModeActivity"
+            android:parentActivityName=".java.activity.PlaceAutoCompleteActivity" />
+        <activity
+            android:name=".java.activity.FullModeActivity"
+            android:parentActivityName=".java.activity.PlaceAutoCompleteActivity" />
+        <activity
+            android:name=".java.activity.FullModeFragmentAutocompleteActivity"
+            android:parentActivityName=".java.activity.PlaceAutoCompleteActivity" />
         <activity android:name=".kotlin.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -70,10 +95,10 @@
         <activity android:name=".kotlin.activity.IndoorActivity" />
         <activity android:name=".kotlin.activity.AddCustomInfoWindowActivity" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>

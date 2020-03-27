@@ -16,8 +16,8 @@ import java.util.*
  */
 class FeatureListActivityKotlin : AppCompatActivity() {
 
-    private var featuresRecycleView: androidx.recyclerview.widget.RecyclerView? = null
-    private var mLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
+    private var featuresRecycleView: RecyclerView? = null
+    private var mLayoutManager: LinearLayoutManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +49,7 @@ class FeatureListActivityKotlin : AppCompatActivity() {
         featuresArrayList.add(Features(19, "Marker Dragging", MarkerDraggingActivity::class.java, "Description"))
         featuresArrayList.add(Features(20, "Indoor", IndoorActivity::class.java, "Description"))
         featuresArrayList.add(Features(21, "Show Heatmap data", HeatMapActivity::class.java, "Description"))
+        featuresArrayList.add(Features(22, "Place Autocomplete Widget", PlaceAutoCompleteActivity::class.java, "Description"))
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView)
         mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
