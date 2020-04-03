@@ -44,6 +44,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
 
     private GeoJsonSource markerSource;
     private String PROPERTY_ROTATION = "rotation";
+    private OnMarkerDraggingListener onMarkerDraggingListener;
 
 
     public MarkerPlugin(MapboxMap mapmyIndiaMap, MapView mapView) {
@@ -52,6 +53,10 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
         updateState();
         mapView.addOnMapChangedListener(this);
         initialiseForDraggingMarker();
+    }
+
+    public void setOnMarkerDraggingListener(OnMarkerDraggingListener onMarkerDraggingListener) {
+        this.onMarkerDraggingListener = onMarkerDraggingListener;
     }
 
     /**
@@ -65,8 +70,13 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     isMarkerPosition = isMarkerPosition(new PointF(motionEvent.getX(), motionEvent.getY()));
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                    if (isMarkerPosition)
-                        updateMarkerPosition(mapmyIndiaMap.getProjection().fromScreenLocation(new PointF(motionEvent.getX(), motionEvent.getY())));
+                    if (isMarkerPosition) {
+                        LatLng position = mapmyIndiaMap.getProjection().fromScreenLocation(new PointF(motionEvent.getX(), motionEvent.getY()));
+                        updateMarkerPosition(position);
+                        if (onMarkerDraggingListener != null) {
+                            onMarkerDraggingListener.onMarkerDragging(position);
+                        }
+                    }
                 }
             }
 
@@ -234,5 +244,9 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
      */
     public void removeCallbacks() {
         isRemoveCallbacks = true;
+    }
+
+    public interface OnMarkerDraggingListener {
+        void onMarkerDragging(LatLng position);
     }
 }

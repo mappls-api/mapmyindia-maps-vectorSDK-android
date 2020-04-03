@@ -1,6 +1,8 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -40,6 +42,12 @@ public class MarkerDraggingActivity extends AppCompatActivity implements OnMapRe
         markerPlugin.icon(getResources().getDrawable(R.drawable.placeholder));
         markerPlugin.addMarker(latLng);
         markerPlugin.draggable(true);
+        markerPlugin.setOnMarkerDraggingListener(new MarkerPlugin.OnMarkerDraggingListener() {
+            @Override
+            public void onMarkerDragging(LatLng position) {
+                Toast.makeText(MarkerDraggingActivity.this, latLng.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

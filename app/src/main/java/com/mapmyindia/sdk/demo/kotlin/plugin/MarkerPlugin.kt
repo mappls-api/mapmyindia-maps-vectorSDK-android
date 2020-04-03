@@ -31,6 +31,7 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
     private var markerSource : GeoJsonSource? = null
     private var isDraggable: Boolean = false
     private var isMarkerPosition: Boolean = false
+    private var onMarkerDraggingListener: OnMarkerDraggingListener? = null
 
 
     companion object {
@@ -46,6 +47,10 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
         initialiseForDraggingMarker()
     }
 
+    fun setOnMarkerDraggingListener(onMarkerDraggingListener: OnMarkerDraggingListener) {
+        this.onMarkerDraggingListener = onMarkerDraggingListener
+    }
+
     /**
      * Add touch listener for dragging the marker
      */
@@ -56,9 +61,11 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
                 if(isDraggable) {
                     if(motionEvent!!.action == MotionEvent.ACTION_DOWN) {
                         isMarkerPosition = isMarkerPosition(PointF(motionEvent.x, motionEvent.y))
-                    } else if(motionEvent!!.action == MotionEvent.ACTION_MOVE) {
+                    } else if(motionEvent.action == MotionEvent.ACTION_MOVE) {
                         if(isMarkerPosition) {
-                            updateMarkerPosition(mapmyIndiaMap.projection.fromScreenLocation(PointF(motionEvent.x, motionEvent.y)))
+                            val position: LatLng = mapmyIndiaMap.projection.fromScreenLocation(PointF(motionEvent.x, motionEvent.y))
+                            updateMarkerPosition(position)
+                            onMarkerDraggingListener?.onMarkerDragging(position)
                         }
                     }
                 }
@@ -221,4 +228,8 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
         isRemoveCallback = true
     }
 
+    interface OnMarkerDraggingListener {
+        fun onMarkerDragging(position: LatLng)
+
+    }
 }
