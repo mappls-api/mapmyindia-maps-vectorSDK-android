@@ -650,5 +650,4 @@ Need support? contact us!
 Read about the latest updates & customer stories
 
 
-> © Copyright 2019. CE Info Systems Pvt. Ltd. All Rights Reserved. | [Terms & Conditions](http://www.mapmyindia.com/api/terms-&-conditions)
-> mapbox-gl-native copyright (c) 2014-2019 Mapbox.
+> © Copyright 2020. CE Info Systems Pvt. Ltd. All Rights Reserved. | [Terms & Conditions](http://www.mapmyindia.com/api/terms-&-conditions).
