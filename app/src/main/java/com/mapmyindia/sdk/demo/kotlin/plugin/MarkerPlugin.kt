@@ -103,7 +103,7 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
         }
 
         if (feature != null)
-            markerSource!!.setGeoJson(feature)
+            markerSource?.setGeoJson(feature)
     }
 
     /**
@@ -144,8 +144,10 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
         this.position = position
         feature = Feature.fromGeometry(Point.fromLngLat(position.longitude, position.latitude))
         mapmyIndiaMap.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(icon))
-        markerSource = GeoJsonSource(SOURCE_ID, feature)
-        mapmyIndiaMap.addSource(markerSource!!)
+        if(mapmyIndiaMap.getSource(SOURCE_ID) == null) {
+            markerSource = GeoJsonSource(SOURCE_ID, feature)
+            mapmyIndiaMap.addSource(markerSource!!)
+        }
     }
 
     /**
@@ -203,15 +205,17 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
      * Add symbol layer on map
      */
     private fun initialise() {
-        val symbolLayer : SymbolLayer = SymbolLayer(LAYER_ID, SOURCE_ID)
-                .withProperties(
-                        iconImage(ICON_ID),
-                        iconRotate(get(PROPERTY_ROTATION)),
-                        iconAllowOverlap(true),
-                        iconIgnorePlacement(true)
-                )
+        if(mapmyIndiaMap.getLayer(LAYER_ID) == null) {
+            val symbolLayer: SymbolLayer = SymbolLayer(LAYER_ID, SOURCE_ID)
+                    .withProperties(
+                            iconImage(ICON_ID),
+                            iconRotate(get(PROPERTY_ROTATION)),
+                            iconAllowOverlap(true),
+                            iconIgnorePlacement(true)
+                    )
 
-        mapmyIndiaMap.addLayer(symbolLayer)
+            mapmyIndiaMap.addLayer(symbolLayer)
+        }
     }
 
     override fun onMapChanged(change: Int) {

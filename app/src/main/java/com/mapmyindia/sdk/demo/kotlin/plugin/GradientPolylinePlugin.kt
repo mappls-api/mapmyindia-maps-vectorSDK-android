@@ -71,15 +71,17 @@ class GradientPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapV
      * Add Line layer to map
      */
     private fun create() {
-        mapmyIndiaMap.addLayer(LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
-                //                lineColor(Color.RED),
-                lineCap(Property.LINE_CAP_ROUND),
-                lineJoin(Property.LINE_JOIN_BEVEL),
-                lineGradient(interpolate(
-                        linear(), lineProgress(),
-                        stop(0f, color(startColor)),
-                        stop(1f, color(endColor)))),
-                lineWidth(4f)))
+        if(mapmyIndiaMap.getLayer(LAYER_ID) == null) {
+            mapmyIndiaMap.addLayer(LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+                    //                lineColor(Color.RED),
+                    lineCap(Property.LINE_CAP_ROUND),
+                    lineJoin(Property.LINE_JOIN_BEVEL),
+                    lineGradient(interpolate(
+                            linear(), lineProgress(),
+                            stop(0f, color(startColor)),
+                            stop(1f, color(endColor)))),
+                    lineWidth(4f)))
+        }
     }
 
 
@@ -87,9 +89,11 @@ class GradientPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapV
      * Add various sources to the map.
      */
     private fun initSources(featureCollection: FeatureCollection) {
-        polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
-                GeoJsonOptions().withLineMetrics(true).withBuffer(2))
-        mapmyIndiaMap.addSource(polylineSource!!)
+        if(mapmyIndiaMap.getSource(UPPER_SOURCE_ID) == null) {
+            polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+                    GeoJsonOptions().withLineMetrics(true).withBuffer(2))
+            mapmyIndiaMap.addSource(polylineSource!!)
+        }
     }
 
     override fun onMapChanged(i: Int) {

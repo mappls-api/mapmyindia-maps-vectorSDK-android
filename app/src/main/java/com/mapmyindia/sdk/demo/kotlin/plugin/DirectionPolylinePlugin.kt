@@ -93,16 +93,18 @@ class DirectionPolylinePlugin(mapmyIndiaMap: MapboxMap, mapView: MapView, privat
      * Add various sources to the map.
      */
     private fun initSources(featureCollection: FeatureCollection) {
-        polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
-                GeoJsonOptions().withLineMetrics(true).withBuffer(2))
-        mapmyIndiaMap!!.addSource(polylineSource!!)
+        if(mapmyIndiaMap?.getSource(UPPER_SOURCE_ID) == null) {
+            polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+                    GeoJsonOptions().withLineMetrics(true).withBuffer(2))
+            mapmyIndiaMap?.addSource(polylineSource!!)
+        }
     }
 
     /**
      * Update Source and GeoJson properties
      */
     private fun updateSource() {
-        val source = mapmyIndiaMap!!.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
+        val source = mapmyIndiaMap?.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
         if (source == null) {
             create()
             return
@@ -116,15 +118,17 @@ class DirectionPolylinePlugin(mapmyIndiaMap: MapboxMap, mapView: MapView, privat
      * Add Line layer on map
      */
     private fun create() {
-        lineLayer = LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
-                lineCap(Property.LINE_CAP_ROUND),
-                lineJoin(Property.LINE_JOIN_ROUND),
-                lineWidth(5f))
-        mapmyIndiaMap!!.addLayer(lineLayer!!)
+        if(mapmyIndiaMap?.getLayer(LAYER_ID) == null) {
+            lineLayer = LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+                    lineCap(Property.LINE_CAP_ROUND),
+                    lineJoin(Property.LINE_JOIN_ROUND),
+                    lineWidth(5f))
+            mapmyIndiaMap?.addLayer(lineLayer!!)
 
 
-        if (directionsCriteria!!.equals(DirectionsCriteria.PROFILE_WALKING, ignoreCase = true)) {
-            lineLayer!!.setProperties(lineDasharray(arrayOf(gapDash, widthDash)))
+            if (directionsCriteria!!.equals(DirectionsCriteria.PROFILE_WALKING, ignoreCase = true)) {
+                lineLayer?.setProperties(lineDasharray(arrayOf(gapDash, widthDash)))
+            }
         }
     }
 

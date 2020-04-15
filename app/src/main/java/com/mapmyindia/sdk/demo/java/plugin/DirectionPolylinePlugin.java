@@ -106,8 +106,10 @@ public class DirectionPolylinePlugin implements MapView.OnMapChangedListener {
      * Add various sources to the map.
      */
     private void initSources(@NonNull FeatureCollection featureCollection) {
-      mapmyIndiaMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
-                new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
+        if(mapmyIndiaMap.getSource(UPPER_SOURCE_ID) == null) {
+            mapmyIndiaMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+                    new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
+        }
     }
 
     /**
@@ -128,14 +130,16 @@ public class DirectionPolylinePlugin implements MapView.OnMapChangedListener {
      * Add Line layer on map
      */
     private void create() {
-      mapmyIndiaMap.addLayer(lineLayer = new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
-                lineCap(Property.LINE_CAP_ROUND),
-                lineJoin(Property.LINE_JOIN_ROUND),
-                lineWidth(5f)));
+        if(mapmyIndiaMap.getLayer(LAYER_ID) == null) {
+            mapmyIndiaMap.addLayer(lineLayer = new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+                    lineCap(Property.LINE_CAP_ROUND),
+                    lineJoin(Property.LINE_JOIN_ROUND),
+                    lineWidth(5f)));
 
 
-        if(directionsCriteria.equalsIgnoreCase(DirectionsCriteria.PROFILE_WALKING)) {
-            lineLayer.setProperties(lineDasharray(new Float[]{gapDash, widthDash}));
+            if (directionsCriteria.equalsIgnoreCase(DirectionsCriteria.PROFILE_WALKING)) {
+                lineLayer.setProperties(lineDasharray(new Float[]{gapDash, widthDash}));
+            }
         }
     }
 

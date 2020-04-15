@@ -115,7 +115,9 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
         this.position = position;
         feature = Feature.fromGeometry(Point.fromLngLat(position.getLongitude(), position.getLatitude()));
         mapmyIndiaMap.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(drawable));
-        mapmyIndiaMap.addSource(markerSource = new GeoJsonSource(SOURCE_ID, feature));
+        if(mapmyIndiaMap.getSource(SOURCE_ID) == null) {
+            mapmyIndiaMap.addSource(markerSource = new GeoJsonSource(SOURCE_ID, feature));
+        }
     }
 
     /**
@@ -136,14 +138,16 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
      * Add symbol layer on map
      */
     private void initialise() {
-        SymbolLayer symbolLayer = new SymbolLayer(LAYER_ID, SOURCE_ID);
-        symbolLayer.withProperties(
-                iconImage(ICON_ID),
-                iconRotate(get(PROPERTY_ROTATION)),
-                iconAllowOverlap(true),
-                iconIgnorePlacement(false)
-        );
-        mapmyIndiaMap.addLayer(symbolLayer);
+        if(mapmyIndiaMap.getLayer(LAYER_ID) == null) {
+            SymbolLayer symbolLayer = new SymbolLayer(LAYER_ID, SOURCE_ID);
+            symbolLayer.withProperties(
+                    iconImage(ICON_ID),
+                    iconRotate(get(PROPERTY_ROTATION)),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(false)
+            );
+            mapmyIndiaMap.addLayer(symbolLayer);
+        }
     }
 
     /**

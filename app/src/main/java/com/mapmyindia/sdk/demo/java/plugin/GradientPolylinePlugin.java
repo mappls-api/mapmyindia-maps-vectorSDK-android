@@ -89,15 +89,17 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
      * Add Line layer to map
      */
     private void create() {
-      mapmyIndiaMap.addLayer(new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+        if(mapmyIndiaMap.getLayer(LAYER_ID) == null) {
+            mapmyIndiaMap.addLayer(new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
 //                lineColor(Color.RED),
-                lineCap(Property.LINE_CAP_ROUND),
-                lineJoin(Property.LINE_JOIN_BEVEL),
-                lineGradient(interpolate(
-                        linear(), lineProgress(),
-                        stop(0f, color(startColor)),
-                        stop(1f, color(endColor)))),
-                lineWidth(4f)));
+                    lineCap(Property.LINE_CAP_ROUND),
+                    lineJoin(Property.LINE_JOIN_BEVEL),
+                    lineGradient(interpolate(
+                            linear(), lineProgress(),
+                            stop(0f, color(startColor)),
+                            stop(1f, color(endColor)))),
+                    lineWidth(4f)));
+        }
     }
 
 
@@ -106,8 +108,10 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
      * Add various sources to the map.
      */
     private void initSources(@NonNull FeatureCollection featureCollection) {
-      mapmyIndiaMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
-                new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
+        if(mapmyIndiaMap.getSource(UPPER_SOURCE_ID) == null) {
+            mapmyIndiaMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+                    new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
+        }
     }
 
     @Override

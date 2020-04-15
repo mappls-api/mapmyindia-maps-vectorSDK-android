@@ -175,10 +175,11 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
         mapmyIndiaMap!!.addImage(CAR,
                 (context.resources.getDrawable(R.drawable.placeholder, null) as BitmapDrawable).bitmap)
 
+        if(mapmyIndiaMap.getSource(CAR_SOURCE) == null) {
 
-
-        carSource = GeoJsonSource(CAR_SOURCE, featureCollection)
-        mapmyIndiaMap.addSource(carSource!!)
+            carSource = GeoJsonSource(CAR_SOURCE, featureCollection)
+            mapmyIndiaMap.addSource(carSource!!)
+        }
 
         GenerateViewIconTask(WeakReference(this).get()!!).execute(featureCollection)
     }
@@ -340,38 +341,41 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
      */
     private fun initialise() {
         layerIds = ArrayList()
+        if(mapmyIndiaMap?.getLayer(CAR_LAYER) == null) {
+            val symbolLayer = SymbolLayer(CAR_LAYER, CAR_SOURCE)
+            symbolLayer.withProperties(
+                    iconImage(CAR),
+                    iconRotate(get(PROPERTY_BEARING)),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
+                    iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
 
-        val symbolLayer = SymbolLayer(CAR_LAYER, CAR_SOURCE)
-        symbolLayer.withProperties(
-                iconImage(CAR),
-                iconRotate(get(PROPERTY_BEARING)),
-                iconAllowOverlap(true),
-                iconIgnorePlacement(true),
-                iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
+            )
+            mapmyIndiaMap!!.addLayer(symbolLayer)
+            layerIds!!.add(symbolLayer.id)
+        }
 
-        )
-        mapmyIndiaMap!!.addLayer(symbolLayer)
-        layerIds!!.add(symbolLayer.id)
+        if(mapmyIndiaMap.getLayer(SOURCE_LAYER_INFO_WINDOW) == null) {
+            val symbolLayerInfoWindow = SymbolLayer(SOURCE_LAYER_INFO_WINDOW, CAR_SOURCE)
+                    .withProperties(
+                            /* show image with id title based on the value of the name feature property */
+                            iconImage("{name}"),
 
-        val symbolLayerInfoWindow = SymbolLayer(SOURCE_LAYER_INFO_WINDOW, CAR_SOURCE)
-                .withProperties(
-                        /* show image with id title based on the value of the name feature property */
-                        iconImage("{name}"),
+                            /* set anchor of icon to bottom-left */
+                            iconAnchor(Property.ICON_ANCHOR_BOTTOM_LEFT),
 
-                        /* set anchor of icon to bottom-left */
-                        iconAnchor(Property.ICON_ANCHOR_BOTTOM_LEFT),
+                            /* all info window and marker image to appear at the same time*/
+                            iconAllowOverlap(true),
 
-                        /* all info window and marker image to appear at the same time*/
-                        iconAllowOverlap(true),
+                            /* offset the info window to be above the marker */
+                            iconOffset(arrayOf(-2f, -25f))
+                    )
+                    /* setData a filter to show only when selected feature property is true */
+                    .withFilter(eq(get(PROPERTY_SELECTED), literal(true)))
 
-                        /* offset the info window to be above the marker */
-                        iconOffset(arrayOf(-2f, -25f))
-                )
-                /* setData a filter to show only when selected feature property is true */
-                .withFilter(eq(get(PROPERTY_SELECTED), literal(true)))
-
-        mapmyIndiaMap.addLayer(symbolLayerInfoWindow)
-        layerIds!!.add(symbolLayerInfoWindow.id)
+            mapmyIndiaMap.addLayer(symbolLayerInfoWindow)
+            layerIds?.add(symbolLayerInfoWindow.id)
+        }
     }
 
 

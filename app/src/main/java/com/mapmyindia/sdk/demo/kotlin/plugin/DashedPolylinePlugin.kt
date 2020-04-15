@@ -56,9 +56,11 @@ class DashedPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapVie
      * Add various sources to the map.
      */
     private fun initSources(featureCollection: FeatureCollection) {
-        polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
-                GeoJsonOptions().withLineMetrics(true).withBuffer(2))
-        mapmyIndiaMap.addSource(polylineSource!!)
+        if(mapmyIndiaMap.getSource(UPPER_SOURCE_ID) == null) {
+            polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+                    GeoJsonOptions().withLineMetrics(true).withBuffer(2))
+            mapmyIndiaMap.addSource(polylineSource!!)
+        }
     }
 
     /**
@@ -79,12 +81,14 @@ class DashedPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapVie
      * Add Layer on map
      */
     private fun create() {
-        mapmyIndiaMap.addLayer(LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
-                lineColor(Color.RED),
-                lineDasharray(arrayOf<Float>(widthDash, gapDash)),
-                lineCap(Property.LINE_CAP_ROUND),
-                lineJoin(Property.LINE_JOIN_BEVEL),
-                lineWidth(4f)))
+        if(mapmyIndiaMap.getLayer(LAYER_ID) == null) {
+            mapmyIndiaMap.addLayer(LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+                    lineColor(Color.RED),
+                    lineDasharray(arrayOf<Float>(widthDash, gapDash)),
+                    lineCap(Property.LINE_CAP_ROUND),
+                    lineJoin(Property.LINE_JOIN_BEVEL),
+                    lineWidth(4f)))
+        }
     }
 
 

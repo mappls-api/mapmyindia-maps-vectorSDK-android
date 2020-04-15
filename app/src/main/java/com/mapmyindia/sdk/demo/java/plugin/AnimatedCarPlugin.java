@@ -210,9 +210,11 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
       mapmyIndiaMap.addImage(CAR,
                 ((BitmapDrawable) context.getResources().getDrawable(R.drawable.placeholder)).getBitmap());
 
+        if(mapmyIndiaMap.getSource(CAR_SOURCE) == null) {
 
-        carSource = new GeoJsonSource(CAR_SOURCE, featureCollection);
-      mapmyIndiaMap.addSource(carSource);
+            carSource = new GeoJsonSource(CAR_SOURCE, featureCollection);
+            mapmyIndiaMap.addSource(carSource);
+        }
 
         new GenerateViewIconTask(new WeakReference<>(this).get()).execute(featureCollection);
     }
@@ -394,40 +396,43 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
      */
     private void initialise() {
         layerIds = new ArrayList<>();
+        if(mapmyIndiaMap.getLayer(CAR_LAYER) == null) {
+            //Symbol layer for car
+            SymbolLayer symbolLayer = new SymbolLayer(CAR_LAYER, CAR_SOURCE);
+            symbolLayer.withProperties(
+                    iconImage(CAR),
+                    iconRotate(get(PROPERTY_BEARING)),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
+                    iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
 
-        //Symbol layer for car
-        SymbolLayer symbolLayer = new SymbolLayer(CAR_LAYER, CAR_SOURCE);
-        symbolLayer.withProperties(
-                iconImage(CAR),
-                iconRotate(get(PROPERTY_BEARING)),
-                iconAllowOverlap(true),
-                iconIgnorePlacement(true),
-                iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
+            );
+            mapmyIndiaMap.addLayer(symbolLayer);
+            layerIds.add(symbolLayer.getId());
+        }
 
-        );
-      mapmyIndiaMap.addLayer(symbolLayer);
-        layerIds.add(symbolLayer.getId());
+        if(mapmyIndiaMap.getLayer(SOURCE_LAYER_INFO_WINDOW) == null) {
+            //Symbol layer for Info Window
+            SymbolLayer symbolLayerInfoWindow = new SymbolLayer(SOURCE_LAYER_INFO_WINDOW, CAR_SOURCE)
+                    .withProperties(
+                            /* show image with id title based on the value of the name feature property */
+                            iconImage("{name}"),
 
-        //Symbol layer for Info Window
-        SymbolLayer symbolLayerInfoWindow = new SymbolLayer(SOURCE_LAYER_INFO_WINDOW, CAR_SOURCE)
-                .withProperties(
-                        /* show image with id title based on the value of the name feature property */
-                        iconImage("{name}"),
+                            /* set anchor of icon to bottom-left */
+                            iconAnchor(Property.ICON_ANCHOR_BOTTOM_LEFT),
 
-                        /* set anchor of icon to bottom-left */
-                        iconAnchor(Property.ICON_ANCHOR_BOTTOM_LEFT),
+                            /* all info window and marker image to appear at the same time*/
+                            iconAllowOverlap(true),
 
-                        /* all info window and marker image to appear at the same time*/
-                        iconAllowOverlap(true),
+                            /* offset the info window to be above the marker */
+                            iconOffset(new Float[]{-2f, -25f})
+                    )
+                    /* setData a filter to show only when selected feature property is true */
+                    .withFilter(eq((get(PROPERTY_SELECTED)), literal(true)));
 
-                        /* offset the info window to be above the marker */
-                        iconOffset(new Float[]{-2f, -25f})
-                )
-                /* setData a filter to show only when selected feature property is true */
-                .withFilter(eq((get(PROPERTY_SELECTED)), literal(true)));
-
-      mapmyIndiaMap.addLayer(symbolLayerInfoWindow);
-        layerIds.add(symbolLayerInfoWindow.getId());
+            mapmyIndiaMap.addLayer(symbolLayerInfoWindow);
+            layerIds.add(symbolLayerInfoWindow.getId());
+        }
     }
 
 

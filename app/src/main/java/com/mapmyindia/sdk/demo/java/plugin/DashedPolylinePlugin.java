@@ -71,8 +71,10 @@ public class DashedPolylinePlugin  implements MapView.OnMapChangedListener{
      * Add various sources to the map.
      */
     private void initSources(@NonNull FeatureCollection featureCollection) {
-      mapmyIndiaMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
-                new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
+        if(mapmyIndiaMap.getSource(UPPER_SOURCE_ID) == null) {
+            mapmyIndiaMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+                    new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
+        }
     }
 
     /**
@@ -93,12 +95,14 @@ public class DashedPolylinePlugin  implements MapView.OnMapChangedListener{
      * Add Layer on map
      */
     private void create() {
-      mapmyIndiaMap.addLayer(new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
-                lineColor(Color.RED),
-                lineDasharray(new Float[] {widthDash, gapDash}),
-                lineCap(Property.LINE_CAP_ROUND),
-                lineJoin(Property.LINE_JOIN_BEVEL),
-                lineWidth(4f)));
+        if(mapmyIndiaMap.getLayer(LAYER_ID) == null) {
+            mapmyIndiaMap.addLayer(new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+                    lineColor(Color.RED),
+                    lineDasharray(new Float[]{widthDash, gapDash}),
+                    lineCap(Property.LINE_CAP_ROUND),
+                    lineJoin(Property.LINE_JOIN_BEVEL),
+                    lineWidth(4f)));
+        }
     }
 
 
