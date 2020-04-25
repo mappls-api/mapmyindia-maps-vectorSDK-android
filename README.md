@@ -630,7 +630,7 @@ override fun onDestroy() {
 ```
 
 ## REST APIs
-For information on the REST API module, please read repository wiki [here](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android-sample-withREST-beta/wiki).
+For information on the REST API module, please read repository wiki [here](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android/wiki).
 
 For any queries and support, please contact: 
 
