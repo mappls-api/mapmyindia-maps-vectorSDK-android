@@ -1,7 +1,12 @@
 <resources>
-    <string name="app_name">Map Demo</string>
+    <string name="app_name">MapmyIndia SDK Demo</string>
     <string name="search">Search</string>
     <string name="pleaseCheckInternetConnection">Please check Internet connection</string>
     <string name="permission_grant_msg"><![CDATA[Please grant all the permissions to continue.  You can go to phone\'s settings >> Applications >> Orrder Driver and manually grant the permissions.]]></string>
     <string name="permission_acceptance_msg">Please Accept all the permissions.</string>
+
+    <string name="txt_start_safety_plugin">Start Safety Plugin</string>
+    <string name="txt_stop_safety_plugin">Stop Safety Plugin</string>
+    <string name="txt_get_containment_zone">Get Containment Zone</string>
+    <string name="initialize_safety_plugin">Initialize</string>
 </resources>

@@ -83,17 +83,18 @@
         <activity android:name=".java.activity.GeoCodeActivity" />
         <activity android:name=".java.activity.ReverseGeocodeActivity" />
         <activity android:name=".java.activity.NearByActivity" />
+        <activity android:name=".java.activity.SafetyPluginActivity" />
         <activity
             android:name=".java.activity.DirectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".java.activity.DistanceActivity" />
-        <activity android:name=".java.InfoWindowSymbolLayerActivity" />
         <activity android:name=".kotlin.activity.MarkerRotationTransitionActivity" />
         <activity android:name=".kotlin.activity.CarAnimationActivity" />
         <activity android:name=".java.activity.AddCustomInfoWindowActivity" />
         <activity android:name=".java.activity.IndoorActivity" />
         <activity android:name=".kotlin.activity.IndoorActivity" />
         <activity android:name=".kotlin.activity.AddCustomInfoWindowActivity" />
+        <activity android:name=".kotlin.activity.SafetyPluginActivity" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />

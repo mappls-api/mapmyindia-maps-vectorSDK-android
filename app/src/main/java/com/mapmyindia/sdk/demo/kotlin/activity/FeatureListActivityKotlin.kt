@@ -50,9 +50,10 @@ class FeatureListActivityKotlin : AppCompatActivity() {
         featuresArrayList.add(Features(20, "Indoor", IndoorActivity::class.java, "Description"))
         featuresArrayList.add(Features(21, "Show Heatmap data", HeatMapActivity::class.java, "Description"))
         featuresArrayList.add(Features(22, "Place Autocomplete Widget", PlaceAutoCompleteActivity::class.java, "Description"))
+        featuresArrayList.add(Features(22, "MapmyIndia Safety Plugin", SafetyPluginActivity::class.java, "MapmyIndia Safety Plugin"))
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView)
-        mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        mLayoutManager = LinearLayoutManager(this)
         featuresRecycleView!!.layoutManager = mLayoutManager
         val featuresListAdapter = object : FeaturesListAdapter(featuresArrayList) {
             override fun redirectOnFeatureCallBack(features: Features) {
