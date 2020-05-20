@@ -33,7 +33,8 @@ class CarAnimationActivity: AppCompatActivity(),OnMapReadyCallback {
         listOfLatlang.add(LatLng(28.704083, 77.101066))
         listOfLatlang.add(LatLng(28.703900, 77.101318))
 
-        map_view!!.getMapAsync(this)
+        map_view?.onCreate(savedInstanceState)
+        map_view?.getMapAsync(this)
     }
 
     override fun onMapReady(mapmyIndiaMap: MapboxMap?) {

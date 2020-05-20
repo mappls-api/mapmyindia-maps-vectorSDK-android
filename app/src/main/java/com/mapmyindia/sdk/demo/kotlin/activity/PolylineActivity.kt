@@ -26,8 +26,8 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.base_layout)
         mapView = findViewById(R.id.map_view)
-        mapView!!.onCreate(savedInstanceState)
-        mapView!!.getMapAsync(this)
+        mapView?.onCreate(savedInstanceState)
+        mapView?.getMapAsync(this)
     }
 
     override fun onMapReady(mapmyIndiaMap: MapboxMap) {

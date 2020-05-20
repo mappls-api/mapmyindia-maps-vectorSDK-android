@@ -31,6 +31,7 @@ public class CarAnimationActivity extends AppCompatActivity implements OnMapRead
         setContentView(R.layout.activity_car_animation);
 
         mapView = findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
         listOfLatlang.add(new LatLng(28.705436, 77.100462));

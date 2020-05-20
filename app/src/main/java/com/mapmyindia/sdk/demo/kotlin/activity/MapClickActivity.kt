@@ -20,8 +20,8 @@ class MapClickActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.base_layout)
         mapView = findViewById(R.id.map_view)
-        mapView!!.onCreate(savedInstanceState)
-        mapView!!.getMapAsync(this)
+        mapView?.onCreate(savedInstanceState)
+        mapView?.getMapAsync(this)
     }
 
     protected fun setCameraAndTilt(): CameraPosition {

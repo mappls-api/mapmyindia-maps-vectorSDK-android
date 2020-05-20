@@ -28,7 +28,7 @@ class SafetyPluginActivity : AppCompatActivity(), View.OnClickListener {
         findViewById<View>(R.id.initialize_btn).setOnClickListener(this)
         findViewById<View>(R.id.get_containment_zone_btn).setOnClickListener(this)
         startStopSafetyPlugin = findViewById<Button>(R.id.start_safety_plugin_btn)
-        startStopSafetyPlugin!!.setOnClickListener(this)
+        startStopSafetyPlugin?.setOnClickListener(this)
         txtInsideZone = findViewById(R.id.txt_inside_zone)
         txtZoneName = findViewById(R.id.txt_zone_name)
         txtDistance = findViewById(R.id.txt_distance)
@@ -36,15 +36,15 @@ class SafetyPluginActivity : AppCompatActivity(), View.OnClickListener {
         txtDistrictName = findViewById(R.id.txt_district_name)
         txtZoneType = findViewById(R.id.txt_zone_type)
         findViewById<View>(R.id.initialize_btn).isEnabled = !MapmyIndiaSafetyPlugin.getInstance().isInitialized
-        startStopSafetyPlugin!!.setText(if (!MapmyIndiaSafetyPlugin.getInstance().isRunning) R.string.txt_start_safety_plugin else R.string.txt_stop_safety_plugin)
+        startStopSafetyPlugin?.setText(if (!MapmyIndiaSafetyPlugin.getInstance().isRunning) R.string.txt_start_safety_plugin else R.string.txt_stop_safety_plugin)
     }
 
     private fun reset() {
-        txtInsideZone!!.text = "Inside Containment Zone: "
-        txtDistance!!.text = "Nearest zone distance: "
-        txtMapLink!!.text = "Containment Zone Link: "
-        txtDistrictName!!.text = "District Name: "
-        txtZoneType!!.text = "Zone Type: "
+        txtInsideZone?.text = "Inside Containment Zone: "
+        txtDistance?.text = "Nearest zone distance: "
+        txtMapLink?.text = "Containment Zone Link: "
+        txtDistrictName?.text = "District Name: "
+        txtZoneType?.text = "Zone Type: "
     }
 
     private fun getDistanceFormat(distance: Long): String {

@@ -35,8 +35,8 @@ class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.distance_activity)
         mapView = findViewById(R.id.map_view)
-        mapView!!.onCreate(savedInstanceState)
-        mapView!!.getMapAsync(this)
+        mapView?.onCreate(savedInstanceState)
+        mapView?.getMapAsync(this)
         transparentProgressDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
     }
 

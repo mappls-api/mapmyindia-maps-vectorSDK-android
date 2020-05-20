@@ -16,7 +16,7 @@ import com.mapmyindia.sdk.demo.java.plugin.MarkerPlugin;
 
 public class MarkerRotationTransitionActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
-    private MapboxMap mMapboxMap;
+    private MapboxMap mapmyIndiaMap;
     private MapView mapView;
     private TextView rotateMarker, markerTransition;
     private LatLng latLngStart = new LatLng(28.705436, 77.100462);
@@ -30,6 +30,7 @@ public class MarkerRotationTransitionActivity extends AppCompatActivity implemen
         setContentView(R.layout.activity_marker_rotation_transition);
 
         mapView = findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
         initViews();
@@ -49,7 +50,7 @@ public class MarkerRotationTransitionActivity extends AppCompatActivity implemen
     @Override
     public void onMapReady(MapboxMap mapmyIndiaMap) {
 
-      this.mMapboxMap = mapmyIndiaMap;
+      this.mapmyIndiaMap = mapmyIndiaMap;
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .include(latLngStart)
                 .include(latLngEnd)
@@ -62,7 +63,7 @@ public class MarkerRotationTransitionActivity extends AppCompatActivity implemen
     }
 
     private void initMarker() {
-        markerPlugin = new MarkerPlugin(mMapboxMap, mapView);
+        markerPlugin = new MarkerPlugin(mapmyIndiaMap, mapView);
         markerPlugin.icon(getResources().getDrawable(R.drawable.placeholder));
         markerPlugin.addMarker(latLngStart);
 

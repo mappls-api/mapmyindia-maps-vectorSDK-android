@@ -28,7 +28,7 @@ class CameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickList
         super.onCreate(savedInstanceState)
         setContentView(R.layout.camera_activity)
         mapView = findViewById(R.id.map_view)
-        mapView!!.onCreate(savedInstanceState)
+        mapView?.onCreate(savedInstanceState)
         initReferences()
         initListeners()
     }

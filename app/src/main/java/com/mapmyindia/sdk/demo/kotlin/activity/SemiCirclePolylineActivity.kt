@@ -23,7 +23,8 @@ class SemiCirclePolylineActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_semi_circle_polyline)
 
-        map_view!!.getMapAsync(this)
+        map_view?.onCreate(savedInstanceState)
+        map_view?.getMapAsync(this)
 
         listOfLatLng = SemiCirclePointsListHelper.showCurvedPolyline(LatLng(28.7039, 77.101318), LatLng(28.704248, 77.102370), 0.5)
     }
@@ -47,36 +48,36 @@ class SemiCirclePolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        map_view!!.onStart()
+        map_view?.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        map_view!!.onStop()
+        map_view?.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        map_view!!.onDestroy()
+        map_view?.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        map_view!!.onPause()
+        map_view?.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        map_view!!.onResume()
+        map_view?.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map_view!!.onLowMemory()
+        map_view?.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        map_view!!.onSaveInstanceState(outState)
+        map_view?.onSaveInstanceState(outState)
     }
 }

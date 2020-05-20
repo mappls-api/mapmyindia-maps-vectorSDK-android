@@ -48,7 +48,6 @@ class FullModeActivity : AppCompatActivity() , OnMapReadyCallback, PermissionsLi
         setContentView(R.layout.activity_full_mode_fragment)
         mapView = findViewById(R.id.map_view)
         mapView.onCreate(savedInstanceState)
-        mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
         search = findViewById(R.id.search)
         search.setOnClickListener {

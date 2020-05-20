@@ -23,7 +23,8 @@ class GradientPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gradient_polyline)
 
-        map_view!!.getMapAsync(this)
+        map_view?.onCreate(savedInstanceState)
+        map_view?.getMapAsync(this)
 
         listOfLatLng.add(LatLng(28.705436, 77.100462))
         listOfLatLng.add(LatLng(28.705191, 77.100784))

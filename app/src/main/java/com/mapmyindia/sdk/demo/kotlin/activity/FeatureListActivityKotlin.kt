@@ -50,7 +50,8 @@ class FeatureListActivityKotlin : AppCompatActivity() {
         featuresArrayList.add(Features(20, "Indoor", IndoorActivity::class.java, "Description"))
         featuresArrayList.add(Features(21, "Show Heatmap data", HeatMapActivity::class.java, "Description"))
         featuresArrayList.add(Features(22, "Place Autocomplete Widget", PlaceAutoCompleteActivity::class.java, "Description"))
-        featuresArrayList.add(Features(22, "MapmyIndia Safety Plugin", SafetyPluginActivity::class.java, "MapmyIndia Safety Plugin"))
+        featuresArrayList.add(Features(23, "MapmyIndia Safety Plugin", SafetyPluginActivity::class.java, "MapmyIndia Safety Plugin"))
+        featuresArrayList.add(Features(24, "Map Gestures", GesturesActivity::class.java, "Gesture"))
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView)
         mLayoutManager = LinearLayoutManager(this)

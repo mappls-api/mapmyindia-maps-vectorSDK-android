@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_marker_rotation_transition.*
 class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListener {
 
 
-    private var mMapboxMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapboxMap? = null
     private val latLngStart: LatLng = LatLng(28.705436, 77.100462)
     private val latLngEnd: LatLng = LatLng(28.703800, 77.101818)
     private var markerPlugin: MarkerPlugin? = null
@@ -29,10 +29,11 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_marker_rotation_transition)
 
-        map_view!!.getMapAsync(this)
+        map_view?.onCreate(savedInstanceState)
+        map_view?.getMapAsync(this)
 
-        marker_rotate!!.setOnClickListener(this)
-        marker_transition!!.setOnClickListener(this)
+        marker_rotate?.setOnClickListener(this)
+        marker_transition?.setOnClickListener(this)
     }
     override fun onMapError(p0: Int, p1: String?) {
 
@@ -40,7 +41,7 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
-        this.mMapboxMap = mapmyIndiaMap
+        this.mapmyIndiaMap = mapmyIndiaMap
 
         val latLngBounds: LatLngBounds = LatLngBounds.Builder()
                 .include(latLngStart)
@@ -54,7 +55,7 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initMarker() {
-        markerPlugin = MarkerPlugin(mMapboxMap!!, map_view)
+        markerPlugin = MarkerPlugin(mapmyIndiaMap!!, map_view)
         markerPlugin!!.icon = resources!!.getDrawable(R.drawable.placeholder,null)
         markerPlugin!!.addMarker(latLngStart)
     }

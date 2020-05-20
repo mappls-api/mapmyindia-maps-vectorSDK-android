@@ -1,6 +1,7 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,7 +25,7 @@ public class AddMarkerActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_layout);
-      mapView = findViewById(R.id.map_view);
+        mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
@@ -33,16 +34,16 @@ public class AddMarkerActivity extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(MapboxMap mapmyIndiaMap) {
 
 
-      mapmyIndiaMap.setPadding(20, 20, 20, 20);
+        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
-      mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(
+        mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(
                 25.321684, 82.987289)).title("XYZ"));
 
         /* this is done for animating/moving camera to particular position */
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
                 25.321684, 82.987289)).zoom(10).tilt(0).build();
-      mapmyIndiaMap.setCameraPosition(cameraPosition);
+        mapmyIndiaMap.setCameraPosition(cameraPosition);
     }
 
     @Override

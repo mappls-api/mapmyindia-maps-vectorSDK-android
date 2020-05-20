@@ -12,10 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".kotlin.activity.FullModeActivity"
-            android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity"/>
-        <activity android:name=".kotlin.activity.CardModeActivity"
-            android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity"/>
+        <activity android:name=".kotlin.activity.GesturesActivity"></activity>
+        <activity android:name=".java.activity.GesturesActivity" />
+        <activity
+            android:name=".kotlin.activity.FullModeActivity"
+            android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
+        <activity
+            android:name=".kotlin.activity.CardModeActivity"
+            android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".kotlin.activity.FullModeFragmentAutocompleteActivity"
             android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
@@ -33,8 +37,7 @@
         <activity android:name=".java.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".java.activity.CardModeFragmentAutocompleteActivity"
-            android:parentActivityName=".java.activity.PlaceAutoCompleteActivity"
-            />
+            android:parentActivityName=".java.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".java.activity.CardModeActivity"
             android:parentActivityName=".java.activity.PlaceAutoCompleteActivity" />

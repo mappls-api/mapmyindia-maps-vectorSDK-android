@@ -26,6 +26,7 @@ public class SemiCirclePolylineActivity extends AppCompatActivity implements OnM
         setContentView(R.layout.activity_semi_circle_polyline);
 
         mapView = findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
         listOfLatLng = SemiCirclePointsListHelper.showCurvedPolyline(new LatLng(28.7039, 77.101318), new LatLng(28.704248, 77.102370), 0.5);

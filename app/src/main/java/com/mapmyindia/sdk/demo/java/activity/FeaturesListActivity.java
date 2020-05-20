@@ -56,7 +56,8 @@ public class FeaturesListActivity extends AppCompatActivity {
         featuresArrayList.add(new Features(20, "Indoor", IndoorActivity.class, "Description"));
         featuresArrayList.add(new Features(21, "Show Heatmap data", HeatMapActivity.class, "Description"));
         featuresArrayList.add(new Features(22, "Place Autocomplete Widget", PlaceAutoCompleteActivity.class, "Description"));
-        featuresArrayList.add(new Features(22, "MapmyIndia Safety Plugin", SafetyPluginActivity.class, "MapmyIndia Safety Plugin"));
+        featuresArrayList.add(new Features(23, "MapmyIndia Safety Plugin", SafetyPluginActivity.class, "MapmyIndia Safety Plugin"));
+        featuresArrayList.add(new Features(24, "Map Gestures", GesturesActivity.class, "Gestures"));
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView);
         mLayoutManager = new LinearLayoutManager(FeaturesListActivity.this);

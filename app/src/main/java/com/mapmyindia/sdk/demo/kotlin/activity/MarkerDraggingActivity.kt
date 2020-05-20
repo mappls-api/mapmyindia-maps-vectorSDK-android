@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.base_layout.*
  */
 class MarkerDraggingActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private var mMapboxMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapboxMap? = null
     private val latLng = LatLng(28.705436, 77.100462)
     private var markerPlugin: MarkerPlugin? = null
 
@@ -26,18 +26,18 @@ class MarkerDraggingActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.base_layout)
 
-        map_view!!.onCreate(savedInstanceState)
-        map_view!!.getMapAsync(this)
+        map_view?.onCreate(savedInstanceState)
+        map_view?.getMapAsync(this)
     }
 
     override fun onMapReady(mapmyIndiaMap: MapboxMap) {
-        this.mMapboxMap = mapmyIndiaMap
+        this.mapmyIndiaMap = mapmyIndiaMap
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0))
         initMarker()
     }
 
     private fun initMarker() {
-        markerPlugin = MarkerPlugin(mMapboxMap!!, map_view!!)
+        markerPlugin = MarkerPlugin(mapmyIndiaMap!!, map_view!!)
         markerPlugin?.icon = resources.getDrawable(R.drawable.placeholder)
         markerPlugin?.addMarker(latLng)
         markerPlugin?.draggable(true)

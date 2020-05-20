@@ -17,7 +17,6 @@ import java.util.List;
 
 public class GradientPolylineActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapboxMap mMapboxMap;
     private MapView mapView;
     private List<LatLng> listOfLatLng = new ArrayList<>();
 
@@ -26,6 +25,7 @@ public class GradientPolylineActivity extends AppCompatActivity implements OnMap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gradient_polyline);
         mapView = findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
         listOfLatLng.add(new LatLng(28.705436, 77.100462));

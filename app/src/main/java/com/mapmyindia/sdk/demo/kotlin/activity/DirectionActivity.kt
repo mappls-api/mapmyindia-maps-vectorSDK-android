@@ -48,8 +48,8 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_direction_layout)
         mapView = findViewById(R.id.map_view)
-        mapView!!.onCreate(savedInstanceState)
-        mapView!!.getMapAsync(this)
+        mapView?.onCreate(savedInstanceState)
+        mapView?.getMapAsync(this)
         transparentProgressDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
 
         tab_layout_profile!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

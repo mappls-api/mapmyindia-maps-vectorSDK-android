@@ -16,7 +16,7 @@ import com.mapmyindia.sdk.demo.java.plugin.MarkerPlugin;
 public class MarkerDraggingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
-    private MapboxMap mMapboxMap;
+    private MapboxMap mapmyIndiaMap;
     private LatLng latLng = new LatLng(28.705436, 77.100462);
     private MarkerPlugin markerPlugin;
 
@@ -32,20 +32,20 @@ public class MarkerDraggingActivity extends AppCompatActivity implements OnMapRe
 
     @Override
     public void onMapReady(MapboxMap mapmyIndiaMap) {
-      this.mMapboxMap = mapmyIndiaMap;
+      this.mapmyIndiaMap = mapmyIndiaMap;
       mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
         initMarker();
     }
 
     private void initMarker() {
-        markerPlugin = new MarkerPlugin(mMapboxMap, mapView);
+        markerPlugin = new MarkerPlugin(mapmyIndiaMap, mapView);
         markerPlugin.icon(getResources().getDrawable(R.drawable.placeholder));
         markerPlugin.addMarker(latLng);
         markerPlugin.draggable(true);
         markerPlugin.setOnMarkerDraggingListener(new MarkerPlugin.OnMarkerDraggingListener() {
             @Override
             public void onMarkerDragging(LatLng position) {
-                Toast.makeText(MarkerDraggingActivity.this, latLng.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MarkerDraggingActivity.this, position.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
