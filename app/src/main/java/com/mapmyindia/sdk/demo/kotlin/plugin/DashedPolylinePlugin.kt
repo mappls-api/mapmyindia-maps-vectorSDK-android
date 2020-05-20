@@ -14,7 +14,6 @@ import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import java.util.*
 
 /**
  * Created by Saksham on 20/9/19.
@@ -75,6 +74,13 @@ class DashedPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapVie
         if (featureCollection != null) {
             polylineSource!!.setGeoJson(featureCollection)
         }
+    }
+    /**
+     * Remove dotted line
+     */
+   fun clear(){
+        featureCollection = FeatureCollection.fromFeatures(ArrayList())
+        updateSource()
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.mapmyindia.sdk.demo.java.plugin;
 
 import android.graphics.Color;
+
 import androidx.annotation.NonNull;
 
 import com.mapbox.geojson.Feature;
@@ -102,7 +103,14 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
         }
     }
 
+    /**
+     *Remove dotted line
+     */
+    public void clear(){
+        featureCollection = FeatureCollection.fromFeatures(new ArrayList<>());
+        updateSource();
 
+    }
 
     /**
      * Add various sources to the map.
@@ -121,6 +129,9 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
             createPolyline(latLngs);
         }
     }
+
+
+
 
     /**
      * Update the source of the polyline

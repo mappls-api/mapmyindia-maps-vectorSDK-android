@@ -2,7 +2,9 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.mapbox.mapboxsdk.annotations.Polygon
 import com.mapbox.mapboxsdk.annotations.PolygonOptions
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -12,6 +14,7 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import kotlinx.android.synthetic.main.activity_polygon.*
 import java.util.*
 
 /**
@@ -20,10 +23,12 @@ import java.util.*
 class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     private val listOfLatlang = ArrayList<LatLng>()
     private var mapView: MapView? = null
+    private var polygon: Polygon?=null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.base_layout)
+        setContentView(R.layout.activity_polygon)
         mapView = findViewById(R.id.map_view)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -32,26 +37,30 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(mapmyIndiaMap: MapboxMap) {
 
         mapmyIndiaMap.cameraPosition = setCameraAndTilt()
-
-
-
-
         mapmyIndiaMap.setPadding(20, 20, 20, 20)
-
-
         listOfLatlang.add(LatLng(28.703900, 77.101318))
         listOfLatlang.add(LatLng(28.703331, 77.102155))
         listOfLatlang.add(LatLng(28.703905, 77.102761))
         listOfLatlang.add(LatLng(28.704248, 77.102370))
 
-        mapmyIndiaMap.addPolygon(PolygonOptions().addAll(listOfLatlang).fillColor(Color.parseColor("#753bb2d0")))
 
 
         /* this is done for move camera focus to particular position */
         val latLngBounds = LatLngBounds.Builder().includes(listOfLatlang).build()
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70))
+        btn_add_polygon.setOnClickListener(View.OnClickListener {
+            polygon = mapmyIndiaMap.addPolygon(PolygonOptions().addAll(listOfLatlang).fillColor(Color.parseColor("#753bb2d0")))
 
+            btn_add_polygon.visibility= View.GONE
+            btn_remove_polygon.visibility= View.VISIBLE
 
+        })
+        btn_remove_polygon.setOnClickListener(View.OnClickListener {
+            mapmyIndiaMap.removePolygon(polygon!!)
+            btn_add_polygon.visibility= View.VISIBLE
+            btn_remove_polygon.visibility= View.GONE
+
+        })
     }
 
     fun setCameraAndTilt(): CameraPosition {

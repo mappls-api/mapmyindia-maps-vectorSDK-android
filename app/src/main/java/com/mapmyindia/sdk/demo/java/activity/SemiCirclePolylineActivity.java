@@ -1,6 +1,9 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -19,6 +22,7 @@ public class SemiCirclePolylineActivity extends AppCompatActivity implements OnM
 
     private MapView mapView;
     private List<LatLng> listOfLatLng;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,8 @@ public class SemiCirclePolylineActivity extends AppCompatActivity implements OnM
         setContentView(R.layout.activity_semi_circle_polyline);
 
         mapView = findViewById(R.id.map_view);
+
+        button = findViewById(R.id.remove);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
@@ -38,17 +44,19 @@ public class SemiCirclePolylineActivity extends AppCompatActivity implements OnM
                 .includes(listOfLatLng)
                 .build();
 
-      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
 
-      DashedPolylinePlugin dashedPolylinePlugin = new DashedPolylinePlugin(mapmyIndiaMap, mapView);
+        DashedPolylinePlugin dashedPolylinePlugin = new DashedPolylinePlugin(mapmyIndiaMap, mapView);
         dashedPolylinePlugin.createPolyline(listOfLatLng);
 
-//        PolylineOptions polylineOptions = new PolylineOptions()
-//                .addAll(listOfLatLng)
-//                .color(Color.parseColor("#3bb2d0"))
-//                .width(4);
-//
-//        mapmyIndiaMap.addPolyline(polylineOptions);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dashedPolylinePlugin.clear();
+            }
+        });
+
     }
 
     @Override

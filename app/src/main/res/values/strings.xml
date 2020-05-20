@@ -9,4 +9,6 @@
     <string name="txt_stop_safety_plugin">Stop Safety Plugin</string>
     <string name="txt_get_containment_zone">Get Containment Zone</string>
     <string name="initialize_safety_plugin">Initialize</string>
+    <string name="txt_remove_btn">remove</string>
+    <string name="txt_add">ADD</string>
 </resources>

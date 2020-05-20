@@ -2,7 +2,9 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.mapbox.mapboxsdk.annotations.Polyline
 import com.mapbox.mapboxsdk.annotations.PolylineOptions
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -12,6 +14,7 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import kotlinx.android.synthetic.main.activity_polyline.*
 import java.util.*
 
 /**
@@ -21,10 +24,11 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val listOfLatlang = ArrayList<LatLng>()
     private var mapView: MapView? = null
+    private var polyLine: Polyline?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.base_layout)
+        setContentView(R.layout.activity_polyline)
         mapView = findViewById(R.id.map_view)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -47,12 +51,25 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
         listOfLatlang.add(LatLng(28.704194, 77.101171))
         listOfLatlang.add(LatLng(28.704083, 77.101066))
         listOfLatlang.add(LatLng(28.703900, 77.101318))
-        mapmyIndiaMap.addPolyline(PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4f))
 
         /* this is done for animating/moving camera to particular position */
 
         val latLngBounds = LatLngBounds.Builder().includes(listOfLatlang).build()
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70))
+
+        btn_add_polyline.setOnClickListener(View.OnClickListener {
+            polyLine =   mapmyIndiaMap.addPolyline(PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4f))
+            btn_add_polyline.visibility= View.GONE
+            btn_remove_polyline.visibility= View.VISIBLE
+
+        })
+        btn_remove_polyline.setOnClickListener(View.OnClickListener {
+            mapmyIndiaMap.removePolyline(polyLine!!)
+            btn_add_polyline.visibility= View.VISIBLE
+            btn_remove_polyline.visibility= View.GONE
+
+        })
+
     }
 
     fun setCameraAndTilt(): CameraPosition {

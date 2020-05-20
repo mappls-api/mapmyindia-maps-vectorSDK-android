@@ -1,6 +1,7 @@
 package com.mapmyindia.sdk.demo.java.plugin;
 
 import android.graphics.Color;
+
 import androidx.annotation.NonNull;
 
 import com.mapbox.geojson.Feature;
@@ -35,7 +36,7 @@ public class DashedPolylinePlugin  implements MapView.OnMapChangedListener{
 
     private FeatureCollection featureCollection;
     private Style mStyle;
-    private static final String LAYER_ID = "line-layer-upper-id";
+    private static final String LAYER_ID = "line-layer-upper -id";
     private List<LatLng> latLngs;
 
     private float widthDash = 4f;
@@ -106,6 +107,14 @@ public class DashedPolylinePlugin  implements MapView.OnMapChangedListener{
     }
 
 
+    /**
+     *Remove dotted line
+     */
+    public void clear(){
+            featureCollection = FeatureCollection.fromFeatures(new ArrayList<>());
+            updateSource();
+
+    }
     @Override
     public void onMapChanged(int i) {
         if(i == MapView.DID_FINISH_LOADING_STYLE) {

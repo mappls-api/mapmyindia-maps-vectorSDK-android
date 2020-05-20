@@ -1,6 +1,9 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -19,12 +22,14 @@ public class GradientPolylineActivity extends AppCompatActivity implements OnMap
 
     private MapView mapView;
     private List<LatLng> listOfLatLng = new ArrayList<>();
+    Button btn_remove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gradient_polyline);
         mapView = findViewById(R.id.map_view);
+        btn_remove = findViewById(R.id.btn_remove);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
@@ -40,14 +45,20 @@ public class GradientPolylineActivity extends AppCompatActivity implements OnMap
     @Override
     public void onMapReady(MapboxMap mapmyIndiaMap) {
 
-      mapmyIndiaMap.setPadding(20, 20, 20, 20);
+        mapmyIndiaMap.setPadding(20, 20, 20, 20);
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .includes(listOfLatLng)
                 .build();
       mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10));
 
-      GradientPolylinePlugin animatedPolylinePlugin = new GradientPolylinePlugin(mapmyIndiaMap, mapView);
-        animatedPolylinePlugin.createPolyline(listOfLatLng);
+      GradientPolylinePlugin gradientPolylinePlugin = new GradientPolylinePlugin(mapmyIndiaMap, mapView);
+        gradientPolylinePlugin.createPolyline(listOfLatLng);
+        btn_remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gradientPolylinePlugin.clear();
+            }
+        });
     }
 
     @Override

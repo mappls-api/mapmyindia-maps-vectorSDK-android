@@ -66,7 +66,6 @@ public class MarkerPlugin implements MapView.OnMapChangedListener {
     private void initialiseForDraggingMarker() {
         mMapView.setOnTouchListener((view, motionEvent) -> {
             if (isDraggable) {
-
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     isMarkerPosition = isMarkerPosition(new PointF(motionEvent.getX(), motionEvent.getY()));
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {

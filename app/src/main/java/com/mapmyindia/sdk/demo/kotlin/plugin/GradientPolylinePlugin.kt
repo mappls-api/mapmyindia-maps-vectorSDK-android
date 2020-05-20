@@ -117,6 +117,15 @@ class GradientPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapV
         }
     }
 
+    /**
+     * Remove dotted line
+     */
+    fun clear(){
+        featureCollection = FeatureCollection.fromFeatures(ArrayList())
+        updateSource()
+    }
+
+
     companion object {
         private const val UPPER_SOURCE_ID = "line-source-upper-id"
         private const val LAYER_ID = "line-layer-upper-id"

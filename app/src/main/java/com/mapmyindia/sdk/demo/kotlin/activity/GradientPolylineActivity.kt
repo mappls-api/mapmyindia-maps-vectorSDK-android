@@ -1,6 +1,7 @@
 package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -42,9 +43,11 @@ class GradientPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
                 .includes(listOfLatLng)
                 .build()
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10))
-
         val animatedPolylinePlugin = GradientPolylinePlugin(mapmyIndiaMap, map_view!!)
         animatedPolylinePlugin.createPolyline(listOfLatLng)
+        btn_remove.setOnClickListener(View.OnClickListener { animatedPolylinePlugin.clear() })
+
+
     }
 
     override fun onMapError(i: Int, s: String) {

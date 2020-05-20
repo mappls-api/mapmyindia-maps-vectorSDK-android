@@ -1,6 +1,7 @@
 package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -38,7 +39,7 @@ class SemiCirclePolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val dashedPolylinePlugin = DashedPolylinePlugin(mapmyIndiaMap, map_view!!)
         dashedPolylinePlugin.createPolyline(listOfLatLng!!)
-
+        remove.setOnClickListener(View.OnClickListener { dashedPolylinePlugin.clear() })
 
     }
 

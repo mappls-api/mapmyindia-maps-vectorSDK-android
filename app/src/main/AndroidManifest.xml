@@ -87,6 +87,7 @@
         <activity android:name=".java.activity.ReverseGeocodeActivity" />
         <activity android:name=".java.activity.NearByActivity" />
         <activity android:name=".java.activity.SafetyPluginActivity" />
+        <activity android:name=".java.activity.SnakeMotionPolylineActivity"/>
         <activity
             android:name=".java.activity.DirectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />

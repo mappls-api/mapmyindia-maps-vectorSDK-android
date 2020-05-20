@@ -2,9 +2,13 @@ package com.mapmyindia.sdk.demo.java.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.mapbox.mapboxsdk.annotations.Polyline;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -25,12 +29,17 @@ public class PolylineActivity extends AppCompatActivity implements OnMapReadyCal
 
     private ArrayList<LatLng> listOfLatlang = new ArrayList<>();
     private MapView mapView;
+    Button addPolygonButton;
+    Button removePolygonButton;
+    private Polyline polyline;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.base_layout);
+        setContentView(R.layout.activity_polyline);
         mapView = findViewById(R.id.map_view);
+        addPolygonButton = findViewById(R.id.btn_add_polyline);
+        removePolygonButton = findViewById(R.id.btn_remove_polyline);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
@@ -39,22 +48,42 @@ public class PolylineActivity extends AppCompatActivity implements OnMapReadyCal
     public void onMapReady(MapboxMap mapmyIndiaMap) {
 
 
-      mapmyIndiaMap.setPadding(20, 20, 20, 20);
+        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
-      mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
+        mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
         listOfLatlang.add(new LatLng(28.705436, 77.100462));
         listOfLatlang.add(new LatLng(28.705191, 77.100784));
         listOfLatlang.add(new LatLng(28.704646, 77.101514));
         listOfLatlang.add(new LatLng(28.704194, 77.101171));
         listOfLatlang.add(new LatLng(28.704083, 77.101066));
         listOfLatlang.add(new LatLng(28.703900, 77.101318));
-      mapmyIndiaMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4));
 
         /* this is done for animating/moving camera to particular position */
 
         LatLngBounds latLngBounds = new LatLngBounds.Builder().includes(listOfLatlang).build();
-      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70));
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70));
+        addPolygonButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                polyline = mapmyIndiaMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4));
+
+
+                addPolygonButton.setVisibility(View.GONE);
+                removePolygonButton.setVisibility(View.VISIBLE);
+
+            }
+        });
+        removePolygonButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (polyline != null) {
+                    mapmyIndiaMap.removePolyline(polyline);
+                    addPolygonButton.setVisibility(View.VISIBLE);
+                    removePolygonButton.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     protected CameraPosition setCameraAndTilt() {
