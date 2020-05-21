@@ -1,5 +1,5 @@
 
-
+  
 
 ![MapmyIndia APIs](https://www.mapmyindia.com/api/img/mapmyindia-api.png)
 # MapmyIndia Vector Map Android SDK
@@ -454,6 +454,16 @@ mapmyIndiaMap.addPolyline(PolylineOptions()
         .color(Color.parseColor("#3bb2d0"))  
         .width(2f))
 ~~~
+### Remove Polyline
+To remove a polyline from map:
+#### Java
+```java
+mapmyIndiaMap.removePolyline(polyline);
+```
+#### Kotlin
+~~~kotlin
+mapmyIndiaMap.removePolyline(polyLine!!)
+~~~
 ### Add A Polygon
 
 ##### Draw a polygon on the map
@@ -468,6 +478,16 @@ mapmyIndiaMap.addPolygon(new PolygonOptions()
 mapmyIndiaMap.addPolygon(PolygonOptions()  
         .addAll(polygon)  
         .fillColor(Color.parseColor("#3bb2d0")))
+~~~
+### Remove Polygon
+To remove a polygon from map:
+#### Java
+```java
+mapmyIndiaMap.removePolygon(polygon);
+```
+#### Kotlin
+~~~kotlin
+mapmyIndiaMap.removePolygon(polygon!!)
 ~~~
 ### Show User Location
 
@@ -590,6 +610,46 @@ override fun onDestroy() {
   }  
 }
 ~~~
+
+### DashedPolyLinePlugin
+DashPolyline Plugin provides option to add or remove dash polyline.
+ ##### Add PolyLine 
+ #### Java
+~~~java 
+ DashedPolylinePlugin dashedPolylinePlugin = new DashedPolylinePlugin(mapmyIndiaMap, mapView);  
+dashedPolylinePlugin.createPolyline(listOfLatLng);
+~~~
+#### Kotlin
+~~~kotlin
+val dashedPolylinePlugin = DashedPolylinePlugin(mapmyIndiaMap, map_view!!)  
+dashedPolylinePlugin.createPolyline(listOfLatLng!!)
+~~~
+ ##### Remove PolyLine 
+  #### Java
+
+~~~java 
+dashedPolylinePlugin.clear();
+~~~
+#### Kotlin
+
+~~~java 
+dashedPolylinePlugin.clear();
+~~~
+### Calculate distance between two points
+To calculate aerial distance between two points:
+#### Java
+~~~java
+LatLng firstLatLng = new LatLng(28, 77);  
+LatLng secondLatLng = new LatLng(28.67, 77.65);  
+firstLatLng.distanceTo(secondLatLng);
+~~~
+#### Kotlin
+~~~kotlin
+val firstLatLng = LatLng(28.0, 77.0)
+val secondLatLng = LatLng(28.67, 77.65)
+firstLatLng.distanceTo(secondLatLng)
+~~~
+
 ### Proguard
 ```
 # Retrofit 2 
