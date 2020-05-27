@@ -2,7 +2,7 @@
   
 
 ![MapmyIndia APIs](https://www.mapmyindia.com/api/img/mapmyindia-api.png)
-# MapmyIndia Vector Map Android SDK
+# [MapmyIndia Vector Map Android SDK](#mapmyindia-vector-map-android-sdk)
 
 **Easy To Integrate Maps & Location APIs & SDKs For Web & Mobile Applications**
 
@@ -32,19 +32,19 @@ Powered with India's most comprehensive and robust mapping functionalities.
 
 
 
-## Getting Started
+## [Getting Started](#getting-started)
 
 MapmyIndia Maps SDK for Android lets you easily add MapmyIndia Maps and web services to your own Android application. The SDK for Android supports API 14+. You can have a look at the map and features you will get in your own app by using the MapmyIndia Maps SDK for Android.
 
 Through customized tiles, you can add different map layers to your application and add bunch of controls and gestures to enhance map usability thus creating potent map based solutions for your customers. The SDK handles downloading of map tiles and their display along with a bunch of controls and native gestures.
 
-## API Usage
+## [API Usage](#api-usage)
 
 Your MapmyIndia Maps SDK usage needs a set of license keys (get them  [here](http://www.mapmyindia.com/api/signup)) and is governed by the API  [terms and conditions](http://www.mapmyindia.com/api/terms-&-conditions). As part of the terms and conditions,  **you cannot remove or hide the MapmyIndia logo and copyright information** in your project.
 
 The allowed SDK hits are described on the user dashboard (http://www.mapmyindia.com/api/dashboard) page. Note that your usage is shared between platforms, so the API hits you make from a web application, Android app or an iOS app all add up to your allowed daily limit.
 
-## Setup your project
+## [Setup your project](#setup-your-project)
 
 Follow these steps to add the SDK to your project –
 
@@ -70,7 +70,7 @@ implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.0'
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 <uses-permission android:name="android.permission.INTERNET"/>
 ```
-### Add Java 8 Support to the project
+### [Add Java 8 Support to the project](#add-java-8-support-to-the-project)
 
  *add following lines in your app module's build.gradle*
 
@@ -81,7 +81,7 @@ compileOptions {
   }
   ```
     
-### Add your API keys to the SDK
+### [Add your API keys to the SDK](#add-your-api-keys-to-the-sdk)
 *Add your API keys to the SDK (in your application's onCreate() or before using map)*
 
 #### Java
@@ -105,7 +105,7 @@ MapmyIndia.getInstance(applicationContext)
 *You cannot use the MapmyIndia Map Mobile SDK without these function calls. You will find your keys in your API Dashboard.*
 
 
-## Add a MapmyIndia Map to your application
+## [Add a MapmyIndia Map to your application](#add-a-mapmyindia-map-to-your-application)
 
 
 ```xml
@@ -216,33 +216,33 @@ override fun onSaveInstanceState(outState: Bundle) {
     map_view.onSaveInstanceState(outState)  
 }
 ~~~
-## Map Interactions
+## [Map Interactions](#map-interactions)
 
 The MapmyIndia Maps Android SDK allows you to define interactions that you can activate on the map to enable gestures and click events. The following interactions are supported –
 
-### Zoom Controls
+### [Zoom Controls](#zoom-controls)
 
 The map supports the familiar two-finger pinch and zooms to change zoom level as well as double tap to zoom in. Set zoom to 4 for country level display and 18 for house number display. In this SDK the camera position plays an important role
 
 And following operations can be performed using the CameraPosition
 
-### Target
+### [Target](#target)
 
 The target is single latitude and longitude coordinate that the camera centers it on. Changing the camera's target will move the camera to the inputted coordinates. The target is a LatLng object. The target coordinate is always  _at the center of the viewport_.
 
-### Tilt
+### [Tilt](#tilt)
 
 Tilt is the camera's angle from the nadir (directly facing the Earth) and uses unit degrees. The camera's minimum (default) tilt is 0 degrees, and the maximum tilt is 60. Tilt levels use six decimal point of precision, which enables you to restrict/set/lock a map's bearing with extreme precision.
 
 The map camera tilt can also adjust by placing two fingertips on the map and moving both fingers up and down in parallel at the same time or
 
-### Bearing
+### [Bearing](#bearing)
 
 Bearing represents the direction that the camera is pointing in and measured in degrees  _clockwise from north_.
 
 The camera's default bearing is 0 degrees (i.e. "true north") causing the map compass to hide until the camera bearing becomes a non-zero value. Bearing levels use six decimal point precision, which enables you to restrict/set/lock a map's bearing with extreme precision. In addition to programmatically adjusting the camera bearing, the user can place two fingertips on the map and rotate their fingers.
 
-### Zoom
+### [Zoom](#zoom)
 
 Zoom controls scale of the map and consumes any value between 0 and 22. At zoom level 0, viewport shows continents and other world features. A middle value of 11 will show city level details.At a higher zoom level, map will begin to show buildings and points of interest. Camera can zoom in following ways:
 
@@ -285,7 +285,7 @@ mapmyIndiaMap?.easeCamera(CameraUpdateFactory.newLatLngZoom(LatLng(22.8978,77.32
 mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(22.8978,77.3245), 14.0))
 ~~~
 
-## Map Events
+## [Map Events](#map-events)
 
 ##### **The SDK allows you to listen to certain events on the map. It sets a callback that is invoked when camera movement has started.**
 #### Java
@@ -355,7 +355,7 @@ mapmyIndiaMap.addOnCameraIdleListener(object : MapboxMap.OnCameraIdleListener {
     }  
 })
 ~~~
-### Map Click/Long Press
+### [Map Click/Long Press](#map-click-long-press)
 
 If you want to respond to a user tapping on a point on the map, you can use a MapEventsOverlay which you need to add on the map as an Overlay.
 
@@ -400,9 +400,9 @@ mapmyIndiaMap.addOnMapLongClickListener(object: MapboxMap.OnMapLongClickListener
     }  
 })
 ~~~
-## Map Overlays
+## [Map Overlays](#map-overlays)
 
-### Add A Marker
+### [Add A Marker](#add-a-marker)
 
  ##### Add markers to the map by following these steps –
  #### Java
@@ -419,7 +419,7 @@ markerOptions.title= "Marker"
 markerOptions.snippet = "This is a Marker"  
 mapmyIndiaMap?.addMarker(markerOptions)
 ~~~
-### Remove A Marker
+### [Remove A Marker](#remove-a-marker)
 #### Java
 ```java
 mapmyIndiaMap.removeMarker(marker)
@@ -428,7 +428,7 @@ mapmyIndiaMap.removeMarker(marker)
 ~~~kotlin
 mapmyIndiaMap?.removeMarker(marker)
 ~~~
-### Customize A Marker
+### [Customize A Marker](#customize-a-marker)
 #### Java
 ```java
 MarkerOptions markerOptions = new MarkerOptions().position(point).icon(IconFactory.getInstance(context).fromResource(R.drawable.ic_android));  
@@ -457,7 +457,7 @@ mapmyIndiaMap?.setInfoWindowAdapter {
   return@setInfoWindowAdapter view  
 }
 ~~~
-### Add A Polyline
+### [Add A Polyline](#add-a-polyline)
 ##### Draw polyline on the map
 #### Java
 ```java
@@ -473,7 +473,7 @@ mapmyIndiaMap.addPolyline(PolylineOptions()
         .color(Color.parseColor("#3bb2d0"))  
         .width(2f))
 ~~~
-### Remove Polyline
+### [Remove Polyline](remove-polyline)
 To remove a polyline from map:
 #### Java
 ```java
@@ -483,7 +483,7 @@ mapmyIndiaMap.removePolyline(polyline);
 ~~~kotlin
 mapmyIndiaMap.removePolyline(polyLine!!)
 ~~~
-### Add A Polygon
+### [Add A Polygon](#add-a-polygon)
 
 ##### Draw a polygon on the map
 #### Java
@@ -498,7 +498,7 @@ mapmyIndiaMap.addPolygon(PolygonOptions()
         .addAll(polygon)  
         .fillColor(Color.parseColor("#3bb2d0")))
 ~~~
-### Remove Polygon
+### [Remove Polygon](#remove-polygon)
 To remove a polygon from map:
 #### Java
 ```java
@@ -508,7 +508,7 @@ mapmyIndiaMap.removePolygon(polygon);
 ~~~kotlin
 mapmyIndiaMap.removePolygon(polygon!!)
 ~~~
-### Show User Location
+### [Show User Location](#show-user-location)
 
 ##### Show the current user location 
 
@@ -630,9 +630,9 @@ override fun onDestroy() {
 }
 ~~~
 
-### DashedPolyLinePlugin
+### [Dashed PolyLine](#dashed-polyline)
 DashPolyline Plugin provides option to add or remove dash polyline.
- ##### Add PolyLine 
+ ##### [Add Dashed PolyLine](#add-dashed-polyline)
  #### Java
 ~~~java 
  DashedPolylinePlugin dashedPolylinePlugin = new DashedPolylinePlugin(mapmyIndiaMap, mapView);  
@@ -643,7 +643,7 @@ dashedPolylinePlugin.createPolyline(listOfLatLng);
 val dashedPolylinePlugin = DashedPolylinePlugin(mapmyIndiaMap, map_view!!)  
 dashedPolylinePlugin.createPolyline(listOfLatLng!!)
 ~~~
- ##### Remove PolyLine 
+ ##### [Remove Dashed PolyLine](#remove-dashed-polyline)
   #### Java
 
 ~~~java 
@@ -654,7 +654,7 @@ dashedPolylinePlugin.clear();
 ~~~java 
 dashedPolylinePlugin.clear();
 ~~~
-### Calculate distance between two points
+### [Calculate distance between two points](#calculate-distance-between-points)
 To calculate aerial distance between two points:
 #### Java
 ~~~java
@@ -669,7 +669,7 @@ val secondLatLng = LatLng(28.67, 77.65)
 firstLatLng.distanceTo(secondLatLng)
 ~~~
 
-### Proguard
+### [Proguard](#proguard)
 ```
 # Retrofit 2 
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
@@ -708,7 +708,7 @@ firstLatLng.distanceTo(secondLatLng)
 }
 ```
 
-## REST APIs
+## [REST APIs](#rest-apis)
 For information on the REST API module, please read repository wiki [here](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android/wiki).
 
 For any queries and support, please contact: 
