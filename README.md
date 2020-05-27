@@ -1,4 +1,4 @@
-
+  
   
 
 ![MapmyIndia APIs](https://www.mapmyindia.com/api/img/mapmyindia-api.png)
@@ -12,6 +12,25 @@ Powered with India's most comprehensive and robust mapping functionalities.
 1. You can get your api key to be used in this document here: [https://www.mapmyindia.com/api/signup](https://www.mapmyindia.com/api/signup)
 
 2. The sample code is provided to help you understand the basic functionality of MapmyIndia maps & REST APIs working on **Android** native development platform.  
+
+## [Version History](#Version-History)
+
+
+| Version | Last Updated | Author |  Release Note|
+| ---- | ---- | ---- | ---- |
+| v6.8.0 | 27 May 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) |   Now enable/disable interactive layer using our maps sdk |
+| v6.7.14 | 28 April 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) |  Added MapmyIndia Safety plugin |
+|v6.7.13 | 12 May 2020| MapmyIndia API Team ([MA](https://github.com/mdakram)) | Functions added to enable/disable dem and monument icons
+|  v6.7.12 | 26 March 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) | Indoor related bug fixes and bug fixes in rest api calls
+| v6.7.10| 29 Jan 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) | Changed rest API calls for better kotlin support
+| v6.7.9 |  6 Dec 2019 | MapmyIndia API Team ([MA](https://github.com/mdakram)) |  Indoor maps are now supported with controls and callbacks for switching between different levels as well as getting the layer control only when the map has an indoor component within viewbounds.
+|v6.7.8 | 25 Oct 2019 | MapmyIndia API Team ([MA](https://github.com/mdakram)) |  Added support for Myanmar throughout all components: Maps, RESTful API methods available through the SDK> Available in both Vector & legacy Raster SDK.
+| v6.7.7| 29 Sep 2019 | MapmyIndia API Team ([MA](https://github.com/mdakram)) | - Retrofit  v2.6 Support  <br/>- Pedestrian Routing API integration in SDK <br/> - Biking Routing API integration in SDK <br/>- Aggressive Routing Resource integrated in both Routing & Distance Matrix methods.<br/>- Able to show flight path polyline via dashed style<br/>- Polyline with gradient colors now available.<br/>- Marker position Animation: Let's a developer animate the transition of marker's position from 1 geocoordinate to another.<br/>- Marker Rotation Animation: Let's a developer animate the rotation of marker, rather than using several markers of different heading for pseudo-animation of marker.<br/>- Marker icon mutation > animated transition to another icon
+| v6.7.6 | 29 Sep 2019 | MapmyIndia API Team ([MA](https://github.com/mdakram)) | Fixes Unknown pbf field type exception
+|v6.7.5 | 5 Sep 2019 | MapmyIndia API Team ([MA](https://github.com/mdakram)) |  Fixes native library loading error
+
+
+
 
 ## Getting Started
 
