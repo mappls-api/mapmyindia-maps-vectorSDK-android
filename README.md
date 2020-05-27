@@ -44,7 +44,7 @@ Follow these steps to add the SDK to your project –
 -   Add below dependency in your app-level `build.gradle`
 
 ```groovy
-implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.7.14'
+implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.0'
 ```
 - Add these permissions in your project
 ```xml
