@@ -1,6 +1,7 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapbox.mapboxsdk.annotations.Icon;

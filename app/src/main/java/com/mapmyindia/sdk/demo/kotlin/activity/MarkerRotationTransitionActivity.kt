@@ -2,9 +2,9 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import android.view.View
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
@@ -56,8 +56,10 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initMarker() {
         markerPlugin = MarkerPlugin(mapmyIndiaMap!!, map_view)
-        markerPlugin!!.icon = resources!!.getDrawable(R.drawable.placeholder,null)
-        markerPlugin!!.addMarker(latLngStart)
+        markerPlugin?.icon = resources?.getDrawable(R.drawable.placeholder,null)
+        markerPlugin?.addMarker(latLngStart)
+        markerPlugin?.addTitle("Title")
+        markerPlugin?.addDescription("Description")
     }
 
     override fun onClick(view: View?) {

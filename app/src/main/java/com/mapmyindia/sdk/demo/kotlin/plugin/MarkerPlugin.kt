@@ -3,26 +3,35 @@ package com.mapmyindia.sdk.demo.kotlin.plugin
 import android.animation.TypeEvaluator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.graphics.PointF
+import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.os.AsyncTask
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.widget.TextView
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.Point
+import com.mapbox.mapboxsdk.annotations.BubbleLayout
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.style.expressions.Expression
 import com.mapbox.mapboxsdk.style.expressions.Expression.get
+import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
+import com.mapmyindia.sdk.demo.R
+import java.lang.ref.WeakReference
+import java.util.*
 
 /**
  * Created by Saksham on 3/9/19.
  */
-class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) : MapView.OnMapChangedListener {
+class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) : MapView.OnMapChangedListener, MapboxMap.OnMapClickListener {
 
     private var feature : Feature? = null
     private var position : LatLng? = null
@@ -39,12 +48,50 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
         private const val SOURCE_ID :String = "SOURCE_ID"
         private const val LAYER_ID : String = "LAYER_ID"
         private const val PROPERTY_ROTATION : String = "rotation"
+        private const val PROPERTY_SELECTED = "property-selected"
+        private const val TITLE = "title"
+        private const val PROPERTY_NAME = "name"
+        private const val FILTER_TEXT = "filter_text"
+        private const val PROPERTY_ADDRESS = "address"
+
+        private const val INFOWINDOW_LAYER_ID = "INFOWINDOW_LAYER_ID"
+
+        /**
+         * Calculate the sample size of the image
+         *
+         * @param options   BitmapFactory options
+         * @param reqWidth  required width
+         * @param reqHeight required height
+         * @return calculated sample size
+         */
+        private fun calculateInSampleSize(
+                options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+            // Raw height and width of image
+            val height = options.outHeight
+            val width = options.outWidth
+            var inSampleSize = 1
+
+            if (height > reqHeight || width > reqWidth) {
+
+                val halfHeight = height / 2
+                val halfWidth = width / 2
+
+                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+                // height and width larger than the requested height and width.
+                while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                    inSampleSize *= 2
+                }
+            }
+
+            return inSampleSize
+        }
     }
 
     init {
         updateState()
         mapView.addOnMapChangedListener(this)
         initialiseForDraggingMarker()
+        mapmyIndiaMap.addOnMapClickListener(this)
     }
 
     fun setOnMarkerDraggingListener(onMarkerDraggingListener: OnMarkerDraggingListener) {
@@ -143,6 +190,7 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
         isRemoveCallback = false
         this.position = position
         feature = Feature.fromGeometry(Point.fromLngLat(position.longitude, position.latitude))
+        feature?.addBooleanProperty(PROPERTY_SELECTED, false)
         mapmyIndiaMap.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(icon))
         if(mapmyIndiaMap.getSource(SOURCE_ID) == null) {
             markerSource = GeoJsonSource(SOURCE_ID, feature)
@@ -180,7 +228,27 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
      * @param position updated position of the marker
      */
     private fun updateMarkerPosition(position: LatLng) {
+        var name: String? = null
+        var description: String? = null
+        var isSelected = false
+        if(feature?.hasProperty(PROPERTY_NAME)!!) {
+            name = feature?.getStringProperty(PROPERTY_NAME)
+        }
+
+        if(feature?.hasProperty(PROPERTY_ADDRESS)!!) {
+            description = feature?.getStringProperty(PROPERTY_ADDRESS)
+        }
+        if(feature?.hasProperty(PROPERTY_SELECTED)!!) {
+            isSelected = feature?.getBooleanProperty(PROPERTY_SELECTED)?:false
+        }
         feature = Feature.fromGeometry(Point.fromLngLat(position.longitude, position.latitude))
+        if(name != null) {
+            feature?.addStringProperty(PROPERTY_NAME, name)
+        }
+        if(description != null) {
+            feature?.addStringProperty(PROPERTY_ADDRESS, description)
+        }
+        feature?.addBooleanProperty(PROPERTY_SELECTED, isSelected)
         updateState()
     }
 
@@ -201,6 +269,15 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
 
     }
 
+    fun addTitle(title: String) {
+        feature?.properties()?.addProperty(PROPERTY_NAME, title)
+    }
+
+
+    fun addDescription(title: String) {
+        feature?.properties()?.addProperty(PROPERTY_ADDRESS, title)
+    }
+
     /**
      * Add symbol layer on map
      */
@@ -215,6 +292,27 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
                     )
 
             mapmyIndiaMap.addLayer(symbolLayer)
+        }
+
+        if(mapmyIndiaMap.getLayer(INFOWINDOW_LAYER_ID) == null) {
+            val symbolLayerInfoWindow = SymbolLayer(INFOWINDOW_LAYER_ID, SOURCE_ID)
+                    .withProperties(
+                            /* show image with id title based on the value of the name feature property */
+                            iconImage("{name}"),
+
+                            /* set anchor of icon to bottom-left */
+                            iconAnchor(Property.ICON_ANCHOR_BOTTOM),
+
+                            /* all info window and marker image to appear at the same time*/
+                            iconAllowOverlap(true),
+
+                            /* offset the info window to be above the marker */
+                            iconOffset(arrayOf(-2f, -25f))
+                    )
+                    /* setData a filter to show only when selected feature property is true */
+                    .withFilter(Expression.eq(get(PROPERTY_SELECTED), Expression.literal(true)))
+
+            mapmyIndiaMap.addLayer(symbolLayerInfoWindow)
         }
     }
 
@@ -232,8 +330,154 @@ class MarkerPlugin(private val mapmyIndiaMap: MapboxMap, val mapView: MapView) :
         isRemoveCallback = true
     }
 
+
+    /**
+     * Generate Info window Icon
+     */
+    private class GenerateViewIconTask @JvmOverloads internal constructor(activity: MarkerPlugin, private val refreshSource: Boolean = true) : AsyncTask<Feature, Void, HashMap<String, Bitmap>>() {
+
+        private val viewMap = HashMap<String, View>()
+        private val activityRef: WeakReference<MarkerPlugin>
+
+        init {
+            this.activityRef = WeakReference(activity)
+        }
+
+        @SuppressLint("WrongThread")
+        override fun doInBackground(vararg params: Feature): HashMap<String, Bitmap>? {
+            val activity = activityRef.get()
+            if (activity != null) {
+                val imagesMap = HashMap<String, Bitmap>()
+                val inflater = LayoutInflater.from(activity.mapView.context)
+
+                val featureCollection = params[0]
+
+
+                    val bubbleLayout = inflater.inflate(R.layout.symbol_layer_info_window_layout_callout, null) as BubbleLayout
+                    if (featureCollection.hasProperty(PROPERTY_NAME)) {
+                        val name1 = featureCollection.getStringProperty(PROPERTY_NAME)
+                        val titleTextView: TextView = bubbleLayout.findViewById(R.id.info_window_title)
+                        titleTextView.text = name1
+
+                        if(featureCollection.hasProperty(PROPERTY_ADDRESS)) {
+                            val address = featureCollection.getStringProperty(PROPERTY_ADDRESS)
+                            val addressTextView = bubbleLayout.findViewById<TextView>(R.id.info_window_description)
+                            addressTextView.text = address
+                        }
+
+
+                        //                    String style = feature.getStringProperty(PROPERTY_CAPITAL);
+                        //                    TextView descriptionTextView = bubbleLayout.findViewById(R.id.info_window_description);
+                        //                    descriptionTextView.setText(
+                        //                            String.format("capital", style));
+
+                        val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                        bubbleLayout.measure(measureSpec, measureSpec)
+
+                        val measuredWidth = bubbleLayout.measuredWidth.toFloat()
+
+                        bubbleLayout.arrowPosition = measuredWidth / 2 - 5
+
+                        val bitmap = SymbolGenerator.generate(bubbleLayout)
+                        imagesMap[name1] = bitmap
+                        viewMap[name1] = bubbleLayout
+                    }
+
+
+                return imagesMap
+            } else {
+                return null
+            }
+        }
+        override fun onPostExecute(bitmapHashMap: HashMap<String, Bitmap>?) {
+            super.onPostExecute(bitmapHashMap)
+            val activity = activityRef.get()
+            if (activity != null && bitmapHashMap != null) {
+                activity.setImageGenResults(bitmapHashMap)
+                if (refreshSource) {
+                    activity.updateState()
+                }
+            }
+        }
+    }
+
+    /**
+     * Add images on the map
+     *
+     * @param imageMap Hashmap of images
+     */
+    private fun setImageGenResults(imageMap: HashMap<String, Bitmap>) {
+        mapmyIndiaMap.addImages(imageMap)
+    }
+
+
+
+
+    /**
+     * Utility class to generate Bitmaps for Symbol.
+     *
+     *
+     * Bitmaps can be added to the map with
+     *
+     */
+    private object SymbolGenerator {
+
+        /**
+         * Generate a Bitmap from an Android SDK View.
+         *
+         * @param view the View to be drawn to a Bitmap
+         * @return the generated bitmap
+         */
+        fun generate(view: View): Bitmap {
+
+
+            val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            view.measure(measureSpec, measureSpec)
+
+            val measuredWidth = view.measuredWidth
+            val measuredHeight = view.measuredHeight
+
+            view.layout(0, 0, measuredWidth, measuredHeight)
+            val bitmap1 = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+
+
+            val options = BitmapFactory.Options()
+            options.inJustDecodeBounds = true
+            options.inBitmap = bitmap1
+            //            BitmapFactory.decodeByteArray(bitmap1.getNinePatchChunk(), 0, view.getHeight(), options);
+            val sampleSize = calculateInSampleSize(options, measuredWidth, measuredHeight)
+            options.inSampleSize = sampleSize
+            //            options.inBitmap = bitmap1;
+            val bitmap = options.inBitmap
+            bitmap.eraseColor(Color.TRANSPARENT)
+            val canvas = Canvas(bitmap)
+            view.draw(canvas)
+            return bitmap
+        }
+    }
+
+
     interface OnMarkerDraggingListener {
         fun onMarkerDragging(position: LatLng)
 
+    }
+
+    override fun onMapClick(latLng: LatLng) {
+        if(feature?.hasProperty(PROPERTY_SELECTED)!!) {
+            if(feature?.getBooleanProperty(PROPERTY_SELECTED) == true) {
+                feature?.addBooleanProperty(PROPERTY_SELECTED, false)
+                updateState()
+                return
+            }
+        }
+        val features = mapmyIndiaMap.queryRenderedFeatures(this.mapmyIndiaMap.projection.toScreenLocation(latLng), LAYER_ID)
+        if (features.isNotEmpty()) {
+
+            feature = features[0]
+
+            feature?.addBooleanProperty(PROPERTY_SELECTED, true)
+            GenerateViewIconTask(this).execute(feature)
+
+        }
     }
 }

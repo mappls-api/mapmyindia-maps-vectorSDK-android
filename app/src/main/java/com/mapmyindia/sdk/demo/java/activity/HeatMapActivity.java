@@ -1,8 +1,9 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
+import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.maps.MapView;

@@ -11,12 +11,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.Feature;
@@ -69,7 +70,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
     private static final String FILTER_TEXT = "filter_text";
     private static final String PROPERTY_ADDRESS = "address";
 
-  private MapboxMap mapmyIndiaMap;
+    private MapboxMap mapmyIndiaMap;
     private Car car;
     private GeoJsonSource carSource;
     private LatLng nextPoint;
@@ -109,12 +110,12 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
         isClearAllCallBacks = false;
     }
 
-  public AnimatedCarPlugin(Context context, MapView mapView, MapboxMap mapmyIndiaMap) {
-    this.mapmyIndiaMap = mapmyIndiaMap;
+    public AnimatedCarPlugin(Context context, MapView mapView, MapboxMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
         this.context = context;
         updateState();
         mapView.addOnMapChangedListener(this);
-    this.mapmyIndiaMap.addOnMapClickListener(this::handleClickIcon);
+        this.mapmyIndiaMap.addOnMapClickListener(this::handleClickIcon);
     }
 
     /**
@@ -130,10 +131,13 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 if (!isClearAllCallBacks) {
-                    latLng = (LatLng) animation.getAnimatedValue();
-                    car.current = latLng;
-                    updateCarSource();
-                    car.feature.properties().addProperty(PROPERTY_BEARING, Car.getBearing(car.current, car.next));
+
+                    if (!car.current.equals(car.next)) {
+                        latLng = (LatLng) animation.getAnimatedValue();
+                        car.current = latLng;
+                        updateCarSource();
+                        car.feature.properties().addProperty(PROPERTY_BEARING, Car.getBearing(car.current, car.next));
+                    }
                 }
             }
         });
@@ -207,10 +211,10 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
         featureCollection = FeatureCollection.fromFeatures(new Feature[]{feature});
 
         car = new Car(feature, nextPoint);
-      mapmyIndiaMap.addImage(CAR,
+        mapmyIndiaMap.addImage(CAR,
                 ((BitmapDrawable) context.getResources().getDrawable(R.drawable.placeholder)).getBitmap());
 
-        if(mapmyIndiaMap.getSource(CAR_SOURCE) == null) {
+        if (mapmyIndiaMap.getSource(CAR_SOURCE) == null) {
 
             carSource = new GeoJsonSource(CAR_SOURCE, featureCollection);
             mapmyIndiaMap.addSource(carSource);
@@ -315,7 +319,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
      * @param screenPoint the point on screen clicked
      */
     private void handleClickIcon(LatLng screenPoint) {
-      List<Feature> features = mapmyIndiaMap.queryRenderedFeatures(this.mapmyIndiaMap.getProjection().toScreenLocation(screenPoint), CAR_LAYER, SOURCE_LAYER_INFO_WINDOW);
+        List<Feature> features = mapmyIndiaMap.queryRenderedFeatures(this.mapmyIndiaMap.getProjection().toScreenLocation(screenPoint), CAR_LAYER, SOURCE_LAYER_INFO_WINDOW);
         if (!features.isEmpty()) {
             String name = features.get(0).getStringProperty(PROPERTY_NAME);
             List<Feature> featureList = featureCollection.features();
@@ -337,9 +341,9 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
      * @param imageMap Hashmap of images
      */
     private void setImageGenResults(HashMap<String, Bitmap> imageMap) {
-      if (mapmyIndiaMap != null) {
+        if (mapmyIndiaMap != null) {
             // calling addImages is faster as separate addImage calls for each bitmap.
-        mapmyIndiaMap.addImages(imageMap);
+            mapmyIndiaMap.addImages(imageMap);
         }
     }
 
@@ -356,7 +360,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
      * Update the state of the marker.
      */
     private void updateState() {
-      GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(CAR_SOURCE);
+        GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(CAR_SOURCE);
         if (source == null) {
             initialise();
             return;
@@ -377,7 +381,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
     private void setVisibility(boolean visible) {
         if (layerIds == null)
             return;
-      List<Layer> layers = mapmyIndiaMap.getLayers();
+        List<Layer> layers = mapmyIndiaMap.getLayers();
         if (layers.size() > 0) {
             for (Layer layer : layers) {
                 if (layerIds.contains(layer.getId())) {
@@ -396,7 +400,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
      */
     private void initialise() {
         layerIds = new ArrayList<>();
-        if(mapmyIndiaMap.getLayer(CAR_LAYER) == null) {
+        if (mapmyIndiaMap.getLayer(CAR_LAYER) == null) {
             //Symbol layer for car
             SymbolLayer symbolLayer = new SymbolLayer(CAR_LAYER, CAR_SOURCE);
             symbolLayer.withProperties(
@@ -411,7 +415,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
             layerIds.add(symbolLayer.getId());
         }
 
-        if(mapmyIndiaMap.getLayer(SOURCE_LAYER_INFO_WINDOW) == null) {
+        if (mapmyIndiaMap.getLayer(SOURCE_LAYER_INFO_WINDOW) == null) {
             //Symbol layer for Info Window
             SymbolLayer symbolLayerInfoWindow = new SymbolLayer(SOURCE_LAYER_INFO_WINDOW, CAR_SOURCE)
                     .withProperties(

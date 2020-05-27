@@ -52,16 +52,17 @@ class FeatureListActivityKotlin : AppCompatActivity() {
         featuresArrayList.add(Features(22, "Place Autocomplete Widget", PlaceAutoCompleteActivity::class.java, "Description"))
         featuresArrayList.add(Features(23, "MapmyIndia Safety Plugin", SafetyPluginActivity::class.java, "MapmyIndia Safety Plugin"))
         featuresArrayList.add(Features(24, "Map Gestures", GesturesActivity::class.java, "Gesture"))
+        featuresArrayList.add(Features(25, "Interactive Layer", InteractiveLayerActivity::class.java, "Gesture"))
 
         featuresRecycleView = findViewById(R.id.featuresRecycleView)
         mLayoutManager = LinearLayoutManager(this)
-        featuresRecycleView!!.layoutManager = mLayoutManager
+        featuresRecycleView?.layoutManager = mLayoutManager
         val featuresListAdapter = object : FeaturesListAdapter(featuresArrayList) {
             override fun redirectOnFeatureCallBack(features: Features) {
                 switchToActivity(features.featureActivityName)
             }
         }
-        featuresRecycleView!!.adapter = featuresListAdapter
+        featuresRecycleView?.adapter = featuresListAdapter
     }
 
     private fun switchToActivity(featureActivityName: Class<*>?) {

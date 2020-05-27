@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".kotlin.activity.GesturesActivity"></activity>
+        <activity android:name=".kotlin.activity.InteractiveLayerActivity"></activity>
+        <activity android:name=".kotlin.activity.GesturesActivity" />
+        <activity android:name=".java.activity.InteractiveLayerActivity" />
         <activity android:name=".java.activity.GesturesActivity" />
         <activity
             android:name=".kotlin.activity.FullModeActivity"
@@ -87,7 +89,7 @@
         <activity android:name=".java.activity.ReverseGeocodeActivity" />
         <activity android:name=".java.activity.NearByActivity" />
         <activity android:name=".java.activity.SafetyPluginActivity" />
-        <activity android:name=".java.activity.SnakeMotionPolylineActivity"/>
+        <activity android:name=".java.activity.SnakeMotionPolylineActivity" />
         <activity
             android:name=".java.activity.DirectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -100,10 +102,10 @@
         <activity android:name=".kotlin.activity.AddCustomInfoWindowActivity" />
         <activity android:name=".kotlin.activity.SafetyPluginActivity" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 </manifest>

@@ -1,11 +1,12 @@
 package com.mapmyindia.sdk.demo.java.adapter;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mapmyindia.sdk.demo.R;
 import com.mmi.services.api.autosuggest.model.ELocation;

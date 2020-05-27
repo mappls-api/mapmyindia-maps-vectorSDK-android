@@ -2,10 +2,11 @@ package com.mapmyindia.sdk.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapmyindia.sdk.demo.java.activity.FeaturesListActivity;
 import com.mapmyindia.sdk.demo.kotlin.activity.FeatureListActivityKotlin;

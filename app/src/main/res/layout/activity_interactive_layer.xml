@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/toggle_info_window"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:checked="true"
+        app:switchPadding="8dp"
+        android:text="Show Info Window"
+        android:textColor="@android:color/white"
+        android:padding="4dp"
+        android:background="#AA000000"/>
+
+    <RelativeLayout
+        android:id="@+id/bottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_interactive_layer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"/>
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/rg_layer"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="12dp"-->
+<!--            android:background="@drawable/bg_bottom_shhet"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/rb_state_stats"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:checked="true"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:text="@string/state_stats"/>-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/rb_cont_zones"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:text="@string/containment_zones"/>-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/rb_treat_centre"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:text="@string/treatment_centre"/>-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/rb_coll_centre"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:text="@string/collection_centre"/>-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/rb_isolation_ward"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:text="@string/isolation_ward"/>-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/rb_night_shelter"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:text="@string/hunger_night_shelter"/>-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/rb_ration_dist"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:text="@string/government_ration_distribution"/>-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/rb_rel_centre"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:text="@string/hunger_relief_centre"/>-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/rb_dist_cont_zone"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:text="@string/district_containment_zone"/>-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/rb_dist_cases"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:text="@string/district_cases"/>-->
+
+<!--        </LinearLayout>-->
+
+
+    </RelativeLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

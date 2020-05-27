@@ -1,10 +1,10 @@
 package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
 import com.mapbox.core.constants.Constants
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.utils.PolylineUtils
@@ -21,7 +21,6 @@ import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog
 import com.mapmyindia.sdk.demo.kotlin.plugin.DirectionPolylinePlugin
 import com.mmi.services.api.directions.DirectionsCriteria
 import com.mmi.services.api.directions.MapmyIndiaDirections
-
 import com.mmi.services.api.directions.models.DirectionsResponse
 import com.mmi.services.api.directions.models.DirectionsRoute
 import kotlinx.android.synthetic.main.activity_direction_layout.*

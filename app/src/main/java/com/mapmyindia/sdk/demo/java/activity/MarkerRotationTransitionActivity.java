@@ -1,9 +1,10 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -66,6 +67,8 @@ public class MarkerRotationTransitionActivity extends AppCompatActivity implemen
         markerPlugin = new MarkerPlugin(mapmyIndiaMap, mapView);
         markerPlugin.icon(getResources().getDrawable(R.drawable.placeholder));
         markerPlugin.addMarker(latLngStart);
+        markerPlugin.addTitle("Title");
+        markerPlugin.addDescription("Description");
 
     }
 

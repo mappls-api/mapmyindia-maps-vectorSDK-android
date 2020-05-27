@@ -4,9 +4,10 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.mapbox.android.core.location.LocationEngineListener;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
