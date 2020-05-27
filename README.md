@@ -2,7 +2,7 @@
   
 
 ![MapmyIndia APIs](https://www.mapmyindia.com/api/img/mapmyindia-api.png)
-# [MapmyIndia Vector Map Android SDK](#mapmyindia-vector-map-android-sdk)
+# MapmyIndia Vector Map Android SDK
 
 **Easy To Integrate Maps & Location APIs & SDKs For Web & Mobile Applications**
 
