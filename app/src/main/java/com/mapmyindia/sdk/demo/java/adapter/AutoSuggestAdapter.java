@@ -19,11 +19,11 @@ import java.util.ArrayList;
 
 public class AutoSuggestAdapter extends RecyclerView.Adapter<AutoSuggestAdapter.MyViewholder> {
     private ArrayList<ELocation> list;
-    private PlaceName placeName;
+    private PlaceData placeData;
 
-    public AutoSuggestAdapter(ArrayList<ELocation> list, PlaceName placeName) {
+    public AutoSuggestAdapter(ArrayList<ELocation> list, PlaceData placeData) {
         this.list = list;
-        this.placeName = placeName;
+        this.placeData = placeData;
     }
 
     @NonNull
@@ -37,10 +37,17 @@ public class AutoSuggestAdapter extends RecyclerView.Adapter<AutoSuggestAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyViewholder holder, final int position) {
         holder.viewName.setText(list.get(position).placeName);
+
         holder.viewName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                placeName.nameOfPlace(list.get(position).placeName);
+
+                ELocation eLocation=new ELocation();
+                eLocation.latitude=list.get(position).latitude;
+                eLocation.longitude=list.get(position).longitude;
+                eLocation.placeName=list.get(position).placeName;
+
+                placeData.dataOfPlace(eLocation);
             }
         });
     }
@@ -50,8 +57,8 @@ public class AutoSuggestAdapter extends RecyclerView.Adapter<AutoSuggestAdapter.
         return list.size();
     }
 
-    public interface PlaceName {
-        void nameOfPlace(String name);
+    public interface PlaceData {
+        void dataOfPlace(ELocation eLocation);
     }
 
     class MyViewholder extends RecyclerView.ViewHolder {

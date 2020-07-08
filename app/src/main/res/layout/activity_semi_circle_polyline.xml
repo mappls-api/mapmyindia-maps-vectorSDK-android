@@ -16,8 +16,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="16dp"
+        android:visibility="gone"
         android:layout_marginBottom="24dp"
         android:text="remove">
+
+    </Button>
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="16dp"
+        android:visibility="gone"
+        android:layout_marginBottom="24dp"
+        android:text="Add">
 
     </Button>
 

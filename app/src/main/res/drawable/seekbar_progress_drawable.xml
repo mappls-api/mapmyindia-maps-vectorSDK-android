@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="true">
+        <layer-list>
+            <item android:id="@android:id/background">
+                <shape android:shape="rectangle">
+                    <corners android:radius="5dp" />
+
+                    <size
+                        android:height="2dp"
+                        android:width="40dp"/>
+                    <gradient
+                        android:angle="270"
+                        android:endColor="#FFFFFF"
+                        android:startColor="#FFFFFF" />
+                </shape>
+            </item>
+            <item android:id="@android:id/secondaryProgress">
+                <clip>
+                    <shape android:shape="oval">
+                        <corners android:radius="5dp" />
+                        <size
+                            android:height="2dp"
+                            android:width="40dp"/>
+                        <gradient android:angle="270" android:endColor="@color/mapmyindia_geofence_colorPrimary" android:startColor="@color/mapmyindia_geofence_colorPrimary" />
+                    </shape>
+                </clip>
+            </item>
+            <item android:id="@android:id/progress">
+                <clip>
+                    <shape android:shape="rectangle">
+                        <corners android:radius="5dp" />
+                        <size
+                            android:height="2dp"
+                            android:width="40dp"/>
+                        <gradient android:angle="90" android:endColor="@color/mapmyindia_geofence_colorPrimary" android:startColor="@color/mapmyindia_geofence_colorPrimary" />
+                    </shape>
+                </clip>
+            </item>
+        </layer-list>
+    </item>
+
+    <item android:state_enabled="false">
+        <layer-list>
+            <item android:id="@android:id/background">
+                <shape android:shape="line">
+                    <corners android:radius="4dp" />
+                    <stroke android:width="12dp" android:color="#ababab" />
+                </shape>
+            </item>
+
+
+            <item android:id="@android:id/progress">
+
+                <clip>
+                    <shape android:shape="line">
+                        <corners android:radius="4dp" />
+                        <stroke android:width="12dp" android:color="#FFFFFF" />
+                    </shape>
+                </clip>
+            </item>
+        </layer-list>
+    </item>
+</selector>

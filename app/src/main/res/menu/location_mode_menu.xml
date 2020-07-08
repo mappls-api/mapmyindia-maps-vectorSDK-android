@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+      android:id="@+id/normal"
+        android:title="Normal"/>
+    <item
+        android:id="@+id/Compass"
+        android:title="Compass"/>
+    <item
+        android:id="@+id/GPS"
+        android:title="GPS"/>
+
+</menu>

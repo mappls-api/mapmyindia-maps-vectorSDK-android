@@ -4,21 +4,26 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.utils.BitmapUtils;
 import com.mapmyindia.sdk.demo.R;
-import com.mapmyindia.sdk.demo.java.plugin.MarkerPlugin;
+import com.mapmyindia.sdk.plugin.annotation.OnSymbolDragListener;
+import com.mapmyindia.sdk.plugin.annotation.Symbol;
+import com.mapmyindia.sdk.plugin.annotation.SymbolManager;
+import com.mapmyindia.sdk.plugin.annotation.SymbolOptions;
 
 public class MarkerDraggingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
     private MapboxMap mapmyIndiaMap;
     private LatLng latLng = new LatLng(28.705436, 77.100462);
-    private MarkerPlugin markerPlugin;
+    private SymbolManager symbolManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +43,28 @@ public class MarkerDraggingActivity extends AppCompatActivity implements OnMapRe
     }
 
     private void initMarker() {
-        markerPlugin = new MarkerPlugin(mapmyIndiaMap, mapView);
-        markerPlugin.icon(getResources().getDrawable(R.drawable.placeholder));
-        markerPlugin.addMarker(latLng);
-        markerPlugin.draggable(true);
-        markerPlugin.setOnMarkerDraggingListener(new MarkerPlugin.OnMarkerDraggingListener() {
+        symbolManager = new SymbolManager(mapView, mapmyIndiaMap);
+        SymbolOptions symbolOptions = new SymbolOptions()
+                .position(latLng)
+                .icon(BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(this, R.drawable.placeholder)))
+                .draggable(true);
+        symbolManager.setIconIgnorePlacement(false);
+        symbolManager.setIconAllowOverlap(true);
+        symbolManager.create(symbolOptions);
+        symbolManager.addDragListener(new OnSymbolDragListener() {
             @Override
-            public void onMarkerDragging(LatLng position) {
-                Toast.makeText(MarkerDraggingActivity.this, position.toString(), Toast.LENGTH_SHORT).show();
+            public void onAnnotationDragStarted(Symbol symbol) {
+
+            }
+
+            @Override
+            public void onAnnotationDrag(Symbol symbol) {
+
+            }
+
+            @Override
+            public void onAnnotationDragFinished(Symbol symbol) {
+                Toast.makeText(MarkerDraggingActivity.this, symbol.getPosition().toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -71,6 +90,9 @@ public class MarkerDraggingActivity extends AppCompatActivity implements OnMapRe
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        if(symbolManager != null) {
+            symbolManager.onDestroy();
+        }
     }
 
     @Override

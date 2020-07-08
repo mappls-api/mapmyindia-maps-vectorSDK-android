@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="300dp"
+            android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/btn_basic_geofence_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/button_background"
+            android:text="Basic GeoFence View"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary" />
+
+        <Button
+            android:id="@+id/btn_geofence_activity_ui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_background"
+            android:text="Custom GeoFence View"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary" />
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

@@ -11,7 +11,7 @@ import java.util.*
 /**
  * Created by CEINFO on 26-02-2019.
  */
-class AutoSuggestAdapter(private var list: ArrayList<ELocation>,private var placeName: PlaceName) : androidx.recyclerview.widget.RecyclerView.Adapter<AutoSuggestAdapter.MyViewholder>() {
+class AutoSuggestAdapter(private var list: ArrayList<ELocation>,private var placeData: PlaceData) : androidx.recyclerview.widget.RecyclerView.Adapter<AutoSuggestAdapter.MyViewholder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewholder {
@@ -22,15 +22,21 @@ class AutoSuggestAdapter(private var list: ArrayList<ELocation>,private var plac
 
     override fun onBindViewHolder(holder: MyViewholder, position: Int) {
         holder.viewName.text = list[position].placeName
-        holder.viewName.setOnClickListener { placeName.nameOfPlace(list[position].placeName) }
+        holder.viewName.setOnClickListener {
+            val eLocation=ELocation()
+            eLocation.latitude=list[position].latitude
+            eLocation.longitude=list[position].longitude
+            eLocation.placeName=list[position].placeName
+
+            placeData.dataOfPlace(eLocation) }
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    interface PlaceName {
-        fun nameOfPlace(name: String)
+    interface PlaceData {
+        fun dataOfPlace(eLocation: ELocation)
     }
 
     inner class MyViewholder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {

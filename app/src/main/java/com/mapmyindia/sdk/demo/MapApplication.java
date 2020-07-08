@@ -23,7 +23,6 @@ public class MapApplication extends Application {
         MapmyIndia.getInstance(this);
     }
 
-
     public String getAtlasClientId() {
         return "";
     }

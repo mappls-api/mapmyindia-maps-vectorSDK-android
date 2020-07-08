@@ -21,8 +21,9 @@ abstract class FeaturesListAdapter(private val list: ArrayList<Features>) : andr
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.viewName.text = list[position].featureTittle
-        holder.viewName.setOnClickListener { redirectOnFeatureCallBack(list[position]) }
+        holder.titleTextView.text = list[position].featureTittle
+        holder.subTitleTextView.text = list[position].featureDescription
+        holder.itemView.setOnClickListener { redirectOnFeatureCallBack(list[position]) }
     }
 
     override fun getItemCount(): Int {
@@ -31,10 +32,12 @@ abstract class FeaturesListAdapter(private val list: ArrayList<Features>) : andr
 
     inner class MyViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
-        var viewName: TextView
+        var titleTextView: TextView
+        var subTitleTextView: TextView
 
         init {
-            viewName = itemView.findViewById<View>(R.id.textView) as TextView
+            titleTextView = itemView.findViewById<View>(R.id.title_text_view) as TextView
+            subTitleTextView = itemView.findViewById<View>(R.id.sub_title_text_view) as TextView
         }
     }
 }

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+        <com.mapmyindia.sdk.geofence.ui.views.GeoFenceView
+            android:id="@+id/geo_fence_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mapmyIndia_geoFence_showUI="false"
+            app:mapmyIndia_geoFence_minRadius="1000"
+            app:mapmyIndia_geoFence_maxRadius="50000"
+            app:mapmyIndia_geoFence_radiusInterval="50"
+            />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/tools_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:minHeight="60dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/id_circle_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:minWidth="100dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_button_circle"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        app:srcCompat="@drawable/mapmyindia_geofence_circle_icon_selector" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Circle" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#000000" />
+
+                <LinearLayout
+                    android:id="@+id/id_polygon_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_toEndOf="@id/id_circle_button"
+                    android:layout_toRightOf="@id/id_circle_button"
+                    android:gravity="center"
+                    android:minWidth="100dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_button_polygon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        app:srcCompat="@drawable/mapmyindia_geofence_polygon_icon_selector" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Polygon" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_apply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:text="Apply"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <CheckBox
+            android:id="@+id/cb_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/tools_view"
+            android:background="#FFFFFF"
+            android:text="Enable "
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/seek_bar_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/tools_view"
+            android:background="#8F8F8F"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingTop="2.0dip"
+            android:paddingBottom="2.0dip"
+            android:visibility="gone">
+
+            <SeekBar
+                android:id="@+id/id_seek_bar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/id_seek_bar_value"
+                android:layout_toLeftOf="@+id/id_seek_bar_value"
+                android:paddingLeft="12.0dip"
+                android:paddingRight="12.0dip"
+                android:max="25"
+                android:progressDrawable="@drawable/seekbar_progress_drawable"
+                android:thumb="@drawable/seek_bar_thumb_drawable" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:id="@+id/id_seek_bar_value"
+                android:layout_width="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:padding="12.0dip"
+                android:textColor="@android:color/white"
+                android:textSize="12.0sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

@@ -18,6 +18,7 @@
         android:layout_margin="8dp"
         android:background="@android:color/white"
         android:ems="10"
+        android:imeOptions="actionSearch"
         android:hint="@string/search"
         android:inputType="textPersonName"
         android:paddingLeft="5dp"

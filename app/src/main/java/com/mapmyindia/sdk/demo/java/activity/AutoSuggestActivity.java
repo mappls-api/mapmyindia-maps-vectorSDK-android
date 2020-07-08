@@ -1,12 +1,17 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,12 +31,9 @@ import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog;
 import com.mmi.services.api.autosuggest.MapmyIndiaAutoSuggest;
 import com.mmi.services.api.autosuggest.model.AutoSuggestAtlasResponse;
 import com.mmi.services.api.autosuggest.model.ELocation;
-import com.mmi.services.api.geocoding.GeoCode;
-import com.mmi.services.api.geocoding.GeoCodeResponse;
-import com.mmi.services.api.geocoding.MapmyIndiaGeoCoding;
+import com.mmi.services.api.textsearch.MapmyIndiaTextSearch;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +43,7 @@ import retrofit2.Response;
  * Created by CEINFO on 26-02-2019.
  */
 
-public class AutoSuggestActivity extends AppCompatActivity implements OnMapReadyCallback, TextWatcher {
+public class AutoSuggestActivity extends AppCompatActivity implements OnMapReadyCallback, TextWatcher, TextView.OnEditorActionListener {
 
     private MapboxMap mapmyIndiaMap;
     private EditText autoSuggestText;
@@ -64,7 +66,8 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void initListeners() {
-        autoSuggestText.addTextChangedListener(this);
+       autoSuggestText.addTextChangedListener(this);
+        autoSuggestText.setOnEditorActionListener(this);
     }
 
     private void initReferences() {
@@ -96,44 +99,13 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
     public void onMapError(int i, String s) {
     }
 
-    public void selectedPlaceName(String name) {
-        if (CheckInternet.isNetworkAvailable(AutoSuggestActivity.this)) {
-            getGeoCode(name);
-        } else {
-            showToast(getString(R.string.pleaseCheckInternetConnection));
-        }
+    public void selectedPlace(ELocation eLocation) {
+        String add = "Latitude: " + eLocation.latitude + " longitude: " + eLocation.longitude;
+        addMarker(Double.parseDouble(eLocation.latitude), Double.parseDouble(eLocation.longitude));
+        showToast(add);
     }
 
-    private void getGeoCode(String geocodeText) {
-        show();
-        MapmyIndiaGeoCoding.builder()
-                .setAddress(geocodeText)
-                .build().enqueueCall(new Callback<GeoCodeResponse>() {
-            @Override
-            public void onResponse(Call<GeoCodeResponse> call, Response<GeoCodeResponse> response) {
-                if (response.code() == 200) {
-                    if (response.body() != null) {
-                        List<GeoCode> placesList = response.body().getResults();
-                        GeoCode place = placesList.get(0);
-                        String add = "Latitude: " + place.latitude + " longitude: " + place.longitude;
-                        addMarker(place.latitude, place.longitude);
-                        showToast(add);
-                    } else {
-                        showToast("Not able to get value, Try again.");
-                    }
-                } else {
-                    showToast(response.message());
-                }
-                hide();
-            }
 
-            @Override
-            public void onFailure(Call<GeoCodeResponse> call, Throwable t) {
-                showToast(t.toString());
-                hide();
-            }
-        });
-    }
 
     private void addMarker(double latitude, double longitude) {
         mapmyIndiaMap.clear();
@@ -154,8 +126,8 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
                                 ArrayList<ELocation> suggestedList = response.body().getSuggestedLocations();
                                 if (suggestedList.size() > 0) {
                                     recyclerView.setVisibility(View.VISIBLE);
-                                    AutoSuggestAdapter autoSuggestAdapter = new AutoSuggestAdapter(suggestedList, name -> {
-                                        selectedPlaceName(name);
+                                    AutoSuggestAdapter autoSuggestAdapter = new AutoSuggestAdapter(suggestedList, eLocation -> {
+                                        selectedPlace(eLocation);
                                         recyclerView.setVisibility(View.GONE);
                                     });
                                     recyclerView.setAdapter(autoSuggestAdapter);
@@ -168,10 +140,40 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
 
                     @Override
                     public void onFailure(Call<AutoSuggestAtlasResponse> call, Throwable t) {
-                        showToast(t.toString());
+                        t.printStackTrace();
                     }
                 });
 
+    }
+
+
+    private void callTextSearchApi(String searchString){
+        MapmyIndiaTextSearch.builder()
+                .query(searchString)
+                .build().enqueueCall(new Callback<AutoSuggestAtlasResponse>() {
+            @Override
+            public void onResponse(Call<AutoSuggestAtlasResponse> call, Response<AutoSuggestAtlasResponse> response) {
+                if (response.code() == 200) {
+                    if (response.body() != null) {
+                        ArrayList<ELocation> suggestedList = response.body().getSuggestedLocations();
+                        if (suggestedList.size() > 0) {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            AutoSuggestAdapter autoSuggestAdapter = new AutoSuggestAdapter(suggestedList, eLocation -> {
+                                selectedPlace(eLocation);
+                                recyclerView.setVisibility(View.GONE);
+                            });
+                            recyclerView.setAdapter(autoSuggestAdapter);
+                        }
+                    } else {
+                        showToast("Not able to get value, Try again.");
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<AutoSuggestAtlasResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     private void show() {
@@ -219,5 +221,15 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
     }
 
 
-
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId== EditorInfo.IME_ACTION_SEARCH){
+           callTextSearchApi(v.getText().toString());
+            autoSuggestText.clearFocus();
+            InputMethodManager in = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            in.hideSoftInputFromWindow(autoSuggestText.getWindowToken(), 0);
+           return true;
+        }
+        return false;
+    }
 }

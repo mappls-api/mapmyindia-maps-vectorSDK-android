@@ -35,8 +35,9 @@ public abstract class FeaturesListAdapter extends RecyclerView.Adapter<FeaturesL
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
-        holder.viewName.setText(list.get(position).getFeatureTittle());
-        holder.viewName.setOnClickListener(new View.OnClickListener() {
+        holder.titleTextView.setText(list.get(position).getFeatureTittle());
+        holder.subTitleTextView.setText(list.get(position).getFeatureDescription());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 redirectOnFeatureCallBack(list.get(position));
@@ -51,11 +52,13 @@ public abstract class FeaturesListAdapter extends RecyclerView.Adapter<FeaturesL
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView viewName;
+        TextView titleTextView;
+        TextView subTitleTextView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            viewName = itemView.findViewById(R.id.textView);
+            titleTextView = itemView.findViewById(R.id.title_text_view);
+            subTitleTextView = itemView.findViewById(R.id.sub_title_text_view);
         }
     }
 }

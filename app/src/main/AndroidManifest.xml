@@ -12,10 +12,31 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".kotlin.activity.InteractiveLayerActivity"></activity>
+        <activity android:name=".java.activity.MapFragmentActivity"></activity>
+        <activity android:name=".kotlin.activity.MapFragmentActivity" />
+        <activity android:name=".kotlin.activity.GeoFenceActivity" />
+        <activity
+            android:name=".kotlin.activity.BasicGeofenceActivity"
+            android:parentActivityName=".kotlin.activity.GeoFenceActivity" />
+        <activity
+            android:name=".kotlin.activity.GeoFenceDetailActivity"
+            android:parentActivityName=".kotlin.activity.GeoFenceActivity" />
+        <activity android:name=".kotlin.activity.GeoFenceCustomActivity" />
+        <activity android:name=".kotlin.activity.PickerActivity" />
+        <activity android:name=".kotlin.activity.ScalebarActivity" />
+        <activity android:name=".kotlin.activity.DirectionStepActivity" />
+        <activity android:name=".kotlin.activity.InteractiveLayerActivity" />
         <activity android:name=".kotlin.activity.GesturesActivity" />
+        <activity android:name=".java.activity.PickerActivity" />
+        <activity android:name=".java.activity.ScalebarActivity" />
         <activity android:name=".java.activity.InteractiveLayerActivity" />
+        <activity android:name=".java.activity.DirectionStepActivity" />
         <activity android:name=".java.activity.GesturesActivity" />
+        <activity android:name=".java.activity.GeoFenceActivity" />
+        <activity android:name=".java.activity.GeoFenceCustomActivity" />
+        <activity
+            android:name=".java.activity.BasicGeoFenceActivity"
+            android:parentActivityName=".java.activity.GeoFenceActivity" />
         <activity
             android:name=".kotlin.activity.FullModeActivity"
             android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
@@ -101,11 +122,14 @@
         <activity android:name=".kotlin.activity.IndoorActivity" />
         <activity android:name=".kotlin.activity.AddCustomInfoWindowActivity" />
         <activity android:name=".kotlin.activity.SafetyPluginActivity" />
+        <activity android:name=".kotlin.activity.SnakeMotionPolylineActivity"/>
+        <activity android:name=".java.activity.LocationCameraActivity" />
+        <activity android:name=".kotlin.activity.LocationCameraActivity" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

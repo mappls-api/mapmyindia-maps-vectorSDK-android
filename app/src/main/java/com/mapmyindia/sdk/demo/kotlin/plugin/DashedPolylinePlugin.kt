@@ -59,6 +59,8 @@ class DashedPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapVie
             polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
                     GeoJsonOptions().withLineMetrics(true).withBuffer(2))
             mapmyIndiaMap.addSource(polylineSource!!)
+        } else {
+            updateSource()
         }
     }
 

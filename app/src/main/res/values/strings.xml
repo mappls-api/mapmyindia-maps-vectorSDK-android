@@ -11,4 +11,7 @@
     <string name="initialize_safety_plugin">Initialize</string>
     <string name="txt_remove_btn">remove</string>
     <string name="txt_add">ADD</string>
+    <string name="pick_a_place">Pick a Place</string>
+
+
 </resources>

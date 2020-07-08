@@ -1,11 +1,16 @@
 package com.mapmyindia.sdk.demo.kotlin.activity
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
@@ -20,8 +25,8 @@ import com.mapmyindia.sdk.demo.kotlin.adapter.AutoSuggestAdapter
 import com.mapmyindia.sdk.demo.kotlin.kotlin.utility.TransparentProgressDialog
 import com.mmi.services.api.autosuggest.MapmyIndiaAutoSuggest
 import com.mmi.services.api.autosuggest.model.AutoSuggestAtlasResponse
-import com.mmi.services.api.geocoding.GeoCodeResponse
-import com.mmi.services.api.geocoding.MapmyIndiaGeoCoding
+import com.mmi.services.api.autosuggest.model.ELocation
+import com.mmi.services.api.textsearch.MapmyIndiaTextSearch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,7 +34,7 @@ import retrofit2.Response
 /**
  * Created by CEINFO on 26-02-2019.
  */
-class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher {
+class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher,TextView.OnEditorActionListener {
 
     lateinit var mapmyIndiaMap: MapboxMap
     private lateinit var autoSuggestText: EditText
@@ -46,7 +51,7 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map_view) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)
-
+        Toast.makeText(this,"kotlin",Toast.LENGTH_SHORT).show()
         initReference()
     }
 
@@ -100,46 +105,16 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
 
         handler = Handler()
         autoSuggestText.addTextChangedListener(this)
+        autoSuggestText.setOnEditorActionListener(this)
     }
 
-    fun selectedPlaceName(name: String?) {
-        if (name != null) {
-            if (CheckInternet.isNetworkAvailable(this@AutoSuggestActivity)) {
-                getGeoCode(name)
-            } else {
-                showToast(getString(R.string.pleaseCheckInternetConnection))
-            }
-
-        }
+    fun selectedPlace(eLocation: ELocation) {
+        val add:String="Latitude: " + eLocation.latitude + " longitude: " + eLocation.longitude
+        addMarker(eLocation.latitude.toDouble(), eLocation.longitude.toDouble())
+        showToast(add)
     }
 
-    private fun getGeoCode(geocodeText: String) {
-        show()
-        MapmyIndiaGeoCoding.builder()
-                .setAddress(geocodeText)
-                .build().enqueueCall(object : Callback<GeoCodeResponse> {
-                    override fun onResponse(call: Call<GeoCodeResponse>, response: Response<GeoCodeResponse>) {
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                val placesList = response.body()?.results
-                                val place = placesList?.get(0)
-                                addMarker(place?.latitude!!, place?.longitude!!)
-                            } else {
-                                showToast("Not able to get value, Try again.")
-                                response.message()
-                            }
-                        } else {
-                            showToast(response.message())
-                        }
-                        hide()
-                    }
 
-                    override fun onFailure(call: Call<GeoCodeResponse>, t: Throwable) {
-                        showToast(t.toString())
-                        hide()
-                    }
-                })
-    }
 
     private fun addMarker(latitude: Double, longitude: Double) {
         mapmyIndiaMap.clear()
@@ -161,9 +136,9 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
                                 val suggestedList = response.body()!!.suggestedLocations
                                 if (suggestedList.size > 0) {
                                     recyclerView.visibility = View.VISIBLE
-                                    val autoSuggestAdapter = AutoSuggestAdapter(suggestedList, object : AutoSuggestAdapter.PlaceName {
-                                        override fun nameOfPlace(name: String) {
-                                            selectedPlaceName(name)
+                                    val autoSuggestAdapter = AutoSuggestAdapter(suggestedList, object : AutoSuggestAdapter.PlaceData {
+                                        override fun dataOfPlace(eLocation: ELocation) {
+                                            selectedPlace(eLocation)
                                             recyclerView.visibility = View.GONE
                                         }
                                     })
@@ -176,7 +151,36 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
                     }
 
                     override fun onFailure(call: Call<AutoSuggestAtlasResponse>, t: Throwable) {
-                        println(t.toString())
+                        t.printStackTrace()
+                    }
+                })
+    }
+
+    private fun callTextSearchApi(searchString: String) {
+        MapmyIndiaTextSearch.builder()
+                .query(searchString)
+                .build().enqueueCall(object : Callback<AutoSuggestAtlasResponse> {
+                    override fun onResponse(call: Call<AutoSuggestAtlasResponse>, response: Response<AutoSuggestAtlasResponse>) {
+                        if (response.code() == 200) {
+                            if (response.body() != null) {
+                                val suggestedList = response.body()!!.suggestedLocations
+                                if (suggestedList.size > 0) {
+                                    recyclerView.visibility = View.VISIBLE
+                                    val autoSuggestAdapter = AutoSuggestAdapter(suggestedList, object : AutoSuggestAdapter.PlaceData {
+                                        override fun dataOfPlace(eLocation: ELocation) {
+                                            selectedPlace(eLocation)
+                                            recyclerView.visibility = View.GONE
+                                        }
+                                    })
+                                    recyclerView.adapter = autoSuggestAdapter
+                                }
+                            } else {
+                                Toast.makeText(this@AutoSuggestActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    override fun onFailure(call: Call<AutoSuggestAtlasResponse>, t: Throwable) {
+                        t.printStackTrace()
                     }
                 })
     }
@@ -193,6 +197,17 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
 
     fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            callTextSearchApi(v!!.text.toString())
+            autoSuggestText.clearFocus()
+            val inputMethodManger =getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManger.hideSoftInputFromWindow(autoSuggestText.windowToken, 0)
+
+        }
+        return false
     }
 
 }

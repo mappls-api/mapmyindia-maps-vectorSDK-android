@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/none"
+    android:title="None"/>
+    <item android:id="@+id/none_compass"
+        android:title="None Compass"/>
+    <item android:id="@+id/none_gps"
+        android:title="None GPS"/>
+    <item android:id="@+id/tracking"
+        android:title="Tracking"/>
+    <item android:id="@+id/tracking_compass"
+        android:title="Tracking Compass"/>
+    <item android:id="@+id/tracking_gps"
+        android:title="Tracking GPS"/>
+    <item android:id="@+id/tracking_gps_north"
+        android:title="Tracking GPS North"/>
+
+</menu>
