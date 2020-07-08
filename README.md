@@ -18,6 +18,8 @@ Powered with India's most comprehensive and robust mapping functionalities.
 
 | Version | Last Updated | Author |  Release Note|
 | ---- | ---- | ---- | ---- |
+| v6.8.2 | 16 June 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) |   Added Options to check current location safety |
+| v6.8.1 | 31 May 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) |   🐞 Bug fixes|
 | v6.8.0 | 27 May 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) |   Now enable/disable interactive layer using our maps sdk |
 | v6.7.14 | 28 April 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) |  Added MapmyIndia Safety plugin |
 |v6.7.13 | 12 May 2020| MapmyIndia API Team ([MA](https://github.com/mdakram)) | Functions added to enable/disable dem and monument icons
