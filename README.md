@@ -113,7 +113,7 @@ MapmyIndia.getInstance(applicationContext)
 
 ```xml
 <com.mapbox.mapboxsdk.maps.MapView  
-  android:id="@id/map_view"  
+  android:id="@+id/map_view"  
   android:layout_width="match_parent"  
   android:layout_height="match_parent" />
 ```
