@@ -18,7 +18,9 @@ Powered with India's most comprehensive and robust mapping functionalities.
 
 | Version | Last Updated | Author |  Release Note|
 | ---- | ---- | ---- | ---- |
-| v6.8.5 | 26 August 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  🐞 Bug Fixes |
+| v6.8.5 | 26 August 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Added Along the route API support<br/>-Fixes blank tile issue |
+| v6.8.4 | 14 August 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  Added EV Charging station support in Nearby API. |
+| v6.8.3 | 23 July 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  🐞 Bug Fixes |
 | v6.8.2 | 16 June 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |   Added Options to check current location safety |
 | v6.8.1 | 31 May 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |   🐞 Bug fixes|
 | v6.8.0 | 27 May 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |   Now enable/disable interactive layer using our maps sdk |
