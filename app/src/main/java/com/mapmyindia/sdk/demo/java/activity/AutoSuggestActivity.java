@@ -140,7 +140,7 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
 
                     @Override
                     public void onFailure(Call<AutoSuggestAtlasResponse> call, Throwable t) {
-                        t.printStackTrace();
+                        showToast(t.toString());
                     }
                 });
 
@@ -171,7 +171,7 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
             }
             @Override
             public void onFailure(Call<AutoSuggestAtlasResponse> call, Throwable t) {
-                t.printStackTrace();
+                showToast(t.toString());
             }
         });
     }

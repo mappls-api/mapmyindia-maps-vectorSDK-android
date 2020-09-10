@@ -92,7 +92,7 @@ class GeoFenceDetailActivity: AppCompatActivity(), OnMapReadyCallback {
                     points.addAll(geofenceDetail.polygonPoints?:ArrayList())
                 } else {
                     val polygon = TurfTransformation.circle(Point.fromLngLat(geofenceDetail.circleCentre?.longitude!!, geofenceDetail.circleCentre?.latitude!!), geofenceDetail.circleRadius?.toDouble()!!, TurfConstants.UNIT_METERS)
-                    points.addAll(polygon.coordinates()[0])
+                    points.addAll(polygon.coordinates()!![0])
                 }
             }
         }
@@ -228,7 +228,7 @@ class GeoFenceDetailActivity: AppCompatActivity(), OnMapReadyCallback {
             val jsonObject = line.data as JsonObject?
             if (jsonObject!!.has("GeoFencetype")) {
                 if (jsonObject["GeoFencetype"].asString.equals(geofenceDetail.gfLabel, ignoreCase = true)) {
-                    line.geometry = LineString.fromLngLats(polygon.coordinates()[0])
+                    line.geometry = LineString.fromLngLats(polygon.coordinates()!![0])
                     lineManager?.update(line)
                 }
             }
@@ -288,7 +288,7 @@ class GeoFenceDetailActivity: AppCompatActivity(), OnMapReadyCallback {
             symbols.add(symbol!!)
         }
         val latLngs: MutableList<LatLng> = java.util.ArrayList()
-        for (point in polygon.coordinates()[0]) {
+        for (point in polygon.coordinates()!![0]) {
             latLngs.add(LatLng(point.latitude(), point.longitude()))
         }
         val fillOptions = FillOptions()
@@ -298,7 +298,7 @@ class GeoFenceDetailActivity: AppCompatActivity(), OnMapReadyCallback {
                 .data(jsonObject)
         val fill = fillManager?.create(fillOptions)
         fillList.add(fill!!)
-        val points = polygon.coordinates()[0]
+        val points = polygon.coordinates()!![0]
         if (geofenceDetail.gfType.equals(GeofenceDetail.TYPE_CIRCLE, ignoreCase = true)) {
             points.add(points[0])
         }

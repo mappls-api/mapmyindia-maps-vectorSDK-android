@@ -111,7 +111,9 @@ public class SnakePolyLinePlugin implements MapView.OnMapChangedListener {
 
         @Override
         public void run() {
-            if (counterIndex < steps.size()) {
+            if(steps==null)
+                return;
+            if (  counterIndex < steps.size()) {
                 LegStep singleStep = steps.get(counterIndex);
                 if (singleStep != null && singleStep.geometry() != null) {
                     LineString lineStringRepresentingSingleStep = LineString.fromPolyline(

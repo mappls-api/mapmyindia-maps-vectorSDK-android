@@ -12,6 +12,8 @@
     <string name="txt_remove_btn">remove</string>
     <string name="txt_add">ADD</string>
     <string name="pick_a_place">Pick a Place</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
 
 
 </resources>

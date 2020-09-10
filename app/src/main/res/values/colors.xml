@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#EC672C</color>
-    <color name="colorPrimaryDark">#f24a00</color>
-    <color name="colorAccent">#EC672C</color>
+<!--    <color name="colorPrimary">#EC672C</color>-->
+<!--    <color name="colorPrimaryDark">#f24a00</color>-->
+<!--    <color name="colorAccent">#EC672C</color>-->
+    <color name="colorPrimary">#e52629</color>
+    <color name="colorPrimaryDark">#e7392a</color>
+    <color name="colorAccent">#ec672c</color>
+
+    <color name="mapmyindia_demo_white">#FFFFFF</color>
+    <color name="mapmyindia_demo_black">#000000</color>
 </resources>

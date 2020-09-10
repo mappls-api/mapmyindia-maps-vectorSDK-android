@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:background="@drawable/header_nav_gradient_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_mapmyIndia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="100dp"
+        android:gravity="bottom"
+        android:text="MapmyIndia"
+        android:textColor="@android:color/white"
+        android:textSize="16sp">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_sdk_sample"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="bottom"
+        android:text="Android Sdk Sample"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="6dp" />
+</LinearLayout>

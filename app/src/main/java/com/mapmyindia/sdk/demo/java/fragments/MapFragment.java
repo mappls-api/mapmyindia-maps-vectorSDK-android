@@ -1,4 +1,4 @@
-package com.mapmyindia.sdk.demo.java;
+package com.mapmyindia.sdk.demo.java.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

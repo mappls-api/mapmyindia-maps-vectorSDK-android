@@ -16,6 +16,7 @@
             app:mapmyIndia_geoFence_minRadius="1000"
             app:mapmyIndia_geoFence_maxRadius="50000"
             app:mapmyIndia_geoFence_radiusInterval="50"
+            app:mapmyIndia_geoFence_polygonCreationMode="tap"
             />
 
         <androidx.cardview.widget.CardView

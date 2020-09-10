@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.demo.java.activity.AddCustomMarkerActivity
 import com.mapmyindia.sdk.demo.kotlin.adapter.FeaturesListAdapter
 import com.mapmyindia.sdk.demo.kotlin.model.Features
 import java.util.*
@@ -61,8 +62,8 @@ class FeatureListActivityKotlin : AppCompatActivity() {
         featuresArrayList.add(Features(++i, "Place Picker", PickerActivity::class.java, "Place Picker to search and choose a specific location"))
         featuresArrayList.add(Features(++i, "GeoFence", GeoFenceActivity::class.java, "Highly customizable UI widget to create/edit geofence widget"))
         featuresArrayList.add(Features(++i, "Map in Fragment", MapFragmentActivity::class.java, "Way to use mapview in Fragment"))
-
-
+        featuresArrayList.add(Features(++i, "Hateos Nearby Api", HateOsNearbyActivity::class.java, "Nearby places using hateos api"))
+        featuresArrayList.add(Features(++i, "POI Along Route Api", PoiAlongRouteActivity::class.java, "user will be able to get the details of POIs of a particular category along his set route"))
         featuresRecycleView = findViewById(R.id.featuresRecycleView)
         mLayoutManager = LinearLayoutManager(this)
         featuresRecycleView?.layoutManager = mLayoutManager

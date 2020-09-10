@@ -13,7 +13,7 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
-import com.mapmyindia.sdk.demo.kotlin.plugin.SnakePolyLinePlugin
+import com.mapmyindia.sdk.demo.java.plugin.SnakePolyLinePlugin
 import com.mmi.services.api.directions.DirectionsCriteria
 import com.mmi.services.api.directions.MapmyIndiaDirections
 import com.mmi.services.api.directions.models.DirectionsResponse
@@ -22,14 +22,14 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class SnakeMotionPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
+class SnakeMotionPolylineActivity: AppCompatActivity() , OnMapReadyCallback{
 
-    private lateinit var mapView: MapView
-    lateinit var mapmyIndiaMap: MapboxMap
+    private lateinit var  mapView: MapView
+    lateinit var  mapmyIndiaMap: MapboxMap
 
-    private var snakePolyLinePlugin: SnakePolyLinePlugin? = null
+    private lateinit var snakePolyLinePlugin: SnakePolyLinePlugin
 
-    companion object {
+    companion object{
         private val ORIGIN_POINT = Point.fromLngLat(77.2667594, 28.5506561)
 
         private val DESTINATION_POINT = Point.fromLngLat(77.101318, 28.703900)
@@ -44,8 +44,9 @@ class SnakeMotionPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
+
     override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
-        this.mapmyIndiaMap = mapmyIndiaMap!!
+        this.mapmyIndiaMap=mapmyIndiaMap!!
         snakePolyLinePlugin = SnakePolyLinePlugin(mapView, mapmyIndiaMap)
         getDirectionRoute()
     }
@@ -73,8 +74,9 @@ class SnakeMotionPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
                                 .includes(latLngs)
                                 .build()
                         mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10, 10, 10, 10))
-
-                        snakePolyLinePlugin?.create(currentRoute.legs()!![0].steps())
+                        if (snakePolyLinePlugin != null) {
+                            snakePolyLinePlugin.create(currentRoute.legs()!![0].steps())
+                        }
                     }
 
                     override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {
@@ -96,8 +98,9 @@ class SnakeMotionPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onStop() {
         super.onStop()
         mapView.onStop()
-        snakePolyLinePlugin?.removeCallback()
-
+        if (snakePolyLinePlugin != null) {
+            snakePolyLinePlugin.removeCallback()
+        }
     }
 
     override fun onDestroy() {

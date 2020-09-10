@@ -13,6 +13,7 @@ import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapbox.mapboxsdk.utils.ColorUtils
 import com.mmi.services.api.directions.DirectionsCriteria
 import java.util.*
 
@@ -57,8 +58,8 @@ class DirectionPolylinePlugin(mapmyIndiaMap: MapboxMap, mapView: MapView, privat
             lineLayer!!.setProperties(lineDasharray(arrayOf(widthDash, gapDash)),
                     lineColor(Color.BLACK))
         } else {
-            lineLayer!!.setProperties(lineDasharray(arrayOf(0f, 0f)),
-                    lineColor(Color.parseColor("#3bb2d0")))
+            lineLayer!!.setProperties(lineDasharray(arrayOf()),
+                    lineColor(ColorUtils.colorToRgbaString(Color.parseColor("#3bb2d0"))))
         }
         featureCollection = FeatureCollection.fromFeature(features)
         initSources(featureCollection!!)
@@ -81,8 +82,8 @@ class DirectionPolylinePlugin(mapmyIndiaMap: MapboxMap, mapView: MapView, privat
             lineLayer!!.setProperties(lineDasharray(arrayOf(widthDash, gapDash)),
                     lineColor(Color.BLACK))
         } else {
-            lineLayer!!.setProperties(lineDasharray(arrayOf(0f, 0f)),
-                    lineColor(Color.parseColor("#3bb2d0")))
+            lineLayer!!.setProperties(lineDasharray(arrayOf()),
+                    lineColor(ColorUtils.colorToRgbaString(Color.parseColor("#3bb2d0"))))
         }
 
         featureCollection = FeatureCollection.fromFeature(features)

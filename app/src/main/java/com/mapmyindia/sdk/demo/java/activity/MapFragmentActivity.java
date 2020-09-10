@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapmyindia.sdk.demo.R;
-import com.mapmyindia.sdk.demo.java.MapFragment;
+import com.mapmyindia.sdk.demo.java.fragments.MapFragment;
 
 public class MapFragmentActivity extends AppCompatActivity {
 

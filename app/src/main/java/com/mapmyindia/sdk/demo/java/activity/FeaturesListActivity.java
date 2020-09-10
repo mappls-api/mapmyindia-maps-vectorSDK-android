@@ -67,7 +67,8 @@ public class FeaturesListActivity extends AppCompatActivity {
         featuresArrayList.add(new Features(++i, "Place Picker", PickerActivity.class, "Place Picker to search and choose a specific location"));
         featuresArrayList.add(new Features(++i, "GeoFence", GeoFenceActivity.class, "Highly customizable UI widget to create/edit geofence widget"));
         featuresArrayList.add(new Features(++i, "Map in Fragment", MapFragmentActivity.class, "Way to use mapview in Fragment"));
-
+        featuresArrayList.add(new Features(++i, "Hateos Nearby Api", HateOsNearbyActivity.class, "Nearby places using hateos api"));
+        featuresArrayList.add(new Features(++i, "POI Along Route Api", PoiAlongRouteActivity.class, "user will be able to get the details of POIs of a particular category along his set route"));
         featuresRecycleView = findViewById(R.id.featuresRecycleView);
         mLayoutManager = new LinearLayoutManager(FeaturesListActivity.this);
         featuresRecycleView.setLayoutManager(mLayoutManager);

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<group android:checkableBehavior="single">
+    <item
+       android:id="@+id/maps"
+        android:title="Map Events">
+
+    </item>
+
+    <item
+        android:id="@+id/maps_layer"
+        android:title="Map Layers"/>
+    <item
+        android:id="@+id/camera"
+        android:title="Camera">
+    </item>
+    <item
+        android:id="@+id/markers"
+        android:title="Marker">
+    </item>
+    <item
+        android:id ="@+id/locations"
+        android:title="Location">
+
+    </item>
+    <item
+        android:id="@+id/polylines"
+        android:title="PolyLines">
+    </item>
+    <item
+        android:id="@+id/apiCalls"
+        android:title="Rest API Calls">
+    </item>
+  
+    <item
+        android:id="@+id/animations"
+        android:title="Animations">
+    </item>
+    <item
+        android:id="@+id/customWidgets"
+        android:title="Custom Widgets">
+    </item>
+</group>
+</menu>

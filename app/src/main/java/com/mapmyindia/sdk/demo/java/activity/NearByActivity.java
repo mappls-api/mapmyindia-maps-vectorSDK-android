@@ -116,7 +116,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
         progressDialogShow();
         MapmyIndiaNearby.builder()
                 .setLocation(latitude, longitude)
-          .keyword("Tea")
+                .keyword("Tea")
                 .build()
                 .enqueueCall(new Callback<NearbyAtlasResponse>() {
                     @Override

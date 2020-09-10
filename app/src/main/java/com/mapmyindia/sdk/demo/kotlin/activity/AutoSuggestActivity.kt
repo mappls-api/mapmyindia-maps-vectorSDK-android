@@ -69,7 +69,7 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         handler.postDelayed(Runnable {
             recyclerView.visibility = View.GONE
-            if (s!!.length < 3)
+            if (s?.length?:0 < 3)
                 recyclerView.adapter = null
 
             if (s != null && s.toString().trim { it <= ' ' }.length < 2) {
@@ -77,7 +77,7 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
                 return@Runnable
             }
 
-            if (s.length > 2) {
+            if (s?.length?:0 > 2) {
                 if (CheckInternet.isNetworkAvailable(this@AutoSuggestActivity)) {
                     callAutoSuggestApi(s.toString())
                 } else {
@@ -151,7 +151,7 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
                     }
 
                     override fun onFailure(call: Call<AutoSuggestAtlasResponse>, t: Throwable) {
-                        t.printStackTrace()
+                        showToast(t.toString())
                     }
                 })
     }
@@ -180,7 +180,7 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
                         }
                     }
                     override fun onFailure(call: Call<AutoSuggestAtlasResponse>, t: Throwable) {
-                        t.printStackTrace()
+                        showToast(t.toString())
                     }
                 })
     }

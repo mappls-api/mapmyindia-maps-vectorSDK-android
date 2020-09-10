@@ -1,10 +1,9 @@
-package com.mapmyindia.sdk.demo.kotlin
+package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import com.mapbox.mapboxsdk.annotations.Icon
+import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -12,18 +11,20 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import kotlinx.android.synthetic.main.base_layout.*
 
-class MapFragment: Fragment(), OnMapReadyCallback {
+/**
+ * Created by CEINFO on 26-02-2019.
+ */
+class AddCustomMarkerActivitykt : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mapView: MapView
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.base_layout, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mapView = view.findViewById(R.id.map_view)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.base_layout)
+        map_view.onCreate(savedInstanceState)
+        mapView = findViewById<MapView>(R.id.map_view) as MapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
     }
@@ -36,47 +37,49 @@ class MapFragment: Fragment(), OnMapReadyCallback {
         mapmyIndiaMap?.setPadding(20, 20, 20, 20)
 
 
+        var iconFactory = IconFactory.getInstance(this)
+        var icon: Icon = iconFactory.fromResource(R.drawable.placeholder)
         mapmyIndiaMap?.addMarker(MarkerOptions().position(LatLng(
-                25.321684, 82.987289)).title("XYZ"))
+                25.321684, 82.987289)).icon(icon))
 
         /* this is done for animating/moving camera to particular position */
         val cameraPosition = CameraPosition.Builder().target(LatLng(
-                25.321684, 82.987289)).zoom(10.0).tilt(0.0).build()
+                25.321684, 82.987289)).zoom(14.0).tilt(0.0).build()
         mapmyIndiaMap?.cameraPosition = cameraPosition
     }
 
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+        map_view.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        map_view.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+        map_view.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
+        map_view.onStop()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mapView.onDestroy()
+    override fun onDestroy() {
+        super.onDestroy()
+        map_view.onDestroy()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+        map_view.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
+        map_view.onSaveInstanceState(outState)
     }
 }

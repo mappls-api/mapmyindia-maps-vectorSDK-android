@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:onClick="onClick"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_add_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="16dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp">
+
+    </TextView>
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="24dp"
+    android:layout_marginRight="24dp"
+    android:layout_alignParentRight="true"
+    app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"/>
+
+    <TextView
+        android:id="@+id/tv_add_desc"
+        android:layout_below="@+id/tv_add_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="12dp"
+        android:textColor="@android:color/black"
+        android:textSize="12sp">
+    </TextView>
+
+    <View
+
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tv_add_desc"
+        android:background="#dedede" />
+
+</RelativeLayout>

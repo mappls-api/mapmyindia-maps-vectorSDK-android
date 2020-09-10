@@ -3,7 +3,7 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.mapmyindia.sdk.demo.R
-import com.mapmyindia.sdk.demo.kotlin.MapFragment
+import com.mapmyindia.sdk.demo.kotlin.fragments.MapFragment
 
 class MapFragmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

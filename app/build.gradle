@@ -1,14 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         multiDexEnabled true
         applicationId "com.mapmyindia.sdk.demo"
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 30
         vectorDrawables.useSupportLibrary = true
         versionCode 1
         versionName "1.0"
@@ -24,25 +25,28 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
 
-    implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.2'
+    implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.5'
 
 
     //Place Widget
     implementation 'com.mapmyindia.sdk:place-widget:1.1.0'
+
+    //Geofence View
+    implementation 'com.mapmyindia.sdk:geofence-ui:0.9.3'
 
     //Annotation Plugin
     implementation 'com.mapmyindia.sdk:annotation-plugin:0.1.0'

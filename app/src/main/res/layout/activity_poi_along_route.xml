@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/details_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@color/mapmyindia_demo_white">
+
+        <LinearLayout
+            android:id="@+id/start_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_start_lat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="Start Latitude"
+                android:minHeight="48dp"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:inputType="numberDecimal"
+                android:background="@drawable/edit_text_background"
+                android:text="28.594475"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_start_lng"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="Start Longitude"
+                android:inputType="numberDecimal"
+                android:textSize="16sp"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:background="@drawable/edit_text_background"
+                android:text="77.202432"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/dest_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/start_layout"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_dest_lat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="8dp"
+                android:inputType="numberDecimal"
+                android:minHeight="48dp"
+                android:textSize="16sp"
+                android:background="@drawable/edit_text_background"
+                android:hint="Destination Latitude"
+                android:text="28.554676"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_dest_lng"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="8dp"
+                android:inputType="numberDecimal"
+                android:textSize="16sp"
+                android:minHeight="48dp"
+                android:background="@drawable/edit_text_background"
+                android:text="77.186982"
+                android:hint="Destination Longitude"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dest_layout"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_keyword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_margin="4dp"
+                android:hint="Keyword"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:background="@drawable/edit_text_background"
+                android:text="FODCOF"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="Search"
+                android:textColor="@color/mapmyindia_demo_white"
+                android:background="@drawable/bg_background_btn"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="#00ffffff"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+       >
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/poiRecyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/recycler_view_bg"/>
+    </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/marker_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

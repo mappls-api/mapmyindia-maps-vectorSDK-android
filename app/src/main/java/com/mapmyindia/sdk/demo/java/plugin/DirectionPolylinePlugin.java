@@ -15,6 +15,7 @@ import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import com.mmi.services.api.directions.DirectionsCriteria;
 
 import java.util.ArrayList;
@@ -71,8 +72,8 @@ public class DirectionPolylinePlugin implements MapView.OnMapChangedListener {
             lineLayer.setProperties(lineDasharray(new Float[]{widthDash, gapDash}),
                     lineColor(Color.BLACK));
         } else {
-            lineLayer.setProperties(lineDasharray(new Float[]{0f,0f}),
-                    lineColor(Color.parseColor("#3bb2d0")));
+            lineLayer.setProperties(lineDasharray(new Float[]{}),
+                    lineColor(ColorUtils.colorToRgbaString(Color.parseColor("#3bb2d0"))));
         }
         featureCollection = FeatureCollection.fromFeature(features);
         initSources(featureCollection);
@@ -95,8 +96,8 @@ public class DirectionPolylinePlugin implements MapView.OnMapChangedListener {
             lineLayer.setProperties(lineDasharray(new Float[]{widthDash, gapDash}),
                     lineColor(Color.BLACK));
         } else {
-            lineLayer.setProperties(lineDasharray(new Float[]{0f,0f}),
-                    lineColor(Color.parseColor("#3bb2d0")));
+            lineLayer.setProperties(lineDasharray(new Float[]{}),
+                    lineColor(ColorUtils.colorToRgbaString(Color.parseColor("#3bb2d0"))));
         }
 
         featureCollection = FeatureCollection.fromFeature(features);
