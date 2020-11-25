@@ -35,15 +35,15 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
 
-    implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.5'
+    implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.9'
 
 
     //Place Widget
-    implementation 'com.mapmyindia.sdk:place-widget:1.1.0'
+    implementation 'com.mapmyindia.sdk:place-widget:1.2.0'
 
     //Geofence View
     implementation 'com.mapmyindia.sdk:geofence-ui:0.9.3'
