@@ -286,7 +286,7 @@ public class PoiAlongRouteActivity extends AppCompatActivity implements OnMapRea
         transparentProgressDialog.dismiss();
     }
 
-
+    @Override
     protected void onStart() {
         super.onStart();
         mapView.onStart();

@@ -21,7 +21,7 @@ public class GesturesActivity extends AppCompatActivity implements OnMapReadyCal
 
     private MapView mapView;
     private MapboxMap mapmyIndiaMap;
-    private AndroidGesturesManager androidGesturesManager;
+    private  AndroidGesturesManager androidGesturesManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

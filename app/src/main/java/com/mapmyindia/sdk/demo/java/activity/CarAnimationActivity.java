@@ -35,12 +35,32 @@ public class CarAnimationActivity extends AppCompatActivity implements OnMapRead
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        listOfLatlang.add(new LatLng(28.705436, 77.100462));
-        listOfLatlang.add(new LatLng(28.705191, 77.100784));
-        listOfLatlang.add(new LatLng(28.704646, 77.101514));
-        listOfLatlang.add(new LatLng(28.704194, 77.101171));
-        listOfLatlang.add(new LatLng(28.704083, 77.101066));
-        listOfLatlang.add(new LatLng(28.703900, 77.101318));
+        listOfLatlang.add(new LatLng(22.30977, 73.23646));
+        listOfLatlang.add(new LatLng(22.30977, 73.23646));
+        listOfLatlang.add(new LatLng(22.3098, 73.23641));
+        listOfLatlang.add(new LatLng(22.30984, 73.23638));
+        listOfLatlang.add(new LatLng(22.30988, 73.23638));
+        listOfLatlang.add(new LatLng(22.30991, 73.23638));
+        listOfLatlang.add(new LatLng(22.30993, 73.23639));
+        listOfLatlang.add(new LatLng(22.30996, 73.23642));
+        listOfLatlang.add(new LatLng(22.30999, 73.23651));
+        listOfLatlang.add(new LatLng(22.30997, 73.23655));
+        listOfLatlang.add(new LatLng(22.30994, 73.23659));
+        listOfLatlang.add(new LatLng(22.30988, 73.23662));
+        listOfLatlang.add(new LatLng(22.30982, 73.2366));
+        listOfLatlang.add(new LatLng(22.30981, 73.23659));
+        listOfLatlang.add(new LatLng(22.30962, 73.23674));
+        listOfLatlang.add(new LatLng(22.30889, 73.2372));
+        listOfLatlang.add(new LatLng(22.30815, 73.23772));
+        listOfLatlang.add(new LatLng(22.3076, 73.23803));
+        listOfLatlang.add(new LatLng(22.30705, 73.23834));
+        listOfLatlang.add(new LatLng(22.30678, 73.23848));
+        listOfLatlang.add(new LatLng(22.30672, 73.23834));
+        listOfLatlang.add(new LatLng(22.30701, 73.2382));
+        listOfLatlang.add(new LatLng( 22.30779, 73.23777));
+        listOfLatlang.add(new LatLng(22.30797, 73.23766));
+        listOfLatlang.add(new LatLng(22.30811, 73.23757));
+        listOfLatlang.add(new LatLng( 22.30847, 73.23734));
     }
 
     @Override

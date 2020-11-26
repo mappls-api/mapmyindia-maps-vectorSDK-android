@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.model.FeaturesList
 import com.mapmyindia.sdk.demo.kotlin.activity.AddCustomMarkerActivitykt
+import com.mapmyindia.sdk.demo.kotlin.activity.AddELocCustomMarkerActivity
+import com.mapmyindia.sdk.demo.kotlin.activity.AddELocMarkerActivity
 import com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter
 import java.util.*
 
@@ -38,6 +40,8 @@ class MarkerFeatureFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick
         featuresArrayList.add(FeaturesList("Add Custom Infowindow", "Location camera options for render and tracking modes"))
         featuresArrayList.add(FeaturesList("Add Custom Marker", "Long press on map and get Latitude Longitude"))
         featuresArrayList.add(FeaturesList("Marker Dragging", "Drag a marker"))
+        featuresArrayList.add(FeaturesList("Add Marker Using ELoc", "Way to add marker using eLoc"))
+        featuresArrayList.add(FeaturesList("Add Custom Marker Using ELoc", "Way to add custom marker using eLoc"))
         featureRecycleView.layoutManager = LinearLayoutManager(context)
         var mapFeaturesListAdapter: MapFeatureListAdapter = MapFeatureListAdapter(featuresArrayList, this)
 
@@ -58,6 +62,12 @@ class MarkerFeatureFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick
             startActivity(addCustomMarkerIntent)
         } else if (position == 3) {
             val markerDraggingIntent = Intent(context, com.mapmyindia.sdk.demo.kotlin.activity.MarkerDraggingActivity::class.java)
+            startActivity(markerDraggingIntent)
+        } else if (position == 4) {
+            val markerDraggingIntent = Intent(context, AddELocMarkerActivity::class.java)
+            startActivity(markerDraggingIntent)
+        } else if (position == 5) {
+            val markerDraggingIntent = Intent(context, AddELocCustomMarkerActivity::class.java)
             startActivity(markerDraggingIntent)
         }
 

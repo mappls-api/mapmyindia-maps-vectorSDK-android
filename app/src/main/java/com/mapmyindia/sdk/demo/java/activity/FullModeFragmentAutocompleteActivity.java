@@ -1,5 +1,7 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
@@ -56,7 +59,7 @@ public class FullModeFragmentAutocompleteActivity extends AppCompatActivity impl
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(location != null) {
+                if (location != null) {
                     PlaceOptions placeOptions = PlaceOptions.builder()
                             .location(Point.fromLngLat(location.getLongitude(), location.getLatitude()))
                             .backgroundColor(ContextCompat.getColor(FullModeFragmentAutocompleteActivity.this, android.R.color.white))
@@ -69,9 +72,11 @@ public class FullModeFragmentAutocompleteActivity extends AppCompatActivity impl
                             search.setText(eLocation.placeName);
                             if (mapmyIndiaMap != null) {
                                 mapmyIndiaMap.clear();
-                                LatLng latLng = new LatLng(Double.parseDouble(eLocation.latitude), Double.parseDouble(eLocation.longitude));
-                                mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
-                                mapmyIndiaMap.addMarker(new MarkerOptions().position(latLng).title(eLocation.placeName).snippet(eLocation.placeAddress));
+                                if (eLocation.latitude != null && eLocation.longitude != null) {
+                                    LatLng latLng = new LatLng(Double.parseDouble(eLocation.latitude), Double.parseDouble(eLocation.longitude));
+                                    mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+                                    mapmyIndiaMap.addMarker(new MarkerOptions().position(latLng).title(eLocation.placeName).snippet(eLocation.placeAddress));
+                                }
                                 getSupportFragmentManager().popBackStack(PlaceAutocompleteFragment.class.getSimpleName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                             }
                         }
@@ -124,6 +129,16 @@ public class FullModeFragmentAutocompleteActivity extends AppCompatActivity impl
 // Get an instance of the component LocationComponent
         locationComponent = mapmyIndiaMap.getLocationComponent();
 // Activate with options
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         locationComponent.activateLocationComponent(this, options);
 // Enable to make component visible
         locationComponent.setLocationComponentEnabled(true);
@@ -201,13 +216,23 @@ public class FullModeFragmentAutocompleteActivity extends AppCompatActivity impl
 
     @Override
     public void onPermissionResult(boolean granted) {
-        if(granted) {
+        if (granted) {
             enableLocation();
         }
     }
 
     @Override
     public void onConnected() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         locationEngine.requestLocationUpdates();
     }
 

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.activity.CameraActivity;
+import com.mapmyindia.sdk.demo.java.activity.ELocCameraActivity;
 import com.mapmyindia.sdk.demo.java.activity.LocationCameraActivity;
 import com.mapmyindia.sdk.demo.java.adapter.MapFeatureListAdapter;
 import com.mapmyindia.sdk.demo.java.model.FeaturesList;
@@ -53,6 +54,9 @@ public class CameraFeatureFragment extends Fragment {
                 } else if (position == 1) {
                     Intent mapClickIntent = new Intent(getContext(), LocationCameraActivity.class);
                     startActivity(mapClickIntent);
+                } else if (position == 2) {
+                    Intent mapClickIntent = new Intent(getContext(), ELocCameraActivity.class);
+                    startActivity(mapClickIntent);
                 }
 
             }
@@ -62,6 +66,7 @@ public class CameraFeatureFragment extends Fragment {
     private void setList() {
         featuresArrayList.add(new FeaturesList("Camera Features", "Animate, Move or Ease Camera Position"));
         featuresArrayList.add(new FeaturesList("Location Camera Options", "Long press on map and get Latitude Longitude"));
+        featuresArrayList.add(new FeaturesList("Camera Features in ELoc", "Animate, Move or Ease Camera Position using eloc"));
 
 
     }

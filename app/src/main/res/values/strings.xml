@@ -14,6 +14,7 @@
     <string name="pick_a_place">Pick a Place</string>
     <string name="open">open</string>
     <string name="close">close</string>
+    <string name="eloc">ELoc</string>
 
 
 </resources>

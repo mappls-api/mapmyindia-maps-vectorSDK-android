@@ -1,7 +1,9 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
@@ -46,6 +49,7 @@ public class FullModeActivity extends AppCompatActivity implements OnMapReadyCal
     private LocationEngine locationEngine;
 
     private Location location;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +61,7 @@ public class FullModeActivity extends AppCompatActivity implements OnMapReadyCal
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(location != null) {
+                if (location != null) {
                     PlaceOptions placeOptions = PlaceOptions.builder()
                             .location(Point.fromLngLat(location.getLongitude(), location.getLatitude()))
                             .backgroundColor(ContextCompat.getColor(FullModeActivity.this, android.R.color.white))
@@ -104,6 +108,16 @@ public class FullModeActivity extends AppCompatActivity implements OnMapReadyCal
 // Get an instance of the component LocationComponent
         locationComponent = mapmyIndiaMap.getLocationComponent();
 // Activate with options
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         locationComponent.activateLocationComponent(this, options);
 // Enable to make component visible
         locationComponent.setLocationComponentEnabled(true);
@@ -118,17 +132,18 @@ public class FullModeActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 101) {
-            if(resultCode == Activity.RESULT_OK) {
-                if(data != null) {
+        if (requestCode == 101) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
                     ELocation eLocation = new Gson().fromJson(data.getStringExtra(PlaceConstants.RETURNING_ELOCATION_DATA), ELocation.class);
                     if (mapmyIndiaMap != null) {
                         textView.setText(eLocation.placeName);
                         mapmyIndiaMap.clear();
-                        LatLng latLng = new LatLng(Double.parseDouble(eLocation.latitude), Double.parseDouble(eLocation.longitude));
-                        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
-                        mapmyIndiaMap.addMarker(new MarkerOptions().position(latLng).title(eLocation.placeName).snippet(eLocation.placeAddress));
-
+                        if (eLocation.latitude != null && eLocation.longitude != null) {
+                            LatLng latLng = new LatLng(Double.parseDouble(eLocation.latitude), Double.parseDouble(eLocation.longitude));
+                            mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+                            mapmyIndiaMap.addMarker(new MarkerOptions().position(latLng).title(eLocation.placeName).snippet(eLocation.placeAddress));
+                        }
                     }
                 }
             }
@@ -200,13 +215,23 @@ public class FullModeActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onPermissionResult(boolean granted) {
-        if(granted) {
+        if (granted) {
             enableLocation();
         }
     }
 
     @Override
     public void onConnected() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         locationEngine.requestLocationUpdates();
     }
 

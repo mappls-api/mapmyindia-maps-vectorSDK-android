@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mapmyindia.sdk.demo.java.model.FeaturesList
 import com.mapmyindia.sdk.demo.kotlin.activity.CameraActivity
+import com.mapmyindia.sdk.demo.kotlin.activity.ELocCameraActivity
 import com.mapmyindia.sdk.demo.kotlin.activity.LocationCameraActivity
 import com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter
 import java.util.*
@@ -35,6 +36,7 @@ class CameraFeatureFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick
         val featuresArrayList = ArrayList<FeaturesList>()
         featuresArrayList.add(FeaturesList("Camera Features", "Animate, Move or Ease Camera Position"))
         featuresArrayList.add(FeaturesList("Location Camera Options", "Long press on map and get Latitude Longitude"))
+        featuresArrayList.add(FeaturesList("Camera Features in ELoc", "Animate, Move or Ease Camera Position using eloc"))
         featureRecycleView.layoutManager = LinearLayoutManager(context)
         var mapFeaturesListAdapter: MapFeatureListAdapter = MapFeatureListAdapter(featuresArrayList,this)
 
@@ -49,8 +51,12 @@ class CameraFeatureFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick
             startActivity(cameraFeatureIntent)
 
         }else if(position==1){
-            var LocationCameraIntent : Intent = Intent(context, LocationCameraActivity::class.java)
-            startActivity(LocationCameraIntent)
+            var locationCameraIntent : Intent = Intent(context, LocationCameraActivity::class.java)
+            startActivity(locationCameraIntent)
+
+        }else if(position==2){
+            var eLocCameraIntent : Intent = Intent(context, ELocCameraActivity::class.java)
+            startActivity(eLocCameraIntent)
 
         }
 

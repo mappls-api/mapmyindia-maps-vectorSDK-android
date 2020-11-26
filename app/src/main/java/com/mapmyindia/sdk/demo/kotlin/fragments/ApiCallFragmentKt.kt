@@ -43,6 +43,7 @@ class ApiCallFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick{
         featuresArrayList.add(FeaturesList("Get Distance", "Get distance between points"))
         featuresArrayList.add(FeaturesList("Hateos Nearby Api", "Nearby places using hateos api"))
         featuresArrayList.add(FeaturesList("POI Along Route Api", "user will be able to get the details of POIs of a particular category along his set route"))
+        featuresArrayList.add(FeaturesList("Place Detail", "To get the place details from eLoc"))
         featureRecycleView.layoutManager = LinearLayoutManager(context)
         var mapFeaturesListAdapter: com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter = com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter(featuresArrayList,this)
 
@@ -80,6 +81,10 @@ class ApiCallFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick{
 
         }else if(position==7){
             var distanceIntent :Intent= Intent(context,PoiAlongRouteActivity::class.java)
+            startActivity(distanceIntent)
+
+        }else if(position==8){
+            var distanceIntent :Intent= Intent(context,PlaceDetailActivity::class.java)
             startActivity(distanceIntent)
 
         }

@@ -39,24 +39,16 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
 
-    implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.9'
-
-
-    //Place Widget
     implementation 'com.mapmyindia.sdk:place-widget:1.2.0'
-
-    //Geofence View
-    implementation 'com.mapmyindia.sdk:geofence-ui:0.9.3'
+    implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.9'
 
     //Annotation Plugin
     implementation 'com.mapmyindia.sdk:annotation-plugin:0.1.0'
 
-    //Direction Plugin
-    implementation 'com.mapmyindia.sdk:directions-plugin:0.1.0'
+    implementation 'com.mapmyindia.sdk:directions-plugin:0.2.0'
 
-    //Scalebar Plugin
     implementation 'com.mapmyindia.sdk:scalebar-plugin:0.1.0'
-
+    implementation 'com.mapmyindia.sdk:geofence-ui:0.9.3'
     //for location
     implementation 'com.google.android.gms:play-services-location:17.0.0'
 
