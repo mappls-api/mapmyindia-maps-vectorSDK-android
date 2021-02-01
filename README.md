@@ -1,3 +1,4 @@
+
   
   
 
@@ -18,6 +19,7 @@ Powered with India's most comprehensive and robust mapping functionalities.
 
 | Version | Last Updated | Author |  Release Note|
 | ---- | ---- | ---- | ---- |
+| v6.8.10 | 01 February 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Added eLoc Support in Direction API calls<br/>-Added eLoc Support in Distance Api call<br/>-Added Support for Many to many in Distance API call |
 | v6.8.9 | 25 November 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Updated nearby API calls<br/>-Added new place details API call<br/>-Added options to add marker using eloc |
 | v6.8.8 | 06 November 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Improved map loading time |
 | v6.8.5 | 26 August 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Added Along the route API support<br/>-Fixes blank tile issue |
@@ -70,7 +72,7 @@ Follow these steps to add the SDK to your project –
 -   Add below dependency in your app-level `build.gradle`
 
 ```groovy
-implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.9'
+implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.10'
 ```
 - Add these permissions in your project
 ```xml
@@ -744,4 +746,4 @@ Need support? contact us!
 Read about the latest updates & customer stories
 
 
-> © Copyright 2020. CE Info Systems Pvt. Ltd. All Rights Reserved. | [Terms & Conditions](http://www.mapmyindia.com/api/terms-&-conditions).
+> © Copyright 2021. CE Info Systems Pvt. Ltd. All Rights Reserved. | [Terms & Conditions](http://www.mapmyindia.com/api/terms-&-conditions).
