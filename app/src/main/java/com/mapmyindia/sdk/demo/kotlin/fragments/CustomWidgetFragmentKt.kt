@@ -38,6 +38,8 @@ class CustomWidgetFragmentKt :Fragment(), MapFeatureListAdapter.AdapterOnClick {
         featuresArrayList.add(FeaturesList("Place Picker", "Place Picker to search and choose a specific location"))
         featuresArrayList.add(FeaturesList("GeoFence", "Highly customizable UI widget to create/edit geofence widget"))
         featuresArrayList.add(FeaturesList("Direction Step", "How to show textual instructions and maneuver icon to the user"))
+        featuresArrayList.add(FeaturesList("Direction Widget", "MapmyIndia Direction Widget, to show Route on map"))
+        featuresArrayList.add(FeaturesList("Nearby Widget", "MapmyIndia Nearby Widget to search nearby result on map"))
         featureRecycleView.layoutManager = LinearLayoutManager(context)
         var mapFeaturesListAdapter: MapFeatureListAdapter = MapFeatureListAdapter(featuresArrayList,this)
 
@@ -64,6 +66,14 @@ class CustomWidgetFragmentKt :Fragment(), MapFeatureListAdapter.AdapterOnClick {
 
         }else if(position==4){
             var directionIntent :Intent= Intent(context, DirectionStepActivity::class.java)
+            startActivity(directionIntent)
+
+        }else if(position==5){
+            var directionIntent :Intent= Intent(context, DirectionUiActivity::class.java)
+            startActivity(directionIntent)
+
+        }else if(position==6){
+            var directionIntent :Intent= Intent(context, NearbyUiActivity::class.java)
             startActivity(directionIntent)
 
         }

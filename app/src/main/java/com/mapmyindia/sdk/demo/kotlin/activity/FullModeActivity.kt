@@ -2,46 +2,34 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.location.Location
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.google.gson.Gson
-import com.mapbox.android.core.location.LocationEngine
-import com.mapbox.android.core.location.LocationEngineListener
-import com.mapbox.android.core.permissions.PermissionsListener
-import com.mapbox.android.core.permissions.PermissionsManager
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
+import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.LocationComponent
-import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.location.modes.CameraMode
-import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.demo.kotlin.settings.MapmyIndiaPlaceWidgetSetting
 import com.mapmyindia.sdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapmyindia.sdk.plugins.places.common.PlaceConstants
 import com.mmi.services.api.autosuggest.model.ELocation
 
-class FullModeActivity : AppCompatActivity() , OnMapReadyCallback, PermissionsListener, LocationEngineListener {
+
+class FullModeActivity : AppCompatActivity() , OnMapReadyCallback {
 
     private lateinit var mapView: MapView
     private var mapmyIndiaMap: MapboxMap? = null
-    private var permissionManager: PermissionsManager? = null
-    private var locationComponent: LocationComponent? = null
-    private var locationEngine: LocationEngine? = null
 
 
     private lateinit var search: TextView
 
-    private var location: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,18 +39,29 @@ class FullModeActivity : AppCompatActivity() , OnMapReadyCallback, PermissionsLi
         mapView.getMapAsync(this)
         search = findViewById(R.id.search)
         search.setOnClickListener {
-            if (location != null) {
+            if (mapmyIndiaMap != null) {
                 val placeOptions: PlaceOptions = PlaceOptions.builder()
-                        .location(Point.fromLngLat(location?.longitude!!, location?.latitude!!))
-                        .backgroundColor(ContextCompat.getColor(this, android.R.color.white))
-                        .build()
+                        .location(MapmyIndiaPlaceWidgetSetting.instance.location)
+                        .filter(MapmyIndiaPlaceWidgetSetting.instance.filter)
+                        .hint(MapmyIndiaPlaceWidgetSetting.instance.hint)
+                        .saveHistory(MapmyIndiaPlaceWidgetSetting.instance.isEnableHistory)
+                        .enableTextSearch(MapmyIndiaPlaceWidgetSetting.instance.isEnableTextSearch)
+                        .pod(MapmyIndiaPlaceWidgetSetting.instance.pod)
+                        .attributionHorizontalAlignment(MapmyIndiaPlaceWidgetSetting.instance.signatureVertical)
+                        .attributionVerticalAlignment(MapmyIndiaPlaceWidgetSetting.instance.signatureHorizontal)
+                        .logoSize(MapmyIndiaPlaceWidgetSetting.instance.logoSize)
+                        .backgroundColor(resources.getColor(MapmyIndiaPlaceWidgetSetting.instance.backgroundColor))
+                        .toolbarColor(resources.getColor(MapmyIndiaPlaceWidgetSetting.instance.toolbarColor))
+                        .build(PlaceOptions.MODE_CARDS)
 
-                val placeAutocompleteActivity: Intent = PlaceAutocomplete.IntentBuilder()
-                        .placeOptions(placeOptions)
-                        .build(this)
-                startActivityForResult(placeAutocompleteActivity, 101)
+                val builder = PlaceAutocomplete.IntentBuilder()
+                if (!MapmyIndiaPlaceWidgetSetting.instance.isDefault) {
+                    builder.placeOptions(placeOptions)
+                }
+                val placeAutocomplete = builder.build(this@FullModeActivity)
+                startActivityForResult(placeAutocomplete, 101)
             } else {
-                Toast.makeText(this,"Please wait for getting current location", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please wait map is loading", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -92,28 +91,11 @@ class FullModeActivity : AppCompatActivity() , OnMapReadyCallback, PermissionsLi
 
         mapmyIndiaMap!!.setMinZoomPreference(4.0)
         mapmyIndiaMap.setMaxZoomPreference(18.0)
+        mapmyIndiaMap.cameraPosition = CameraPosition.Builder().target(LatLng(28.0, 77.0)).zoom(4.0).build()
 
-        if (PermissionsManager.areLocationPermissionsGranted(this)) {
-            enableLocation()
-        } else {
-            permissionManager = PermissionsManager(this)
-            permissionManager?.requestLocationPermissions(this)
-        }
     }
 
-    private fun enableLocation() {
-        val options: LocationComponentOptions = LocationComponentOptions.builder(this)
-                .trackingGesturesManagement(true)
-                .accuracyColor(ContextCompat.getColor(this, R.color.colorAccent))
-                .build()
-        locationComponent = mapmyIndiaMap?.locationComponent
-        locationComponent?.activateLocationComponent(this, options)
-        locationComponent?.isLocationComponentEnabled = true
-        locationEngine = locationComponent?.locationEngine!!
-        locationEngine?.addLocationEngineListener(this)
-        locationComponent?.cameraMode = CameraMode.TRACKING
-        locationComponent?.renderMode = RenderMode.COMPASS
-    }
+
 
     override fun onStart() {
         super.onStart()
@@ -122,32 +104,22 @@ class FullModeActivity : AppCompatActivity() , OnMapReadyCallback, PermissionsLi
 
     override fun onResume() {
         super.onResume()
-        if (locationEngine != null) {
-            locationEngine?.removeLocationEngineListener(this)
-            locationEngine?.addLocationEngineListener(this)
-        }
         mapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        if (locationEngine != null)
-            locationEngine?.removeLocationEngineListener(this)
+
         mapView.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        if (locationEngine != null) {
-            locationEngine?.removeLocationEngineListener(this)
-            locationEngine?.removeLocationUpdates()
-        }
         mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        locationEngine?.deactivate()
         mapView.onDestroy()
     }
 
@@ -161,22 +133,5 @@ class FullModeActivity : AppCompatActivity() , OnMapReadyCallback, PermissionsLi
         mapView.onSaveInstanceState(outState)
     }
 
-    override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {
-
-    }
-
-    override fun onPermissionResult(granted: Boolean) {
-        if (granted) {
-            enableLocation()
-        }
-    }
-
-    override fun onLocationChanged(location: Location?) {
-        this.location = location
-    }
-
-    override fun onConnected() {
-        locationEngine?.requestLocationUpdates()
-    }
 }
 

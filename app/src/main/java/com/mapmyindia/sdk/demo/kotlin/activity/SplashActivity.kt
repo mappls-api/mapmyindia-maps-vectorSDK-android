@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +32,7 @@ class SplashActivity : AppCompatActivity() {
 
 
     private fun redirect() {
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
             startActivity(Intent(applicationContext, MainActivity::class.java))
             finish()

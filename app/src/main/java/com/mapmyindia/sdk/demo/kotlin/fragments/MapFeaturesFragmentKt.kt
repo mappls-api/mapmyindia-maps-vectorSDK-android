@@ -10,10 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.model.FeaturesList
-import com.mapmyindia.sdk.demo.kotlin.activity.GesturesActivity
-import com.mapmyindia.sdk.demo.kotlin.activity.MapClickActivity
-import com.mapmyindia.sdk.demo.kotlin.activity.MapFragmentActivity
-import com.mapmyindia.sdk.demo.kotlin.activity.MapLongClickActivity
+import com.mapmyindia.sdk.demo.kotlin.activity.*
 import com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter
 import java.util.*
 
@@ -36,12 +33,12 @@ class MapFeaturesFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick {
 
 
     private fun init() {
-        var i = 0
         val featuresArrayList = ArrayList<FeaturesList>()
         featuresArrayList.add(FeaturesList("Map Fragment", "Way to add Map in Fragment"))
         featuresArrayList.add(FeaturesList("Map Long Click", "Location camera options for render and tracking modes"))
         featuresArrayList.add(FeaturesList("Map Tap", "Long press on map and get Latitude Longitude"))
         featuresArrayList.add(FeaturesList("Map Gestures", "Gestures detection for map view"))
+        featuresArrayList.add(FeaturesList("Map Styles", "To change and update MapmyIndia Styles"))
         featureRecycleView.layoutManager = LinearLayoutManager(context)
         var mapFeaturesListAdapter: MapFeatureListAdapter = MapFeatureListAdapter(featuresArrayList, this)
 
@@ -63,6 +60,9 @@ class MapFeaturesFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick {
         } else if (position == 3) {
             val gestureIntent = Intent(context, GesturesActivity::class.java)
             startActivity(gestureIntent)
+        } else if (position == 4) {
+            val styleIntent = Intent(context, StyleActivity::class.java)
+            startActivity(styleIntent)
         }
     }
 }

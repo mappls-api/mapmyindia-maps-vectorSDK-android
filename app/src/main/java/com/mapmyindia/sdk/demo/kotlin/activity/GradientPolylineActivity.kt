@@ -3,14 +3,15 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.demo.databinding.ActivityGradientPolylineBinding
 import com.mapmyindia.sdk.demo.kotlin.plugin.GradientPolylinePlugin
-import kotlinx.android.synthetic.main.activity_gradient_polyline.*
 import java.util.*
 
 /**
@@ -19,13 +20,14 @@ import java.util.*
 class GradientPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val listOfLatLng = ArrayList<LatLng>()
+    private lateinit var mBinding: ActivityGradientPolylineBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gradient_polyline)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_gradient_polyline)
 
-        map_view?.onCreate(savedInstanceState)
-        map_view?.getMapAsync(this)
+        mBinding.mapView.onCreate(savedInstanceState)
+        mBinding.mapView.getMapAsync(this)
 
         listOfLatLng.add(LatLng(28.705436, 77.100462))
         listOfLatLng.add(LatLng(28.705191, 77.100784))
@@ -43,9 +45,9 @@ class GradientPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
                 .includes(listOfLatLng)
                 .build()
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10))
-        val animatedPolylinePlugin = GradientPolylinePlugin(mapmyIndiaMap, map_view!!)
+        val animatedPolylinePlugin = GradientPolylinePlugin(mapmyIndiaMap, mBinding.mapView)
         animatedPolylinePlugin.createPolyline(listOfLatLng)
-        btn_remove.setOnClickListener(View.OnClickListener { animatedPolylinePlugin.clear() })
+        mBinding.btnRemove.setOnClickListener(View.OnClickListener { animatedPolylinePlugin.clear() })
 
 
     }
@@ -56,36 +58,36 @@ class GradientPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        map_view!!.onStart()
+        mBinding.mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        map_view!!.onStop()
+        mBinding.mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        map_view!!.onDestroy()
+        mBinding.mapView.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        map_view!!.onPause()
+        mBinding.mapView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        map_view!!.onResume()
+        mBinding.mapView.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map_view!!.onLowMemory()
+        mBinding.mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        map_view!!.onSaveInstanceState(outState)
+        mBinding.mapView.onSaveInstanceState(outState)
     }
 }

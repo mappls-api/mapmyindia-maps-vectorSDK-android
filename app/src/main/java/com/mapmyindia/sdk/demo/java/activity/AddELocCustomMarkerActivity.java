@@ -17,7 +17,6 @@ import com.mapmyindia.sdk.demo.R;
 /**
  * Created by Saksham on 26-11-2019.
  */
-
 public class AddELocCustomMarkerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;

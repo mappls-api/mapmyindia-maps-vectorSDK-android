@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.activity.DirectionStepActivity;
+import com.mapmyindia.sdk.demo.java.activity.DirectionUiActivity;
 import com.mapmyindia.sdk.demo.java.activity.GeoFenceActivity;
+import com.mapmyindia.sdk.demo.java.activity.NearbyUiActivity;
 import com.mapmyindia.sdk.demo.java.activity.PickerActivity;
 import com.mapmyindia.sdk.demo.java.activity.PlaceAutoCompleteActivity;
 import com.mapmyindia.sdk.demo.java.activity.SafetyPluginActivity;
@@ -27,6 +29,7 @@ public class CustomWidgetsFragment extends Fragment {
     RecyclerView featuresRecycleView;
     MapFeatureListAdapter.OnClickListener onClickListener;
     ArrayList<FeaturesList> featuresArrayList = new ArrayList<>();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,29 +57,36 @@ public class CustomWidgetsFragment extends Fragment {
                     Intent placeAutoCompleteWidget = new Intent(getContext(), PlaceAutoCompleteActivity.class);
                     startActivity(placeAutoCompleteWidget);
                 } else if (position == 1) {
-                    Intent safetyPluginWidgetIntent= new Intent(getContext(), SafetyPluginActivity.class);
+                    Intent safetyPluginWidgetIntent = new Intent(getContext(), SafetyPluginActivity.class);
                     startActivity(safetyPluginWidgetIntent);
-                }
-                else if (position == 2) {
+                } else if (position == 2) {
                     Intent placePickerWidgetIntent = new Intent(getContext(), PickerActivity.class);
                     startActivity(placePickerWidgetIntent);
-                }
-                else if (position == 3) {
+                } else if (position == 3) {
                     Intent geofenceWidgetIntent = new Intent(getContext(), GeoFenceActivity.class);
                     startActivity(geofenceWidgetIntent);
-                }
-                else if (position == 4) {
+                } else if (position == 4) {
                     Intent directionStepIntent = new Intent(getContext(), DirectionStepActivity.class);
                     startActivity(directionStepIntent);
+                }else if (position == 5) {
+                    Intent directionUiIntent = new Intent(getContext(), DirectionUiActivity.class);
+                    startActivity(directionUiIntent);
+                }else if (position == 6) {
+                    Intent nearbyUiIntent = new Intent(getContext(), NearbyUiActivity.class);
+                    startActivity(nearbyUiIntent);
                 }
             }
-        });     }
+        });
+    }
+
     private void setList() {
         featuresArrayList.add(new FeaturesList("Place Autocomplete Widget", "Location search functionality and UI to search a place"));
         featuresArrayList.add(new FeaturesList("MapmyIndia Safety Plugin", "MapmyIndia Safety Plugin, To show you current location safety"));
         featuresArrayList.add(new FeaturesList("Place Picker", "Place Picker to search and choose a specific location"));
         featuresArrayList.add(new FeaturesList("GeoFence", "Highly customizable UI widget to create/edit geofence widget"));
         featuresArrayList.add(new FeaturesList("Direction Step", "How to show textual instructions and maneuver icon to the user"));
+        featuresArrayList.add(new FeaturesList("Direction Widget", "MapmyIndia Direction Widget to show Route on map"));
+        featuresArrayList.add(new FeaturesList("Nearby Widget", "MapmyIndia Nearby Widget to search nearby result on map"));
 
     }
 }

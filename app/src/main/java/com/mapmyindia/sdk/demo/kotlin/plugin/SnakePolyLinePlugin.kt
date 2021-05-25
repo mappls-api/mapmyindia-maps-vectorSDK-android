@@ -2,6 +2,7 @@ package com.mapmyindia.sdk.demo.kotlin.plugin
 
 import android.graphics.Color
 import android.os.Handler
+import android.os.Looper
 import com.mapbox.core.constants.Constants
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
@@ -29,7 +30,7 @@ class SnakePolyLinePlugin: OnMapChangedListener {
         private const val DRAW_SPEED_MILLISECONDS = 500
     }
 
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
     private lateinit var  legSteps: List<LegStep>
     private lateinit var runnable: Runnable
 

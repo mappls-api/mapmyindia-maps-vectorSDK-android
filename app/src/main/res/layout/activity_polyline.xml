@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
@@ -30,3 +31,4 @@
         android:visibility="gone"
         android:text="@string/txt_remove_btn" />
 </RelativeLayout>
+</layout>

@@ -3,6 +3,7 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -103,7 +104,7 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
 
 
 
-        handler = Handler()
+        handler = Handler(Looper.getMainLooper())
         autoSuggestText.addTextChangedListener(this)
         autoSuggestText.setOnEditorActionListener(this)
     }

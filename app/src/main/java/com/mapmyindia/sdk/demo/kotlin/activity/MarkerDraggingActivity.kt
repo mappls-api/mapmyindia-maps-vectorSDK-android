@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 
@@ -12,27 +13,27 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.demo.databinding.BaseLayoutBinding
 import com.mapmyindia.sdk.plugin.annotation.OnSymbolDragListener
 import com.mapmyindia.sdk.plugin.annotation.Symbol
 import com.mapmyindia.sdk.plugin.annotation.SymbolManager
 import com.mapmyindia.sdk.plugin.annotation.SymbolOptions
-import kotlinx.android.synthetic.main.base_layout.*
 
 /**
  * Created by Saksham on 20/9/19.
  */
 class MarkerDraggingActivity : AppCompatActivity(), OnMapReadyCallback {
-
+    private lateinit var mBinding:BaseLayoutBinding
     private var mapmyIndiaMap: MapboxMap? = null
     private val latLng = LatLng(28.705436, 77.100462)
     private var symbolManager: SymbolManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.base_layout)
+        mBinding= DataBindingUtil.setContentView(this,R.layout.base_layout)
 
-        map_view?.onCreate(savedInstanceState)
-        map_view?.getMapAsync(this)
+        mBinding.mapView.onCreate(savedInstanceState)
+        mBinding.mapView.getMapAsync(this)
     }
 
     override fun onMapReady(mapmyIndiaMap: MapboxMap) {
@@ -42,7 +43,7 @@ class MarkerDraggingActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initMarker() {
-        symbolManager = SymbolManager(map_view!!, mapmyIndiaMap!!)
+        symbolManager = SymbolManager( mBinding.mapView, mapmyIndiaMap!!)
         val symbolOptions = SymbolOptions()
                 .icon(BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(this, R.drawable.placeholder)))
                 .draggable(true)
@@ -71,36 +72,36 @@ class MarkerDraggingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        map_view!!.onStart()
+        mBinding.mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        map_view!!.onStop()
+        mBinding.mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        map_view!!.onDestroy()
+        mBinding.mapView.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        map_view!!.onPause()
+        mBinding.mapView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        map_view!!.onResume()
+        mBinding.mapView.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map_view!!.onLowMemory()
+        mBinding.mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        map_view!!.onSaveInstanceState(outState)
+        mBinding.mapView.onSaveInstanceState(outState)
     }
 }

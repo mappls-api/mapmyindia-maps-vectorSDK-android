@@ -47,6 +47,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(
                 25.321684, 82.987289)).title("XYZ"));
 
+
         /* this is done for animating/moving camera to particular position */
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
                 25.321684, 82.987289)).zoom(10).tilt(0).build();

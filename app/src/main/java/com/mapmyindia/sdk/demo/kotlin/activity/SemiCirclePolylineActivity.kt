@@ -3,6 +3,7 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
@@ -10,10 +11,10 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.demo.databinding.ActivitySemiCirclePolylineBinding
 import com.mapmyindia.sdk.demo.kotlin.utility.SemiCirclePointsListHelper
 import com.mapmyindia.sdk.plugin.annotation.LineManager
 import com.mapmyindia.sdk.plugin.annotation.LineOptions
-import kotlinx.android.synthetic.main.activity_semi_circle_polyline.*
 
 /**
  * Created by Saksham on 20/9/19.
@@ -22,27 +23,28 @@ class SemiCirclePolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var lineManager: LineManager? = null
     private var listOfLatLng: List<LatLng>? = null
+    private lateinit var mBinding: ActivitySemiCirclePolylineBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_semi_circle_polyline)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_semi_circle_polyline)
 
-        map_view?.onCreate(savedInstanceState)
-        map_view?.getMapAsync(this)
-        remove.setOnClickListener(View.OnClickListener {
+        mBinding.mapView.onCreate(savedInstanceState)
+        mBinding.mapView.getMapAsync(this)
+        mBinding.remove.setOnClickListener(View.OnClickListener {
             lineManager?.clearAll()
-            remove.visibility = View.GONE
-            add.visibility = View.VISIBLE
+            mBinding.remove.visibility = View.GONE
+            mBinding.add.visibility = View.VISIBLE
         })
 
-        add.setOnClickListener{
+        mBinding.add.setOnClickListener{
             val lineOptions: LineOptions = LineOptions()
                     .points(listOfLatLng)
                     .lineColor("#FF0000")
                     .lineWidth(4f)
             lineManager?.create(lineOptions)
-            add.visibility = View.GONE
-            remove.visibility = View.VISIBLE
+            mBinding.add.visibility = View.GONE
+            mBinding.remove.visibility = View.VISIBLE
         }
 
         listOfLatLng = SemiCirclePointsListHelper.showCurvedPolyline(LatLng(28.7039, 77.101318), LatLng(28.704248, 77.102370), 0.5)
@@ -55,7 +57,7 @@ class SemiCirclePolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
 
-        lineManager = LineManager(map_view!!, mapmyIndiaMap, null, GeoJsonOptions().withLineMetrics(true).withBuffer(2))
+        lineManager = LineManager(mBinding.mapView, mapmyIndiaMap, null, GeoJsonOptions().withLineMetrics(true).withBuffer(2))
         lineManager?.lineDasharray = arrayOf(4f, 6f)
         val lineOptions: LineOptions = LineOptions()
                 .points(listOfLatLng)
@@ -63,7 +65,7 @@ class SemiCirclePolylineActivity : AppCompatActivity(), OnMapReadyCallback {
                 .lineWidth(4f)
         lineManager?.create(lineOptions)
 
-        remove.visibility = View.VISIBLE
+        mBinding.remove.visibility = View.VISIBLE
 
     }
 
@@ -73,36 +75,36 @@ class SemiCirclePolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        map_view?.onStart()
+        mBinding.mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        map_view?.onStop()
+        mBinding.mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        map_view?.onDestroy()
+        mBinding.mapView.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        map_view?.onPause()
+        mBinding.mapView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        map_view?.onResume()
+        mBinding.mapView.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map_view?.onLowMemory()
+        mBinding.mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        map_view?.onSaveInstanceState(outState)
+        mBinding.mapView.onSaveInstanceState(outState)
     }
 }

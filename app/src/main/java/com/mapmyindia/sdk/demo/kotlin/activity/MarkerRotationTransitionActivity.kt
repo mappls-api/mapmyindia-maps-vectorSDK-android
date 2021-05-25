@@ -5,21 +5,22 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.demo.databinding.ActivityMarkerRotationTransitionBinding
 import com.mapmyindia.sdk.demo.kotlin.plugin.MarkerPlugin
-import kotlinx.android.synthetic.main.activity_marker_rotation_transition.*
 
 /**
  * Created by Saksham on 3/9/19.
  */
 class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListener {
 
-
+    private lateinit var mBinding: ActivityMarkerRotationTransitionBinding
     private var mapmyIndiaMap: MapboxMap? = null
     private val latLngStart: LatLng = LatLng(28.705436, 77.100462)
     private val latLngEnd: LatLng = LatLng(28.703800, 77.101818)
@@ -27,13 +28,13 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_marker_rotation_transition)
+        mBinding = DataBindingUtil.setContentView(this,R.layout.activity_marker_rotation_transition)
 
-        map_view?.onCreate(savedInstanceState)
-        map_view?.getMapAsync(this)
+        mBinding.mapView.onCreate(savedInstanceState)
+        mBinding.mapView.getMapAsync(this)
 
-        marker_rotate?.setOnClickListener(this)
-        marker_transition?.setOnClickListener(this)
+        mBinding.markerRotate.setOnClickListener(this)
+        mBinding.markerTransition.setOnClickListener(this)
     }
     override fun onMapError(p0: Int, p1: String?) {
 
@@ -55,7 +56,7 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initMarker() {
-        markerPlugin = MarkerPlugin(mapmyIndiaMap!!, map_view)
+        markerPlugin = MarkerPlugin(mapmyIndiaMap!!, mBinding.mapView)
         markerPlugin?.icon = resources?.getDrawable(R.drawable.placeholder,null)
         markerPlugin?.addMarker(latLngStart)
         markerPlugin?.addTitle("Title")
@@ -78,17 +79,17 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
 
     override fun onStart() {
         super.onStart()
-        map_view.onStart()
+        mBinding.mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        map_view.onStop()
+        mBinding.mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        map_view.onDestroy()
+        mBinding.mapView.onDestroy()
         if (markerPlugin != null) {
             markerPlugin!!.removeCallbacks()
         }
@@ -96,22 +97,22 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
 
     override fun onPause() {
         super.onPause()
-        map_view.onPause()
+        mBinding.mapView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        map_view.onResume()
+        mBinding.mapView.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map_view.onLowMemory()
+        mBinding.mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        map_view.onSaveInstanceState(outState)
+        mBinding.mapView.onSaveInstanceState(outState)
     }
 
 }

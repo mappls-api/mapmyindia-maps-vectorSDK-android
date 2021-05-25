@@ -4,16 +4,17 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.demo.databinding.BaseLayoutBinding;
 
 /**
  * Created by CEINFO on 26-02-2019.
@@ -21,15 +22,14 @@ import com.mapmyindia.sdk.demo.R;
 
 public class AddCustomMarkerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapView mapView;
+    private BaseLayoutBinding mBinding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.base_layout);
-        mapView = findViewById(R.id.map_view);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.base_layout);
+        mBinding.mapView.onCreate(savedInstanceState);
+        mBinding.mapView.getMapAsync(this);
     }
 
     @Override
@@ -57,42 +57,42 @@ public class AddCustomMarkerActivity extends AppCompatActivity implements OnMapR
     @Override
     protected void onStart() {
         super.onStart();
-        mapView.onStart();
+        mBinding.mapView.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mapView.onStop();
+        mBinding.mapView.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        mBinding.mapView.onDestroy();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.onPause();
+        mBinding.mapView.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mapView.onResume();
+        mBinding.mapView.onResume();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
+        mBinding.mapView.onLowMemory();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+        mBinding.mapView.onSaveInstanceState(outState);
     }
 }

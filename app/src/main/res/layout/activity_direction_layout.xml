@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -78,6 +79,15 @@
             android:text="Route ETA"/>
 
     </RadioGroup>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:id="@+id/edit_btn"
+        android:layout_margin="@dimen/margin_5"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_edit_24"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/direction_details_layout"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:id="@+id/direction_details_layout"
@@ -112,3 +122,4 @@
     </LinearLayout>
 
 </RelativeLayout>
+</layout>

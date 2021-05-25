@@ -11,6 +11,7 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -25,6 +26,7 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.demo.databinding.ActivityPoiAlongRouteBinding
 import com.mapmyindia.sdk.demo.java.adapter.PoiAlongAdapter
 import com.mapmyindia.sdk.demo.java.plugin.DirectionPolylinePlugin
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet
@@ -36,14 +38,13 @@ import com.mmi.services.api.alongroute.models.SuggestedPOI
 import com.mmi.services.api.directions.DirectionsCriteria
 import com.mmi.services.api.directions.MapmyIndiaDirections
 import com.mmi.services.api.directions.models.DirectionsResponse
-import kotlinx.android.synthetic.main.base_layout.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
 class PoiAlongRouteActivity: AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapLongClickListener {
-
+    private lateinit var mBinding:ActivityPoiAlongRouteBinding
     private lateinit var mapmyIndiaMap: MapboxMap
     private lateinit var mapView: MapView
     private lateinit var transparentProgressDialog: TransparentProgressDialog
@@ -62,7 +63,7 @@ class PoiAlongRouteActivity: AppCompatActivity(), OnMapReadyCallback, MapboxMap.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_poi_along_route)
+        mBinding= DataBindingUtil.setContentView(this,R.layout.activity_poi_along_route)
         mapView = findViewById(R.id.map_view)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
@@ -240,37 +241,37 @@ class PoiAlongRouteActivity: AppCompatActivity(), OnMapReadyCallback, MapboxMap.
 
     override fun onStart() {
         super.onStart()
-        map_view.onStart()
+        mBinding.mapView.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        map_view.onResume()
+        mBinding.mapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        map_view.onPause()
+        mBinding.mapView.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        map_view.onStop()
+        mBinding.mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        map_view.onDestroy()
+        mBinding.mapView.onDestroy()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map_view.onLowMemory()
+        mBinding.mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        map_view.onSaveInstanceState(outState)
+        mBinding.mapView.onSaveInstanceState(outState)
     }
 
     override fun onMapLongClick(latLng: LatLng) {

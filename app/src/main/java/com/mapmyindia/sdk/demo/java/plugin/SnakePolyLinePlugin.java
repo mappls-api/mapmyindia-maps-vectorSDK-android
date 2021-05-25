@@ -2,6 +2,7 @@ package com.mapmyindia.sdk.demo.java.plugin;
 
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Looper;
 
 import com.mapbox.core.constants.Constants;
 import com.mapbox.geojson.Feature;
@@ -33,7 +34,7 @@ public class SnakePolyLinePlugin implements MapView.OnMapChangedListener {
     private static final String DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID = "DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID";
     private static final String DRIVING_ROUTE_POLYLINE_SOURCE_ID = "DRIVING_ROUTE_POLYLINE_SOURCE_ID";
     private static final int DRAW_SPEED_MILLISECONDS = 500;
-    private Handler handler = new Handler();
+    private Handler handler = new Handler(Looper.getMainLooper());
     private List<LegStep> legSteps;
     private Runnable runnable;
 

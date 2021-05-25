@@ -16,7 +16,7 @@ import com.mapmyindia.sdk.demo.R
 class ELocCameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListener, MapboxMap.OnCameraMoveListener, MapboxMap.OnCameraIdleListener, MapboxMap.OnCameraMoveCanceledListener {
 
     private var mapmyIndiaMap: MapboxMap? = null
-    private var mapView: MapView? = null
+    private lateinit var mapView: MapView
     private var moveCamera: TextView? = null
     private var easeCamera: TextView? = null
     private var animateCamera: TextView? = null
@@ -25,13 +25,13 @@ class ELocCameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClick
         super.onCreate(savedInstanceState)
         setContentView(R.layout.camera_activity)
         mapView = findViewById(R.id.map_view)
-        mapView?.onCreate(savedInstanceState)
+        mapView.onCreate(savedInstanceState)
         initReferences()
         initListeners()
     }
 
     private fun initListeners() {
-        mapView!!.getMapAsync(this)
+        mapView.getMapAsync(this)
 
         // Layout related listeners
         moveCamera!!.setOnClickListener(this)
@@ -88,36 +88,36 @@ class ELocCameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClick
 
     override fun onStart() {
         super.onStart()
-        mapView!!.onStart()
+        mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView!!.onStop()
+        mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView!!.onDestroy()
+        mapView.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView!!.onPause()
+        mapView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView!!.onResume()
+        mapView.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView!!.onLowMemory()
+        mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView!!.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
     }
 }

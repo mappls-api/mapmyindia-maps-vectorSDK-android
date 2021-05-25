@@ -6,6 +6,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapbox.geojson.Point;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -53,11 +55,11 @@ public class HeatMapActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onMapReady(MapboxMap mapmyIndiaMap) {
 
-        mapmyIndiaMap.setPadding(20, 20, 20, 20);
         HeatMapPlugin heatMapPlugin = HeatMapPlugin.builder(mapmyIndiaMap, mapView)
                 .addAll(heatMapOptionList)
                 .build();
         heatMapPlugin.addHeatMap();
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(28, 77), 4));
 
     }
 

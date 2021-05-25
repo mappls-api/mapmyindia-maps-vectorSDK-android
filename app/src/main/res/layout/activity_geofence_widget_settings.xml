@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/default_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="4dp"
+            app:layout_constraintBottom_toTopOf="@id/scroll_layout"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/show_default_settings"
+                android:textColor="#212121"
+                />
+
+            <CheckBox
+                android:id="@+id/cb_default"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <View
+            app:layout_constraintTop_toBottomOf="@id/default_layout"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#000000"/>
+        <ScrollView
+            android:id="@+id/scroll_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/default_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="2dp"
+            >
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".SettingsActivity"
+                android:orientation="vertical"
+                tools:ignore="MissingDefaultResource">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Initial Geofence Polygon"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/is_polygon_btn"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="circle Outline Width"
+                        />
+                    <EditText
+                        android:id="@+id/et_circleOutlineWidth"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal"
+                        android:layout_height="wrap_content"
+                        android:hint="circle Outline Width"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_save_circleOutlineWidth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save circle Outline Width"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:id="@+id/circle_fill_color_layout"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Circle FillColor"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/circle_fill_color_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:id="@+id/circle_fill__outline_color_layout"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Circle Fill Outline Color"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/circle_fill__outline_color_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:id="@+id/dragging_line_color_layout"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Dragging Line Color"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/dragging_line_color_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Max Radius"
+                        />
+                    <EditText
+                        android:id="@+id/et_max_radius"
+                        android:layout_width="0dp"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:hint="Max Radius"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_save_min_radius"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Min Radius"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Min Radius"
+                        />
+                    <EditText
+                        android:id="@+id/et_min_radius"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal"
+                        android:layout_height="wrap_content"
+                        android:hint="Min Radius"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_save_max_radius"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Max Radius"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:id="@+id/polygon_fill_outlineColor_layout"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Polygon Fill Outline Color"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/polygon_fill_outlineColor_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:id="@+id/polygon_fill_color_layout"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Polygon FillColor"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/polygon_fill_color_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:id="@+id/polygon_drawing_line_color_layout"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Polygon Drawing LineColor"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/polygon_drawing_line_color_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Polygon Outline Width"
+                        />
+                    <EditText
+                        android:id="@+id/et_polygon_outline_width"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:layout_height="wrap_content"
+                        android:hint="Polygon Outline Width"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_polygon_outline_width"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Polygon Outline Width"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="simplifyWhenIntersectingPolygonDetected"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/simplify_When_IntersectingPolygonDetected_btn"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Show Seekbar"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/show_seekbar_btn"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:id="@+id/seekbar_primary_color_layout"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Seekbar Primary Color"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/seekbar_primary_color_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:id="@+id/seekbar_secondary_color_layout"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Seekbar Secondary Color"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/seekbar_secondary_color_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Seekbar Corner Radius"
+                        />
+                    <EditText
+                        android:id="@+id/et_seekbar_corner_radius"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:layout_height="wrap_content"
+                        android:hint="Seekbar Corner Radius"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_seekbar_corner_radius"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Seekbar Corner Radius"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+        <FrameLayout
+            android:id="@+id/disable_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/default_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="#41000000"
+            android:layout_marginTop="2dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

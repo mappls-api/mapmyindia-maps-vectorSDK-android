@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mapmyindia.sdk.demo.R;
-import com.mapmyindia.sdk.demo.java.activity.AddMarkerActivity;
+import com.mapmyindia.sdk.demo.java.activity.CurrentLocationActivity;
 import com.mapmyindia.sdk.demo.java.activity.CustomCurrentLocationIconActivity;
 import com.mapmyindia.sdk.demo.java.adapter.MapFeatureListAdapter;
 import com.mapmyindia.sdk.demo.java.model.FeaturesList;
@@ -51,7 +51,7 @@ public class LocationFeatureFragment extends Fragment {
             @Override
             public void onClick(int position) {
                 if (position == 0) {
-                    Intent addMarkerIntent = new Intent(getContext(), AddMarkerActivity.class);
+                    Intent addMarkerIntent = new Intent(getContext(), CurrentLocationActivity.class);
                     startActivity(addMarkerIntent);
                 }
                 if (position == 1) {

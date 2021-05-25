@@ -27,7 +27,6 @@ import java.util.ArrayList;
 public class MarkersFeaturesFragment extends Fragment {
 
     RecyclerView featuresRecycleView;
-    MapFeatureListAdapter.OnClickListener onClickListener;
     ArrayList<FeaturesList> featuresArrayList = new ArrayList<>();
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

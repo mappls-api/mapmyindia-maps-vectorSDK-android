@@ -1,8 +1,5 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -10,43 +7,26 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
-import com.mapbox.android.core.location.LocationEngine;
-import com.mapbox.android.core.location.LocationEngineListener;
-import com.mapbox.android.core.permissions.PermissionsListener;
-import com.mapbox.android.core.permissions.PermissionsManager;
-import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.location.LocationComponent;
-import com.mapbox.mapboxsdk.location.LocationComponentOptions;
-import com.mapbox.mapboxsdk.location.modes.CameraMode;
-import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.demo.java.settings.MapmyIndiaPlaceWidgetSetting;
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapmyindia.sdk.plugins.places.autocomplete.ui.PlaceAutocompleteFragment;
 import com.mapmyindia.sdk.plugins.places.autocomplete.ui.PlaceSelectionListener;
 import com.mmi.services.api.autosuggest.model.ELocation;
 
-import java.util.List;
-
-public class FullModeFragmentAutocompleteActivity extends AppCompatActivity implements OnMapReadyCallback, PermissionsListener, LocationEngineListener {
+public class FullModeFragmentAutocompleteActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MapView mapView;
     private MapboxMap mapmyIndiaMap;
     private TextView search;
-    private PermissionsManager permissionsManager;
-
-    private LocationComponent locationComponent;
-    private LocationEngine locationEngine;
-
-    private Location location;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,12 +39,26 @@ public class FullModeFragmentAutocompleteActivity extends AppCompatActivity impl
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (location != null) {
+                if (mapmyIndiaMap != null) {
                     PlaceOptions placeOptions = PlaceOptions.builder()
-                            .location(Point.fromLngLat(location.getLongitude(), location.getLatitude()))
-                            .backgroundColor(ContextCompat.getColor(FullModeFragmentAutocompleteActivity.this, android.R.color.white))
+                            .location(MapmyIndiaPlaceWidgetSetting.getInstance().getLocation())
+                            .filter(MapmyIndiaPlaceWidgetSetting.getInstance().getFilter())
+                            .hint(MapmyIndiaPlaceWidgetSetting.getInstance().getHint())
+                            .enableTextSearch(MapmyIndiaPlaceWidgetSetting.getInstance().isEnableTextSearch())
+                            .pod(MapmyIndiaPlaceWidgetSetting.getInstance().getPod())
+                            .saveHistory(MapmyIndiaPlaceWidgetSetting.getInstance().isEnableHistory())
+                            .attributionHorizontalAlignment(MapmyIndiaPlaceWidgetSetting.getInstance().getSignatureVertical())
+                            .attributionVerticalAlignment(MapmyIndiaPlaceWidgetSetting.getInstance().getSignatureHorizontal())
+                            .logoSize(MapmyIndiaPlaceWidgetSetting.getInstance().getLogoSize())
+                            .backgroundColor(getResources().getColor(MapmyIndiaPlaceWidgetSetting.getInstance().getBackgroundColor()))
+                            .toolbarColor(getResources().getColor(MapmyIndiaPlaceWidgetSetting.getInstance().getToolbarColor()))
                             .build();
-                    PlaceAutocompleteFragment placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(placeOptions);
+                    PlaceAutocompleteFragment placeAutocompleteFragment;
+                    if (MapmyIndiaPlaceWidgetSetting.getInstance().isDefault()) {
+                        placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance();
+                    } else {
+                        placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(placeOptions);
+                    }
                     placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                         @Override
                         public void onPlaceSelected(ELocation eLocation) {
@@ -92,7 +86,7 @@ public class FullModeFragmentAutocompleteActivity extends AppCompatActivity impl
                             .addToBackStack(PlaceAutocompleteFragment.class.getSimpleName())
                             .commit();
                 } else {
-                    Toast.makeText(FullModeFragmentAutocompleteActivity.this, "Please wait for getting current location", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FullModeFragmentAutocompleteActivity.this, "Please wait map is loading", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -109,45 +103,9 @@ public class FullModeFragmentAutocompleteActivity extends AppCompatActivity impl
 
         mapmyIndiaMap.setMinZoomPreference(4);
         mapmyIndiaMap.setMaxZoomPreference(18);
-
-        if (PermissionsManager.areLocationPermissionsGranted(this)) {
-            enableLocation();
-        } else {
-            permissionsManager = new PermissionsManager(this);
-            permissionsManager.requestLocationPermissions(this);
-        }
+        mapmyIndiaMap.setCameraPosition(new CameraPosition.Builder().target(new LatLng(28, 77)).zoom(4).build());
 
 
-    }
-
-
-    private void enableLocation() {
-        LocationComponentOptions options = LocationComponentOptions.builder(this)
-                .trackingGesturesManagement(true)
-                .accuracyColor(ContextCompat.getColor(this, R.color.colorAccent))
-                .build();
-// Get an instance of the component LocationComponent
-        locationComponent = mapmyIndiaMap.getLocationComponent();
-// Activate with options
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationComponent.activateLocationComponent(this, options);
-// Enable to make component visible
-        locationComponent.setLocationComponentEnabled(true);
-        locationEngine = locationComponent.getLocationEngine();
-
-        locationEngine.addLocationEngineListener(this);
-// Set the component's camera mode
-        locationComponent.setCameraMode(CameraMode.TRACKING);
-        locationComponent.setRenderMode(RenderMode.COMPASS);
     }
 
 
@@ -165,36 +123,24 @@ public class FullModeFragmentAutocompleteActivity extends AppCompatActivity impl
     protected void onStop() {
         super.onStop();
         mapView.onStop();
-        if (locationEngine != null) {
-            locationEngine.removeLocationEngineListener(this);
-            locationEngine.removeLocationUpdates();
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        if (locationEngine != null) {
-            locationEngine.deactivate();
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-        if (locationEngine != null)
-            locationEngine.removeLocationEngineListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-        if (locationEngine != null) {
-            locationEngine.addLocationEngineListener(this);
-        }
     }
 
     @Override
@@ -207,37 +153,5 @@ public class FullModeFragmentAutocompleteActivity extends AppCompatActivity impl
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onExplanationNeeded(List<String> permissionsToExplain) {
-
-    }
-
-    @Override
-    public void onPermissionResult(boolean granted) {
-        if (granted) {
-            enableLocation();
-        }
-    }
-
-    @Override
-    public void onConnected() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationEngine.requestLocationUpdates();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        this.location = location;
     }
 }

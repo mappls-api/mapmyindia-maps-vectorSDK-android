@@ -4,6 +4,7 @@ package com.mapmyindia.sdk.demo.java.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -79,7 +80,7 @@ public class AutoSuggestActivity extends AppCompatActivity implements OnMapReady
 
 
         transparentProgressDialog = new TransparentProgressDialog(this, R.drawable.circle_loader, "");
-        handler = new Handler();
+        handler = new Handler(Looper.getMainLooper());
     }
 
     @Override

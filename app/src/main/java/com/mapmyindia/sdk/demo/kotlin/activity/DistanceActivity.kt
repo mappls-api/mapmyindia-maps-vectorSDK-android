@@ -1,23 +1,25 @@
 package com.mapmyindia.sdk.demo.kotlin.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.demo.databinding.DistanceActivityBinding
+import com.mapmyindia.sdk.demo.java.activity.InputActivity
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog
 import com.mmi.services.api.directions.DirectionsCriteria
 import com.mmi.services.api.distance.MapmyIndiaDistanceMatrix
 import com.mmi.services.api.distance.models.DistanceResponse
 import com.mmi.services.api.distance.models.DistanceResults
-import kotlinx.android.synthetic.main.distance_activity.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,16 +30,25 @@ import java.util.*
  * Created by CEINFO on 26-02-2019.
  */
 class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
-    private var mapView: MapView? = null
     private var transparentProgressDialog: TransparentProgressDialog? = null
+    private lateinit var mBinding: DistanceActivityBinding
 
+    private var mDestination:String? = "28.551087,77.257373"
+    private var mSource :String?= "28.582864,77.234230"
+    private var waypoints: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.distance_activity)
-        mapView = findViewById(R.id.map_view)
-        mapView?.onCreate(savedInstanceState)
-        mapView?.getMapAsync(this)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.distance_activity)
+        mBinding.mapView.onCreate(savedInstanceState)
+        mBinding.mapView.getMapAsync(this)
         transparentProgressDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
+        mBinding.editBtn.setOnClickListener { v: View? ->
+            val intent = Intent(this, InputActivity::class.java)
+            intent.putExtra("origin", mSource);
+            intent.putExtra("destination", mDestination);
+            intent.putExtra("waypoints", waypoints);
+            startActivityForResult(intent, 501)
+        }
     }
 
     override fun onMapReady(mapmyIndiaMap: MapboxMap) {
@@ -46,11 +57,11 @@ class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
         mapmyIndiaMap.setPadding(20, 20, 20, 20)
 
         mapmyIndiaMap.cameraPosition = setCameraAndTilt()
-        val coordinatesPoint = ArrayList<Point>()
+      /*  val coordinatesPoint = ArrayList<Point>()
         coordinatesPoint.add(Point.fromLngLat(77.257373, 28.551087))
-        coordinatesPoint.add(Point.fromLngLat(77.234230, 28.582864))
+        coordinatesPoint.add(Point.fromLngLat(77.234230, 28.582864))*/
         if (CheckInternet.isNetworkAvailable(this@DistanceActivity)) {
-            calculateDistance(coordinatesPoint)
+            calculateDistance(null, null)
         } else {
             Toast.makeText(this, getString(R.string.pleaseCheckInternetConnection), Toast.LENGTH_SHORT).show()
         }
@@ -71,11 +82,34 @@ class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
         transparentProgressDialog!!.dismiss()
     }
 
-    private fun calculateDistance(pointList: List<Point>) {
+    private fun calculateDistance(pointList: List<Point>?, elocs: MutableList<String?>?) {
         progressDialogShow()
-        MapmyIndiaDistanceMatrix.builder()
-                .coordinates(pointList)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
+
+        val builder = MapmyIndiaDistanceMatrix.builder()
+        if (mSource != null) {
+            if (!mSource!!.contains(",")) {
+                builder.coordinate(mSource)
+            } else {
+                val point = Point.fromLngLat(mSource!!.split(",").toTypedArray()[1].toDouble(), mSource!!.split(",").toTypedArray()[0].toDouble())
+                builder.coordinate(point)
+            }
+        }
+
+        if (elocs != null && elocs.isNotEmpty()) {
+            builder.coordinateList(elocs)
+        }
+        if (pointList != null && pointList.isNotEmpty()) {
+            builder.coordinates(pointList)
+        }
+        if (mDestination != null) {
+            if (!mDestination!!.contains(",")) {
+                builder.coordinate(mDestination)
+            } else {
+                val point = Point.fromLngLat(mDestination!!.split(",").toTypedArray()[1].toDouble(), mDestination!!.split(",").toTypedArray()[0].toDouble())
+                builder.coordinate(point)
+            }
+        }
+              builder.profile(DirectionsCriteria.PROFILE_DRIVING)
                 .resource(DirectionsCriteria.RESOURCE_DISTANCE_ETA)
                 .build()
                 .enqueueCall(object : Callback<DistanceResponse> {
@@ -104,9 +138,10 @@ class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private fun updateData(distanceList: DistanceResults) {
-        distance_details_layout!!.visibility = View.VISIBLE
-        tv_duration!!.text = "(" + getFormattedDuration(distanceList.durations()!![0][1]) + ")"
-        tv_distance!!.text = getFormattedDistance(distanceList.distances()!![0][1])
+        mBinding.distanceDetailsLayout.visibility = View.VISIBLE
+        mBinding.editBtn.visibility = View.VISIBLE
+        mBinding.tvDuration.text = "(" + getFormattedDuration(distanceList.durations()!![0][1]) + ")"
+        mBinding.tvDistance.text = getFormattedDistance(distanceList.distances()!![0][1])
     }
 
     /**
@@ -142,37 +177,72 @@ class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        mapView!!.onStart()
+        mBinding.mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView!!.onStop()
+        mBinding.mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView!!.onDestroy()
+        mBinding.mapView.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView!!.onPause()
+        mBinding.mapView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView!!.onResume()
+        mBinding.mapView.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView!!.onLowMemory()
+        mBinding.mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView!!.onSaveInstanceState(outState)
+        mBinding.mapView.onSaveInstanceState(outState)
     }
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 501 && resultCode == RESULT_OK) {
+            val elocs: MutableList<String?> = ArrayList()
+            val points: MutableList<Point> = ArrayList()
+            if (data!!.hasExtra("origin")) {
+                mSource = data.getStringExtra("origin")
+            }
+            if (data.hasExtra("waypoints")) {
+                val wayPoints = data.getStringExtra("waypoints")
+                if (!wayPoints!!.contains(";")) {
+                    if (!wayPoints.contains(",")) {
+                        elocs.add(wayPoints)
+                    } else {
+                        val point = Point.fromLngLat(wayPoints.split(",").toTypedArray()[1].toDouble(), wayPoints.split(",").toTypedArray()[0].toDouble())
+                        points.add(point)
+                    }
+                } else {
+                    val wayPointsArray = wayPoints.split(";").toTypedArray()
+                    for (value in wayPointsArray) {
+                        if (!value.contains(",")) {
+                            elocs.add(value)
+                        } else {
+                            val point = Point.fromLngLat(value.split(",").toTypedArray()[1].toDouble(), value.split(",").toTypedArray()[0].toDouble())
+                            points.add(point)
+                        }
+                    }
+                }
+                this.waypoints = wayPoints
+            }
+            if (data.hasExtra("destination")) {
+                mDestination = data.getStringExtra("destination")
+            }
+            calculateDistance(points, elocs)
+        }
+    }
 }

@@ -9,16 +9,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.demo.databinding.BaseLayoutBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +29,15 @@ import java.util.List;
  */
 public class AddCustomInfoWindowActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapView mapView;
     private List<LatLng> latLngList = new ArrayList<>();
+    private BaseLayoutBinding mBinding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.base_layout);
-        mapView = findViewById(R.id.map_view);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.base_layout);
+        mBinding.mapView.onCreate(savedInstanceState);
+        mBinding.mapView.getMapAsync(this);
 
         latLngList.add(new LatLng(25.321684, 82.987289));
         latLngList.add(new LatLng(25.331684, 82.997289));
@@ -62,7 +62,7 @@ public class AddCustomInfoWindowActivity extends AppCompatActivity implements On
             public View getInfoWindow(@NonNull Marker marker) {
                 View view = LayoutInflater.from(AddCustomInfoWindowActivity.this).inflate(R.layout.custom_info_window_layout, null);
                 TextView textView = view.findViewById(R.id.text);
-                textView.setText("MapmyIndia Hdead Office, 237, Okhla ");
+                textView.setText("MapmyIndia Head Office, 237, Okhla ");
                 return view;
             }
         });
@@ -90,42 +90,42 @@ public class AddCustomInfoWindowActivity extends AppCompatActivity implements On
     @Override
     protected void onStart() {
         super.onStart();
-        mapView.onStart();
+        mBinding.mapView.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mapView.onStop();
+        mBinding.mapView.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        mBinding.mapView.onDestroy();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.onPause();
+        mBinding.mapView.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mapView.onResume();
+        mBinding.mapView.onResume();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
+        mBinding.mapView.onLowMemory();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+        mBinding.mapView.onSaveInstanceState(outState);
     }
 }

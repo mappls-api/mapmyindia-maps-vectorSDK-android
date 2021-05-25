@@ -25,6 +25,7 @@ import com.mapmyindia.sdk.demo.java.fragments.MapFeaturesFragment;
 import com.mapmyindia.sdk.demo.java.fragments.MapLayersFragment;
 import com.mapmyindia.sdk.demo.java.fragments.MarkersFeaturesFragment;
 import com.mapmyindia.sdk.demo.java.fragments.PolylineFeaturesFragment;
+import com.mapmyindia.sdk.demo.kotlin.fragments.AnimationsFragmentKt;
 import com.mapmyindia.sdk.demo.kotlin.fragments.ApiCallFragmentKt;
 import com.mapmyindia.sdk.demo.kotlin.fragments.CustomWidgetFragmentKt;
 import com.mapmyindia.sdk.demo.kotlin.fragments.LocationFragmentKt;
@@ -217,8 +218,8 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (item.getItemId() == R.id.animations) {
 
-                /*AnimationFragmentkt animationsFragment = new AnimationFragmentkt();
-                replaceFragment(animationsFragment);*/
+                AnimationsFragmentKt animationsFragment = new AnimationsFragmentKt();
+                replaceFragment(animationsFragment);
                 drawerLayout.closeDrawer(GravityCompat.START);
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Animations");
 

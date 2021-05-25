@@ -28,7 +28,6 @@ import com.mmi.services.api.autosuggest.model.AutoSuggestAtlasResponse
 import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearby
 import com.mmi.services.api.nearby.model.NearbyAtlasResponse
 import com.mmi.services.api.nearby.model.NearbyAtlasResult
-import kotlinx.android.synthetic.main.base_layout.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -204,36 +203,36 @@ class HateOsNearbyActivity : AppCompatActivity(), OnMapReadyCallback,TextView.On
 
     override fun onStart() {
         super.onStart()
-        map_view.onStart()
+        mapView.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        map_view.onResume()
+        mapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        map_view.onPause()
+        mapView.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        map_view.onStop()
+        mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        map_view.onDestroy()
+        mapView.onDestroy()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map_view.onLowMemory()
+        mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        map_view.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
     }
 }

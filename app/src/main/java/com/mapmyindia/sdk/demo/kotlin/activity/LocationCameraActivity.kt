@@ -10,6 +10,7 @@ import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -22,18 +23,20 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
-import kotlinx.android.synthetic.main.activity_location_camera_options.*
+import com.mapmyindia.sdk.demo.databinding.ActivityLocationCameraOptionsBinding
 
 
 class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, LocationEngineListener, OnCameraTrackingChangedListener {
+    private lateinit var mBinding:ActivityLocationCameraOptionsBinding
     private var mapmyIndiaMap: MapboxMap? = null
     private lateinit var locationComponent: LocationComponent
     private var locationEngine: LocationEngine? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_location_camera_options);
-        add_mapView?.getMapAsync(this)
-        add_mapView.onCreate(savedInstanceState)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_location_camera_options)
+
+        mBinding.addMapView.getMapAsync(this)
+        mBinding.addMapView.onCreate(savedInstanceState)
         setButtonOnClickListener()
     }
 
@@ -63,7 +66,7 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
 
     override fun onStart() {
         super.onStart()
-        add_mapView.onStart();
+        mBinding.addMapView.onStart();
     }
 
     override fun onResume() {
@@ -72,20 +75,20 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
             locationEngine?.removeLocationEngineListener(this);
             locationEngine?.addLocationEngineListener(this);
         }
-        add_mapView.onResume();
+        mBinding.addMapView.onResume();
 
     }
 
     override fun onPause() {
         super.onPause()
-        add_mapView.onPause();
+        mBinding.addMapView.onPause();
         if (locationEngine != null)
             locationEngine?.removeLocationEngineListener(this);
     }
 
     override fun onStop() {
         super.onStop()
-        add_mapView.onStop();
+        mBinding.addMapView.onStop();
         if (locationEngine != null) {
             locationEngine?.removeLocationEngineListener(this);
             locationEngine?.removeLocationUpdates();
@@ -94,7 +97,7 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
 
     override fun onDestroy() {
         super.onDestroy()
-        add_mapView.onDestroy();
+        mBinding.addMapView.onDestroy();
         if (locationEngine != null) {
             locationEngine?.deactivate();
         }
@@ -102,12 +105,12 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
 
     override fun onLowMemory() {
         super.onLowMemory()
-        add_mapView.onLowMemory()
+        mBinding.addMapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        add_mapView.onSaveInstanceState(outState)
+        mBinding.addMapView.onSaveInstanceState(outState)
     }
 
     override fun onLocationChanged(location: Location?) {
@@ -134,13 +137,13 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
 
 
     private fun setButtonOnClickListener() {
-        btn_location_mode.setOnClickListener(object : View.OnClickListener {
+        mBinding.btnLocationMode.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val popupMenu = PopupMenu(this@LocationCameraActivity, btn_location_mode)
+                val popupMenu = PopupMenu(this@LocationCameraActivity, mBinding.btnLocationMode)
                 popupMenu.menuInflater.inflate(R.menu.location_mode_menu, popupMenu.menu)
                 popupMenu.gravity = Gravity.BOTTOM
                 popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
-                    btn_location_mode.text = item.title.toString()
+                    mBinding.btnLocationMode.text = item.title.toString()
                     setRenderMode(item.title.toString())
                     true
                 })
@@ -149,13 +152,13 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
 
             }
         })
-        btn_tracking.setOnClickListener(object : View.OnClickListener {
+        mBinding.btnTracking.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val popupMenu = PopupMenu(this@LocationCameraActivity, btn_tracking)
+                val popupMenu = PopupMenu(this@LocationCameraActivity, mBinding.btnTracking)
                 popupMenu.menuInflater.inflate(R.menu.tracking_mode_menu, popupMenu.menu)
                 popupMenu.gravity = Gravity.BOTTOM
                 popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
-                    btn_tracking.text = item.title.toString()
+                    mBinding.btnTracking.text = item.title.toString()
                     setCameraMode(item.title.toString())
                     true
                 })
@@ -198,21 +201,21 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
 
     override fun onCameraTrackingChanged(currentMode: Int) {
         if (currentMode == CameraMode.NONE) {
-            btn_tracking.text = "None"
+            mBinding.btnTracking.text = "None"
         } else if (currentMode == CameraMode.TRACKING) {
-            btn_tracking.text = "Tracking"
+            mBinding.btnTracking.text = "Tracking"
         } else if (currentMode == CameraMode.TRACKING_COMPASS) {
-            btn_tracking.text = "Tracking Compass"
+            mBinding.btnTracking.text = "Tracking Compass"
         } else if (currentMode == CameraMode.TRACKING_GPS) {
-            btn_tracking.text = "Tracking GPS"
+            mBinding.btnTracking.text = "Tracking GPS"
         } else if (currentMode == CameraMode.TRACKING_GPS_NORTH) {
-            btn_tracking.text = "Tracking GPS North"
+            mBinding.btnTracking.text = "Tracking GPS North"
         }
     }
 
 
     override fun onCameraTrackingDismissed() {
-        btn_tracking.text = "None"
+        mBinding.btnTracking.text = "None"
     }
 }
 

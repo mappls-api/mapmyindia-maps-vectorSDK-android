@@ -4,17 +4,17 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.mapbox.mapboxsdk.annotations.Polygon
 import com.mapbox.mapboxsdk.annotations.PolygonOptions
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
-import kotlinx.android.synthetic.main.activity_polygon.*
+import com.mapmyindia.sdk.demo.databinding.ActivityPolygonBinding
 import java.util.*
 
 /**
@@ -22,16 +22,15 @@ import java.util.*
  */
 class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     private val listOfLatlang = ArrayList<LatLng>()
-    private var mapView: MapView? = null
     private var polygon: Polygon?=null
+    private lateinit var mBinding: ActivityPolygonBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_polygon)
-        mapView = findViewById(R.id.map_view)
-        mapView?.onCreate(savedInstanceState)
-        mapView?.getMapAsync(this)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_polygon)
+        mBinding.mapView.onCreate(savedInstanceState)
+        mBinding.mapView.getMapAsync(this)
     }
 
     override fun onMapReady(mapmyIndiaMap: MapboxMap) {
@@ -48,17 +47,17 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
         /* this is done for move camera focus to particular position */
         val latLngBounds = LatLngBounds.Builder().includes(listOfLatlang).build()
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70))
-        btn_add_polygon.setOnClickListener(View.OnClickListener {
+        mBinding.btnAddPolygon.setOnClickListener(View.OnClickListener {
             polygon = mapmyIndiaMap.addPolygon(PolygonOptions().addAll(listOfLatlang).fillColor(Color.parseColor("#753bb2d0")))
 
-            btn_add_polygon.visibility= View.GONE
-            btn_remove_polygon.visibility= View.VISIBLE
+            mBinding.btnAddPolygon.visibility= View.GONE
+            mBinding.btnRemovePolygon.visibility= View.VISIBLE
 
         })
-        btn_remove_polygon.setOnClickListener(View.OnClickListener {
+        mBinding.btnRemovePolygon.setOnClickListener(View.OnClickListener {
             mapmyIndiaMap.removePolygon(polygon!!)
-            btn_add_polygon.visibility= View.VISIBLE
-            btn_remove_polygon.visibility= View.GONE
+            mBinding.btnAddPolygon.visibility= View.VISIBLE
+            mBinding.btnRemovePolygon.visibility= View.GONE
 
         })
     }
@@ -75,36 +74,36 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        mapView!!.onStart()
+        mBinding.mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView!!.onStop()
+        mBinding.mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView!!.onDestroy()
+        mBinding.mapView.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView!!.onPause()
+        mBinding.mapView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView!!.onResume()
+        mBinding.mapView.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView!!.onLowMemory()
+        mBinding.mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView!!.onSaveInstanceState(outState)
+        mBinding.mapView.onSaveInstanceState(outState)
     }
 }

@@ -2,6 +2,7 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.mapbox.mapboxsdk.annotations.Icon
 import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
@@ -10,7 +11,8 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
-import kotlinx.android.synthetic.main.indoor_layout.*
+import com.mapmyindia.sdk.demo.databinding.IndoorLayoutBinding
+
 
 /**
  * Created by Saksham on 4/12/19.
@@ -18,12 +20,13 @@ import kotlinx.android.synthetic.main.indoor_layout.*
 class IndoorActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var map: MapboxMap? = null
+    private lateinit var mBinding :IndoorLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.indoor_layout)
-        map_view?.onCreate(savedInstanceState)
-        map_view?.getMapAsync(this)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.indoor_layout)
+        mBinding.mapView.onCreate(savedInstanceState)
+        mBinding.mapView.getMapAsync(this)
 
     }
 
@@ -55,36 +58,36 @@ class IndoorActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        map_view!!.onStart()
+        mBinding.mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        map_view!!.onStop()
+        mBinding.mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        map_view!!.onDestroy()
+        mBinding.mapView.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        map_view!!.onPause()
+        mBinding.mapView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        map_view!!.onResume()
+        mBinding.mapView.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map_view!!.onLowMemory()
+        mBinding.mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        map_view!!.onSaveInstanceState(outState)
+        mBinding.mapView.onSaveInstanceState(outState)
     }
 }

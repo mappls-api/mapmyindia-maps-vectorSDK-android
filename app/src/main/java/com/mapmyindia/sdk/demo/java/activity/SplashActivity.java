@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -80,7 +81,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
     private void redirect() {
-        final Handler handler = new Handler();
+        final Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> {
             startActivity(new Intent(getApplicationContext(), FeaturesListActivity.class));
             finish();

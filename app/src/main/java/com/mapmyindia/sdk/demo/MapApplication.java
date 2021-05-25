@@ -19,7 +19,6 @@ public class MapApplication extends Application {
         MapmyIndiaAccountManager.getInstance().setMapSDKKey(getMapSDKKey());
         MapmyIndiaAccountManager.getInstance().setAtlasClientId(getAtlasClientId());
         MapmyIndiaAccountManager.getInstance().setAtlasClientSecret(getAtlasClientSecret());
-        MapmyIndiaAccountManager.getInstance().setAtlasGrantType(getAtlasGrantType());
         MapmyIndia.getInstance(this);
     }
 
@@ -28,11 +27,6 @@ public class MapApplication extends Application {
     }
 
     public String getAtlasClientSecret() {
-        return "";
-    }
-
-
-    public String getAtlasGrantType() {
         return "";
     }
 

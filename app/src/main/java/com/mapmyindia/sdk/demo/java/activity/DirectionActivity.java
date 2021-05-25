@@ -1,6 +1,10 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -9,12 +13,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.mapbox.core.constants.Constants;
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.utils.PolylineUtils;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -30,6 +37,7 @@ import com.mmi.services.api.directions.DirectionsCriteria;
 import com.mmi.services.api.directions.MapmyIndiaDirections;
 import com.mmi.services.api.directions.models.DirectionsResponse;
 import com.mmi.services.api.directions.models.DirectionsRoute;
+import com.mmi.services.api.directions.models.DirectionsWaypoint;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,14 +48,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static java.lang.Double.parseDouble;
+
 
 /**
  * Created by CEINFO on 26-02-2019.
  */
 
-public class DirectionActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class DirectionActivity extends AppCompatActivity implements OnMapReadyCallback, MapboxMap.OnMapLongClickListener {
 
-  private MapboxMap mapmyIndiaMap;
+    private MapboxMap mapmyIndiaMap;
     private MapView mapView;
     private TransparentProgressDialog transparentProgressDialog;
     private String profile = DirectionsCriteria.PROFILE_DRIVING;
@@ -56,6 +66,10 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     private LinearLayout directionDetailsLayout;
     private TextView tvDistance, tvDuration;
     private DirectionPolylinePlugin directionPolylinePlugin;
+    private FloatingActionButton floatingActionButton;
+    private String mDestination = "MMI000";
+    private String mSource = "28.594475,77.202432";
+    private String wayPoints;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,11 +83,21 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         directionDetailsLayout = findViewById(R.id.direction_details_layout);
         tvDistance = findViewById(R.id.tv_distance);
         tvDuration = findViewById(R.id.tv_duration);
+        floatingActionButton = findViewById(R.id.edit_btn);
+        floatingActionButton.setOnClickListener(v ->
+                {
+                    Intent intent = new Intent(this, InputActivity.class);
+                    intent.putExtra("origin", mSource);
+                    intent.putExtra("destination", mDestination);
+                    intent.putExtra("waypoints", wayPoints);
+                    startActivityForResult(intent, 500);
+                }
+        );
 //        profileTabLayout.setVisibility(View.GONE);
         profileTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-              if (mapmyIndiaMap == null) {
+                if (mapmyIndiaMap == null) {
                     if (profileTabLayout.getTabAt(0) != null) {
                         Objects.requireNonNull(profileTabLayout.getTabAt(0)).select();
                         return;
@@ -143,13 +167,13 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
     @Override
     public void onMapReady(MapboxMap mapmyIndiaMap) {
-      this.mapmyIndiaMap = mapmyIndiaMap;
+        this.mapmyIndiaMap = mapmyIndiaMap;
 
 
-      mapmyIndiaMap.setPadding(20, 20, 20, 20);
+        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 //        profileTabLayout.setVisibility(View.VISIBLE);
-
-      mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
+        mapmyIndiaMap.addOnMapLongClickListener(this);
+        mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
         if (CheckInternet.isNetworkAvailable(DirectionActivity.this)) {
             getDirections();
         } else {
@@ -187,10 +211,45 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     private void getDirections() {
         progressDialogShow();
 
-        MapmyIndiaDirections.builder()
-                .origin(Point.fromLngLat(77.202432, 28.594475))
-                .destination(Point.fromLngLat(77.186982, 28.554676))
-                .profile(profile)
+        Object dest = !mDestination.contains(",") ? mDestination : Point.fromLngLat(parseDouble(mDestination.split(",")[1]), parseDouble(mDestination.split(",")[0]));
+        Object src = !mSource.contains(",") ? mSource : Point.fromLngLat(parseDouble(mSource.split(",")[1]), parseDouble(mSource.split(",")[0]));
+
+        MapmyIndiaDirections.Builder builder = MapmyIndiaDirections.builder();
+
+        if (src instanceof String) {
+            builder.origin(String.valueOf(src));
+        } else {
+            builder.origin((Point) src);
+        }
+
+        if (dest instanceof String) {
+            builder.destination(String.valueOf(dest));
+        } else {
+            builder.destination((Point) dest);
+        }
+
+        if (wayPoints != null) {
+            if (!wayPoints.contains(";")) {
+                if (!wayPoints.contains(",")) {
+                    Log.e("taf", wayPoints);
+                    builder.addWaypoint(wayPoints);
+                } else {
+                    Point point = Point.fromLngLat(Double.parseDouble(wayPoints.split(",")[1]), Double.parseDouble(wayPoints.split(",")[0]));
+                    builder.addWaypoint(point);
+                }
+            } else {
+                String[] wayPointsArray = wayPoints.split(";");
+                for (String value : wayPointsArray) {
+                    if (!value.contains(",")) {
+                        builder.addWaypoint(value);
+                    } else {
+                        Point point = Point.fromLngLat(Double.parseDouble(value.split(",")[1]), Double.parseDouble(value.split(",")[0]));
+                        builder.addWaypoint(point);
+                    }
+                }
+            }
+        }
+        builder.profile(profile)
                 .resource(resource)
                 .steps(true)
                 .alternatives(false)
@@ -201,13 +260,19 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                     if (response.body() != null) {
                         DirectionsResponse directionsResponse = response.body();
                         List<DirectionsRoute> results = directionsResponse.routes();
+                        mapmyIndiaMap.clear();
 
                         if (results.size() > 0) {
-                          mapmyIndiaMap.clear();
                             DirectionsRoute directionsRoute = results.get(0);
                             if (directionsRoute != null && directionsRoute.geometry() != null) {
                                 drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6));
                                 updateData(directionsRoute);
+                            }
+                        }
+                        List<DirectionsWaypoint> directionsWaypoints = directionsResponse.waypoints();
+                        if (directionsWaypoints != null && directionsWaypoints.size() > 0) {
+                            for (DirectionsWaypoint directionsWaypoint : directionsWaypoints) {
+                                mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(directionsWaypoint.location().latitude(), directionsWaypoint.location().longitude())));
                             }
                         }
                     }
@@ -236,6 +301,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     private void updateData(@NonNull DirectionsRoute directionsRoute) {
         if (directionsRoute.distance() != null && directionsRoute.distance() != null) {
             directionDetailsLayout.setVisibility(View.VISIBLE);
+            floatingActionButton.setVisibility(View.VISIBLE);
             tvDuration.setText("(" + getFormattedDuration(directionsRoute.duration()) + ")");
             tvDistance.setText(getFormattedDistance(directionsRoute.distance()));
         }
@@ -284,8 +350,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             listOfLatLng.add(new LatLng(point.latitude(), point.longitude()));
         }
 
-        if(directionPolylinePlugin == null) {
-          directionPolylinePlugin = new DirectionPolylinePlugin(mapmyIndiaMap, mapView, profile);
+        if (directionPolylinePlugin == null) {
+            directionPolylinePlugin = new DirectionPolylinePlugin(mapmyIndiaMap, mapView, profile);
             directionPolylinePlugin.createPolyline(listOfLatLng);
         } else {
             directionPolylinePlugin.updatePolyline(profile, listOfLatLng);
@@ -293,7 +359,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         }
 //        mapmyIndiaMap.addPolyline(new PolylineOptions().addAll(listOfLatLng).color(Color.parseColor("#3bb2d0")).width(4));
         LatLngBounds latLngBounds = new LatLngBounds.Builder().includes(listOfLatLng).build();
-      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30));
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30));
     }
 
     @Override
@@ -343,4 +409,56 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         mapView.onSaveInstanceState(outState);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 500 && resultCode == RESULT_OK) {
+            if (data.hasExtra("destination")) {
+                mDestination = data.getStringExtra("destination");
+            }
+            if (data.hasExtra("origin")) {
+                mSource = data.getStringExtra("origin");
+            }
+            if (data.hasExtra("waypoints")) {
+                wayPoints = data.getStringExtra("waypoints");
+            }
+            getDirections();
+        }
+    }
+
+    @Override
+    public void onMapLongClick(@NonNull LatLng latLng) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage("Select Point as Source or Destination");
+
+        alertDialog.setPositiveButton("Source", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mSource = latLng.getLatitude() + "," + latLng.getLongitude();
+                getDirections();
+            }
+        });
+        alertDialog.setNegativeButton("Destination", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mDestination = latLng.getLatitude() + "," + latLng.getLongitude();
+                getDirections();
+            }
+        });
+        alertDialog.setNeutralButton("Waypoint", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (TextUtils.isEmpty(wayPoints)) {
+                    wayPoints = latLng.getLatitude() + "," + latLng.getLongitude();
+                } else {
+                    String wayPoint = wayPoints + ";" + latLng.getLatitude() + "," + latLng.getLongitude();
+                    wayPoints = wayPoint;
+                }
+                getDirections();
+            }
+        });
+
+        alertDialog.setCancelable(true);
+        alertDialog.show();
+    }
 }

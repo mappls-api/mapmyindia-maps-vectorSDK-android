@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/default_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="4dp"
+            app:layout_constraintBottom_toTopOf="@id/scroll_layout"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/show_default_settings"
+                android:textColor="#212121"
+                />
+
+            <CheckBox
+                android:id="@+id/cb_default"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <View
+            app:layout_constraintTop_toBottomOf="@id/default_layout"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#000000"/>
+        <ScrollView
+            android:id="@+id/scroll_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/default_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="2dp"
+            >
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".SettingsActivity"
+                android:orientation="vertical"
+                tools:ignore="MissingDefaultResource">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:id="@+id/toolbar_color_layout"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Toolbar Color"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/picker_toolbar_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Include device Location button"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/include_device_location"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Include Search Button"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/include_search_button"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_5"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Tokenize Address"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/tokenize_address_btn"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:text="Signature Vertical Alignment"/>
+
+                <RadioGroup
+                    android:id="@+id/rg_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_top"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TOP"
+                        android:layout_margin="2dp"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_bottom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="BOTTOM"
+                        android:layout_margin="2dp"/>
+`
+                </RadioGroup>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:text="Signature Horizontal Alignment"/>
+
+                <RadioGroup
+                    android:id="@+id/rg_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LEFT"
+                        android:layout_margin="2dp"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CENTER"
+                        android:layout_margin="2dp"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="RIGHT"
+                        android:layout_margin="2dp"/>
+                </RadioGroup>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:text="Logo Size"/>
+
+                <RadioGroup
+                    android:id="@+id/rg_logo_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SMALL"
+                        android:layout_margin="2dp"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MEDIUM"
+                        android:layout_margin="2dp"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_large"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LARGE"
+                        android:layout_margin="2dp"/>
+                </RadioGroup>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Location"
+                        />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/et_latitude"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Latitude"
+                            android:layout_margin="2dp"
+                            android:padding="8dp"
+                            android:inputType="numberDecimal"
+                            android:background="@drawable/edit_text_background"/>
+
+                        <EditText
+                            android:id="@+id/et_longitude"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:hint="Longitude"
+                            android:padding="8dp"
+                            android:inputType="numberDecimal"
+                            android:background="@drawable/edit_text_background"/>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_save_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Location"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Filter (e.g., cop:YMCZ0J)"
+                        />
+                    <EditText
+                        android:id="@+id/et_filter"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:hint="Filter"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_save_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Filter"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Enable History"
+                        android:textColor="#212121"
+                        />
+
+                    <CheckBox
+                        android:id="@+id/cb_enable_history"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:id="@+id/history_count_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="History Count"
+                        android:textColor="#212121"
+                        />
+
+                    <EditText
+                        android:id="@+id/et_history_count"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:hint="Count"
+                        android:inputType="number"
+                        android:layout_margin="2dp"
+                        android:background="@drawable/edit_text_background"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:id="@+id/btn_save_history_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="4dp"
+                        android:padding="4dp"
+                        android:background="@drawable/bg_background_btn"
+                        android:textColor="@color/mapmyindia_demo_white"
+                        android:text="Save HistoryCount"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="POD"/>
+
+                        <Button
+                            android:id="@+id/btn_pod_clear"
+                            android:layout_marginTop="32dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Clear"
+                            android:background="@drawable/bg_background_btn"
+                            android:textColor="@color/mapmyindia_demo_white"/>
+
+                    </LinearLayout>
+
+                    <RadioGroup
+                        android:id="@+id/rg_pod"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/rb_sub_sub_locality"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sub sub locality"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_sub_locality"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sub locality"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_locality"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Locality"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_sub_district"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sub District"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_district"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="District"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_city"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="City"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_village"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Village"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_state"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="State"
+                            />
+
+                    </RadioGroup>
+
+
+
+                </LinearLayout>
+
+                <View
+                    app:layout_constraintTop_toBottomOf="@id/default_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Hint"
+                        />
+                    <EditText
+                        android:id="@+id/et_hint"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:hint="Search Hint"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Search Hint"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="zoom"
+                        />
+                    <EditText
+                        android:id="@+id/et_zoom"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:layout_height="wrap_content"
+                        android:hint="zoom"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_zoom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Search Zoom"/>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Background Color"/>
+
+                    <RadioGroup
+                        android:id="@+id/backgroundRG"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:checked="true"
+                            android:id="@+id/rb_white"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="White"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_black"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Black"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_red"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Red"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_green"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Green"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Blue"
+                            />
+
+                    </RadioGroup>
+
+
+
+                </LinearLayout>
+
+                <View
+                    app:layout_constraintTop_toBottomOf="@id/default_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Toolbar background Color"/>
+
+                    <RadioGroup
+                        android:id="@+id/toolbarRG"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:checked="true"
+                            android:id="@+id/rb_white_toolbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="White"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_black_toolbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Black"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_red_toolbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Red"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_green_toolbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Green"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_blue_toolbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Blue"
+                            />
+
+                    </RadioGroup>
+
+
+
+                </LinearLayout>
+
+                <View
+                    app:layout_constraintTop_toBottomOf="@id/default_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+
+            </LinearLayout>
+
+        </ScrollView>
+        <FrameLayout
+            android:id="@+id/disable_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/default_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="#41000000"
+            android:layout_marginTop="2dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

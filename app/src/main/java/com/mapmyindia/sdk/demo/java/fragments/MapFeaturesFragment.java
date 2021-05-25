@@ -17,6 +17,7 @@ import com.mapmyindia.sdk.demo.java.activity.GesturesActivity;
 import com.mapmyindia.sdk.demo.java.activity.MapClickActivity;
 import com.mapmyindia.sdk.demo.java.activity.MapFragmentActivity;
 import com.mapmyindia.sdk.demo.java.activity.MapLongClickActivity;
+import com.mapmyindia.sdk.demo.java.activity.StyleActivity;
 import com.mapmyindia.sdk.demo.java.adapter.MapFeatureListAdapter;
 import com.mapmyindia.sdk.demo.java.model.FeaturesList;
 
@@ -69,6 +70,10 @@ public class MapFeaturesFragment extends Fragment {
                     Intent gestureIntent= new Intent(getContext(), GesturesActivity.class);
                     startActivity(gestureIntent);
                 }
+                else if(position==4){
+                    Intent styleIntent= new Intent(getContext(), StyleActivity.class);
+                    startActivity(styleIntent);
+                }
             }
         });
     }
@@ -78,7 +83,6 @@ public class MapFeaturesFragment extends Fragment {
         featuresArrayList.add(new FeaturesList("Map Long Click", "Location camera options for render and tracking modes"));
         featuresArrayList.add(new FeaturesList("Map Tap", "Long press on map and get Latitude Longitude"));
         featuresArrayList.add(new FeaturesList("Map Gestures", "Gestures detection for map view"));
-
-
+        featuresArrayList.add(new FeaturesList("Map Styles", "To change and update MapmyIndia Styles"));
     }
 }

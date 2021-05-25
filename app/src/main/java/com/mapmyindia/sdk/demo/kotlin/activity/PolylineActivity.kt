@@ -4,17 +4,17 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.mapbox.mapboxsdk.annotations.Polyline
 import com.mapbox.mapboxsdk.annotations.PolylineOptions
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
-import kotlinx.android.synthetic.main.activity_polyline.*
+import com.mapmyindia.sdk.demo.databinding.ActivityPolylineBinding
 import java.util.*
 
 /**
@@ -23,15 +23,14 @@ import java.util.*
 class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val listOfLatlang = ArrayList<LatLng>()
-    private var mapView: MapView? = null
     private var polyLine: Polyline?=null
+    private lateinit var mBinding:ActivityPolylineBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_polyline)
-        mapView = findViewById(R.id.map_view)
-        mapView?.onCreate(savedInstanceState)
-        mapView?.getMapAsync(this)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_polyline)
+        mBinding.mapView.onCreate(savedInstanceState)
+        mBinding.mapView.getMapAsync(this)
     }
 
     override fun onMapReady(mapmyIndiaMap: MapboxMap) {
@@ -57,16 +56,16 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
         val latLngBounds = LatLngBounds.Builder().includes(listOfLatlang).build()
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70))
 
-        btn_add_polyline.setOnClickListener(View.OnClickListener {
+        mBinding.btnAddPolyline.setOnClickListener(View.OnClickListener {
             polyLine =   mapmyIndiaMap.addPolyline(PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4f))
-            btn_add_polyline.visibility= View.GONE
-            btn_remove_polyline.visibility= View.VISIBLE
+            mBinding.btnAddPolyline.visibility= View.GONE
+            mBinding.btnRemovePolyline.visibility= View.VISIBLE
 
         })
-        btn_remove_polyline.setOnClickListener(View.OnClickListener {
+        mBinding.btnRemovePolyline.setOnClickListener(View.OnClickListener {
             mapmyIndiaMap.removePolyline(polyLine!!)
-            btn_add_polyline.visibility= View.VISIBLE
-            btn_remove_polyline.visibility= View.GONE
+            mBinding.btnAddPolyline.visibility= View.VISIBLE
+            mBinding.btnRemovePolyline.visibility= View.GONE
 
         })
 
@@ -84,36 +83,36 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        mapView!!.onStart()
+        mBinding.mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView!!.onStop()
+        mBinding.mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView!!.onDestroy()
+        mBinding.mapView.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView!!.onPause()
+        mBinding.mapView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView!!.onResume()
+        mBinding.mapView.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView!!.onLowMemory()
+        mBinding.mapView.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView!!.onSaveInstanceState(outState)
+        mBinding.mapView.onSaveInstanceState(outState)
     }
 }

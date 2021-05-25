@@ -1,5 +1,6 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -42,17 +44,30 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
     private TextView tvDistance, tvDuration;
     private LinearLayout directionDetailsLayout;
 
+    private FloatingActionButton floatingActionButton;
+    private String mDestination="28.551087,77.257373";
+    private String mSource ="28.582864,77.234230";
+    private String waypoints;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.distance_activity);
         mapView = findViewById(R.id.map_view);
+        floatingActionButton = findViewById(R.id.edit_btn);
         directionDetailsLayout = findViewById(R.id.distance_details_layout);
         tvDistance = findViewById(R.id.tv_distance);
         tvDuration = findViewById(R.id.tv_duration);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         transparentProgressDialog = new TransparentProgressDialog(this, R.drawable.circle_loader, "");
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, InputActivity.class);
+            intent.putExtra("origin", mSource);
+            intent.putExtra("destination", mDestination);
+            intent.putExtra("waypoints", waypoints);
+            startActivityForResult(intent,501);
+        });
     }
 
     @Override
@@ -64,11 +79,11 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
 
         mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
 
-        List<Point> coordinatesPoint = new ArrayList<Point>();
+       /* List<Point> coordinatesPoint = new ArrayList<Point>();
         coordinatesPoint.add(Point.fromLngLat(77.257373, 28.551087));
-        coordinatesPoint.add(Point.fromLngLat(77.234230, 28.582864));
+        coordinatesPoint.add(Point.fromLngLat(77.234230, 28.582864));*/
         if (CheckInternet.isNetworkAvailable(DistanceActivity.this)) {
-            calculateDistance(coordinatesPoint);
+            calculateDistance(null,null);
         } else {
             Toast.makeText(this, getString(R.string.pleaseCheckInternetConnection), Toast.LENGTH_SHORT).show();
         }
@@ -92,11 +107,33 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
         transparentProgressDialog.dismiss();
     }
 
-    private void calculateDistance(List<Point> pointList) {
+    private void calculateDistance(List<Point> pointList,List<String> elocs) {
         progressDialogShow();
-        MapmyIndiaDistanceMatrix.builder()
-                .coordinates(pointList)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
+       MapmyIndiaDistanceMatrix.Builder builder =   MapmyIndiaDistanceMatrix.builder();
+            if (mSource!=null){
+                if (!mSource.contains(",")){
+                    builder.coordinate(mSource);
+                }else {
+                    Point point =Point.fromLngLat(Double.parseDouble(mSource.split(",")[1]),Double.parseDouble(mSource.split(",")[0]));
+                  builder.coordinate(point);
+                }
+            }
+
+                 if (elocs!=null&&elocs.size()>0){
+                     builder.coordinateList(elocs);
+                 }
+                 if (pointList!=null&&pointList.size()>0){
+                     builder.coordinates(pointList);
+                 }
+        if (mDestination!=null){
+            if (!mDestination.contains(",")){
+                builder.coordinate(mDestination);
+            }else {
+                Point point =Point.fromLngLat(Double.parseDouble(mDestination.split(",")[1]),Double.parseDouble(mDestination.split(",")[0]));
+                builder.coordinate(point);
+            }
+        }
+                builder.profile(DirectionsCriteria.PROFILE_DRIVING)
                 .resource(DirectionsCriteria.RESOURCE_DISTANCE_ETA)
                 .build()
                 .enqueueCall(new Callback<DistanceResponse>() {
@@ -128,6 +165,7 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
     private void updateData(DistanceResults distanceResults) {
 
         directionDetailsLayout.setVisibility(View.VISIBLE);
+        floatingActionButton.setVisibility(View.VISIBLE);
         tvDuration.setText("(" + getFormattedDuration(distanceResults.durations().get(0)[1]) + ")");
         tvDistance.setText(getFormattedDistance(distanceResults.distances().get(0)[1]));
     }
@@ -204,5 +242,46 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==501&&resultCode==RESULT_OK){
+
+            List<String> elocs= new ArrayList<>();
+            List<Point> points = new ArrayList<>();
+            if (data.hasExtra("origin")){
+               mSource = data.getStringExtra("origin");
+
+            }
+            if (data.hasExtra("waypoints")){
+               String wayPoints=  data.getStringExtra("waypoints");
+                if (!wayPoints.contains(";")){
+                    if (!wayPoints.contains(",")){
+                        elocs.add(wayPoints);
+                    }else{
+                        Point point = Point.fromLngLat(Double.parseDouble(wayPoints.split(",")[1]),Double.parseDouble(wayPoints.split(",")[0]));
+                        points.add(point);
+                    }
+                }else {
+                    String [] wayPointsArray = wayPoints.split(";");
+                    for (String value :wayPointsArray){
+                        if (!value.contains(",")){
+                            elocs.add(value);
+                        }else{
+                            Point point = Point.fromLngLat(Double.parseDouble(value.split(",")[1]),Double.parseDouble(value.split(",")[0]));
+                           points.add(point);
+                        }
+                    }
+                }
+                this.waypoints = wayPoints;
+            }
+            if (data.hasExtra("destination")){
+                mDestination = data.getStringExtra("destination");
+            }
+
+            calculateDistance(points,elocs);
+        }
     }
 }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.activity.CarAnimationActivity;
 import com.mapmyindia.sdk.demo.java.activity.MarkerRotationTransitionActivity;
+import com.mapmyindia.sdk.demo.java.activity.TrackingActivity;
 import com.mapmyindia.sdk.demo.java.adapter.MapFeatureListAdapter;
 import com.mapmyindia.sdk.demo.java.model.FeaturesList;
 
@@ -53,6 +54,9 @@ public class AnimationsFragment extends Fragment {
                 } else if (position == 1) {
                     Intent markerRototationIntent = new Intent(getContext(), MarkerRotationTransitionActivity.class);
                     startActivity(markerRototationIntent);
+                } else if (position == 2) {
+                    Intent trackingActivityIntent = new Intent(getContext(), TrackingActivity.class);
+                    startActivity(trackingActivityIntent);
                 }
             }
         });
@@ -61,5 +65,6 @@ public class AnimationsFragment extends Fragment {
     private void setList() {
         featuresArrayList.add(new FeaturesList("Animate Car", "Animate a car marker on predefined route"));
         featuresArrayList.add(new FeaturesList("Marker Rotation and Transition", "Rotate a marker by given degree and animate the marker to a new position"));
+        featuresArrayList.add(new FeaturesList("Tracking sample", "To track a vehicle on map"));
     }
 }
