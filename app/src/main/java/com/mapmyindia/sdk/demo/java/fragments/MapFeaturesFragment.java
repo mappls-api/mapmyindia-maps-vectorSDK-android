@@ -80,8 +80,8 @@ public class MapFeaturesFragment extends Fragment {
 
     private void setList() {
         featuresArrayList.add(new FeaturesList("Map Fragment", "Way to add Map in Fragment"));
-        featuresArrayList.add(new FeaturesList("Map Long Click", "Location camera options for render and tracking modes"));
-        featuresArrayList.add(new FeaturesList("Map Tap", "Long press on map and get Latitude Longitude"));
+        featuresArrayList.add(new FeaturesList("Map Long Click", "Long press on map and get Latitude Longitude"));
+        featuresArrayList.add(new FeaturesList("Map Tap", "Click on map and get Latitude Longitude"));
         featuresArrayList.add(new FeaturesList("Map Gestures", "Gestures detection for map view"));
         featuresArrayList.add(new FeaturesList("Map Styles", "To change and update MapmyIndia Styles"));
     }
