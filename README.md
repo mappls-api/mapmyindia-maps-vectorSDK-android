@@ -19,11 +19,11 @@ Powered with India's most comprehensive and robust mapping functionalities.
 
 | Version | Last Updated | Author |  Release Note|
 | ---- | ---- | ---- | ---- |
+| v6.8.16 | 03 September 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |   Added distance in Autosuggest API response |
 | v6.8.15 | 18 August 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Added Nearby Report API call<br/>-Added hyperlocal in Autosuggest |
 | v6.8.14 | 24 May 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  Added MapmyIndia Style support |
 | v6.8.13 | 19 May 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  Fixes Android Auto related Issue |
 | v6.8.12 | 07 May 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  Fixes On Map Ready related Issue |
-| v6.8.11 | 26 April 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  - Added Page Info in Nearby API response<br/>- Added Android Auto Support
 
 
 For more details of previous versions , [click here](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android/wiki/version_history).
@@ -60,7 +60,7 @@ Follow these steps to add the SDK to your project –
 -   Add below dependency in your app-level `build.gradle`
 
 ```groovy
-implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.15'
+implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.16'
 ```
 - Add these permissions in your project
 ```xml
