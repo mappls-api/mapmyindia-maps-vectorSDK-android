@@ -1,7 +1,4 @@
 
-  
-  
-
 ![MapmyIndia APIs](https://www.mapmyindia.com/api/img/mapmyindia-api.png)
 # MapmyIndia Vector Map Android SDK
 
@@ -22,11 +19,11 @@ Powered with India's most comprehensive and robust mapping functionalities.
 
 | Version | Last Updated | Author |  Release Note|
 | ---- | ---- | ---- | ---- |
-| v6.8.10 | 01 February 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Added eLoc Support in Direction API calls<br/>-Added eLoc Support in Distance Api call<br/>-Added Support for Many to many in Distance API call |
-| v6.8.9 | 25 November 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Updated nearby API calls<br/>-Added new place details API call<br/>-Added options to add marker using eloc |
-| v6.8.8 | 06 November 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Improved map loading time |
-| v6.8.5 | 26 August 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Added Along the route API support<br/>-Fixes blank tile issue |
-| v6.8.4 | 14 August 2020 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  Added EV Charging station support in Nearby API.
+| v6.8.15 | 18 August 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  -Added Nearby Report API call<br/>-Added hyperlocal in Autosuggest |
+| v6.8.14 | 24 May 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  Added MapmyIndia Style support |
+| v6.8.13 | 19 May 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  Fixes Android Auto related Issue |
+| v6.8.12 | 07 May 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  Fixes On Map Ready related Issue |
+| v6.8.11 | 26 April 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  - Added Page Info in Nearby API response<br/>- Added Android Auto Support
 
 
 For more details of previous versions , [click here](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android/wiki/version_history).
@@ -63,7 +60,7 @@ Follow these steps to add the SDK to your project –
 -   Add below dependency in your app-level `build.gradle`
 
 ```groovy
-implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.10'
+implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.15'
 ```
 - Add these permissions in your project
 ```xml
@@ -671,29 +668,6 @@ firstLatLng.distanceTo(secondLatLng)
 
 ### [Proguard](#proguard)
 ```
-# Retrofit 2 
-# Platform calls Class.forName on types which do not exist on Android to determine platform.
--dontnote retrofit2.Platform 
-# Platform used when running on RoboVM on iOS. Will not be used at runtime.
--dontnote retrofit2.Platform$IOS$MainThreadExecutor 
-# Platform used when running on Java 8 VMs. Will not be used at runtime.
--dontwarn retrofit2.Platform$Java8 
-# Retain generic type information for use by reflection by converters and adapters.
--keepattributes *Annotation*,Signature 
-# Retain declared checked exceptions for use by a Proxy instance. 
- -keepattributes Exceptions 
-# For using GSON @Expose annotation
--keepattributes *Annotation* 
-# Gson specific classes 
--dontwarn sun.misc.** 
--dontwarn okio.** 
--dontwarn okhttp3.**
--keep class retrofit.** 
--keep class retrofit.** { *; } 
--keepclasseswithmembers class * { 
- @retrofit.http.* <methods>;
-}
-
 -keep class com.mmi.services.account.** {
     <fields>;
     <methods>;
