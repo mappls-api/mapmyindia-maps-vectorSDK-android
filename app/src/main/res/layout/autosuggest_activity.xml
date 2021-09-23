@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
       android:id="@+id/map_view"
         android:layout_above="@+id/layoutBottom"
-        android:name="com.mapbox.mapboxsdk.maps.SupportMapFragment"/>
+        android:name="com.mapmyindia.sdk.maps.SupportMapFragment"/>
 
     <EditText
         android:id="@+id/auto_suggest"

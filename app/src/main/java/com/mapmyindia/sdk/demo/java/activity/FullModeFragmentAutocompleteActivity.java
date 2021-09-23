@@ -9,15 +9,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.settings.MapmyIndiaPlaceWidgetSetting;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapmyindia.sdk.plugins.places.autocomplete.ui.PlaceAutocompleteFragment;
 import com.mapmyindia.sdk.plugins.places.autocomplete.ui.PlaceSelectionListener;
@@ -25,7 +25,7 @@ import com.mmi.services.api.autosuggest.model.ELocation;
 
 public class FullModeFragmentAutocompleteActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MapView mapView;
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private TextView search;
 
     @Override
@@ -95,10 +95,9 @@ public class FullModeFragmentAutocompleteActivity extends AppCompatActivity impl
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
 
-        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
         mapmyIndiaMap.setMinZoomPreference(4);

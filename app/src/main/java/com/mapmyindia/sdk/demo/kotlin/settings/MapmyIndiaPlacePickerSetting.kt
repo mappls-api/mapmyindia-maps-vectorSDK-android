@@ -1,8 +1,8 @@
 package com.mapmyindia.sdk.demo.kotlin.settings
 
 import android.R
-import com.mapbox.geojson.Point
 import com.mapmyindia.sdk.demo.java.settings.MapmyIndiaPlacePickerSetting
+import com.mapmyindia.sdk.geojson.Point
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions
 
  class MapmyIndiaPlacePickerSetting {

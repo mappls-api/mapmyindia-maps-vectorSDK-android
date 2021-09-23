@@ -4,15 +4,15 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.Icon;
+import com.mapmyindia.sdk.maps.annotations.IconFactory;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
 
 
 /**
@@ -22,7 +22,7 @@ import com.mapmyindia.sdk.demo.R;
 public class IndoorActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
-    private MapboxMap map;
+    private MapmyIndiaMap map;
 
 
     @Override
@@ -38,7 +38,7 @@ public class IndoorActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onMapReady(MapboxMap map) {
+    public void onMapReady(MapmyIndiaMap map) {
         this.map = map;
         //To turn on layer control
         map.getUiSettings().setLayerControlEnabled(true);

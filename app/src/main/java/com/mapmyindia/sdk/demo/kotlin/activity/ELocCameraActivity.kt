@@ -4,18 +4,19 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraELocUpdateFactory
 
 
 /**
  * Created by Saksham on 26-11-2020.
  */
-class ELocCameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListener, MapboxMap.OnCameraMoveListener, MapboxMap.OnCameraIdleListener, MapboxMap.OnCameraMoveCanceledListener {
+class ELocCameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListener, MapmyIndiaMap.OnCameraMoveListener, MapmyIndiaMap.OnCameraIdleListener, MapmyIndiaMap.OnCameraMoveCanceledListener {
 
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private lateinit var mapView: MapView
     private var moveCamera: TextView? = null
     private var easeCamera: TextView? = null
@@ -46,7 +47,7 @@ class ELocCameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClick
         animateCamera = findViewById(R.id.animateCamera)
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
 
 
@@ -54,7 +55,7 @@ class ELocCameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClick
 
         mapmyIndiaMap.setPadding(20, 20, 20, 20)
 
-        mapmyIndiaMap.animateCamera("MMI000", 14.0)
+        mapmyIndiaMap.animateCamera(CameraELocUpdateFactory.newELocZoom("MMI000", 14.0))
 
         //Map related listeners
         mapmyIndiaMap.addOnCameraMoveListener(this)
@@ -80,9 +81,9 @@ class ELocCameraActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClick
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.moveCamera -> mapmyIndiaMap?.moveCamera("2T7S17", 14.0)
-            R.id.easeCamera -> mapmyIndiaMap?.easeCamera("5EU4EZ", 14.0)
-            R.id.animateCamera -> mapmyIndiaMap?.animateCamera("IB3BR9", 14.0)
+            R.id.moveCamera -> mapmyIndiaMap?.moveCamera(CameraELocUpdateFactory.newELocZoom("2T7S17", 14.0))
+            R.id.easeCamera -> mapmyIndiaMap?.easeCamera(CameraELocUpdateFactory.newELocZoom("5EU4EZ", 14.0))
+            R.id.animateCamera -> mapmyIndiaMap?.animateCamera(CameraELocUpdateFactory.newELocZoom("IB3BR9", 14.0))
         }
     }
 

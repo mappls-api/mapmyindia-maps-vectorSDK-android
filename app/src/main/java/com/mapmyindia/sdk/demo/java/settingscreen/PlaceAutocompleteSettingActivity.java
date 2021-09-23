@@ -12,11 +12,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.mapbox.geojson.Point;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.ActivityPlaceAutocompleteSettingBinding;
 import com.mapmyindia.sdk.demo.java.settings.MapmyIndiaPlaceWidgetSetting;
 import com.mapmyindia.sdk.demo.java.utils.InputFilterMinMax;
+import com.mapmyindia.sdk.geojson.Point;
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mmi.services.api.autosuggest.AutoSuggestCriteria;
 

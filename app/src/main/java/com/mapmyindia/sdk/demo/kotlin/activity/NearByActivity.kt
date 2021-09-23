@@ -10,18 +10,21 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.adapter.NearByAdapter
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
+import com.mapmyindia.sdk.maps.camera.CameraELocUpdateFactory
+import com.mapmyindia.sdk.maps.camera.CameraPosition
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mmi.services.api.OnResponseCallback
 import com.mmi.services.api.nearby.MapmyIndiaNearby
+import com.mmi.services.api.nearby.MapmyIndiaNearbyManager
 import com.mmi.services.api.nearby.model.NearbyAtlasResponse
 import com.mmi.services.api.nearby.model.NearbyAtlasResult
 import retrofit2.Call
@@ -33,7 +36,7 @@ import java.util.*
  * Created by CEINFO on 26-02-2019.
  */
 class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private var mapView: MapView? = null
     private var transparentProgressDialog: TransparentProgressDialog? = null
     private var recyclerView: androidx.recyclerview.widget.RecyclerView? = null
@@ -100,7 +103,7 @@ class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
         transparentProgressDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
 
 
@@ -121,6 +124,7 @@ class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
             } else {
                 Toast.makeText(this@NearByActivity, getString(R.string.pleaseCheckInternetConnection), Toast.LENGTH_SHORT).show()
             }
+            return@addOnMapClickListener false
         }
     }
 
@@ -147,7 +151,7 @@ class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
         val builder = MapmyIndiaNearby.builder()
         if (!TextUtils.isEmpty(location)) {
             if (!location.contains(",")) {
-                mapmyIndiaMap!!.moveCamera(location, 11.0)
+                mapmyIndiaMap!!.moveCamera(CameraELocUpdateFactory.newELocZoom(location, 11.0))
                 builder.setLocation(location)
             } else {
               mapmyIndiaMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.split(",").toTypedArray()[0].toDouble(), location.split(",").toTypedArray()[1].toDouble()), 14.0))
@@ -160,29 +164,24 @@ class NearByActivity : AppCompatActivity(), OnMapReadyCallback {
 
         builder.radius(radius)
                 .build()
-                .enqueueCall(object : Callback<NearbyAtlasResponse> {
-                    override fun onResponse(call: Call<NearbyAtlasResponse>, response: Response<NearbyAtlasResponse>) {
-
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                val nearByList = response.body()!!.suggestedLocations
-                                if (nearByList.size > 0) {
-                                    addMarker(nearByList)
-                                }
-                            } else {
-                                Toast.makeText(this@NearByActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
-                            }
-                        } else {
-                            Toast.makeText(this@NearByActivity, response.message(), Toast.LENGTH_LONG).show()
-                        }
-
-                        progressDialogHide()
+        MapmyIndiaNearbyManager.newInstance(builder.build()).call(object : OnResponseCallback<NearbyAtlasResponse> {
+            override fun onSuccess(nearbyResponse: NearbyAtlasResponse?) {
+                if (nearbyResponse != null) {
+                    val nearByList = nearbyResponse.suggestedLocations
+                    if (nearByList.size > 0) {
+                        addMarker(nearByList)
                     }
+                } else {
+                    Toast.makeText(this@NearByActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
+                }
+                progressDialogHide()
+            }
 
-                    override fun onFailure(call: Call<NearbyAtlasResponse>, t: Throwable) {
-                        progressDialogHide()
-                    }
-                })
+            override fun onError(p0: Int, p1: String?) {
+                progressDialogHide()
+            }
+
+        })
     }
 
 

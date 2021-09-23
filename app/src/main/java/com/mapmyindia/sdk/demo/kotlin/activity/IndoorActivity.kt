@@ -3,15 +3,16 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.mapboxsdk.annotations.Icon
-import com.mapbox.mapboxsdk.annotations.IconFactory
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.demo.databinding.ActivityAddMarkerBinding
 import com.mapmyindia.sdk.demo.databinding.IndoorLayoutBinding
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.annotations.Icon
+import com.mapmyindia.sdk.maps.annotations.IconFactory
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
+import com.mapmyindia.sdk.maps.camera.CameraPosition
+import com.mapmyindia.sdk.maps.geometry.LatLng
 
 
 /**
@@ -19,7 +20,7 @@ import com.mapmyindia.sdk.demo.databinding.IndoorLayoutBinding
  */
 class IndoorActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private var map: MapboxMap? = null
+    private var map: MapmyIndiaMap? = null
     private lateinit var mBinding :IndoorLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,16 +35,16 @@ class IndoorActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         map = mapmyIndiaMap
         //To turn on layer control
-        mapmyIndiaMap?.uiSettings?.isLayerControlEnabled = true
+        mapmyIndiaMap.uiSettings?.isLayerControlEnabled = true
 
 
 
         val iconFactory: IconFactory = IconFactory.getInstance(this)
         val icon: Icon = iconFactory.fromResource(R.drawable.placeholder)
-        mapmyIndiaMap?.addMarker(MarkerOptions()
+        mapmyIndiaMap.addMarker(MarkerOptions()
                 .position(LatLng(28.5425071, 77.1560724))
                 .icon(icon))
 
@@ -53,7 +54,7 @@ class IndoorActivity : AppCompatActivity(), OnMapReadyCallback {
                 .tilt(0.0)
                 .build()
 
-        mapmyIndiaMap?.cameraPosition = cameraPosition
+        mapmyIndiaMap.cameraPosition = cameraPosition
     }
 
     override fun onStart() {

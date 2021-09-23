@@ -7,14 +7,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.BaseLayoutBinding
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds
 
 /**
  * Created by Saksham on 2/12/19.
@@ -39,22 +39,22 @@ class AddCustomInfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
 
 
 
         latLngList.forEach {
-            mapmyIndiaMap?.addMarker(MarkerOptions().position(it).setTitle("XYZ"))
+            mapmyIndiaMap.addMarker(MarkerOptions().position(it).setTitle("XYZ"))
         }
 
-        mapmyIndiaMap?.setInfoWindowAdapter {
+        mapmyIndiaMap.setInfoWindowAdapter {
             val view: View? = LayoutInflater.from(this@AddCustomInfoWindowActivity).inflate(R.layout.custom_info_window_layout, null)
             val textView: TextView = view?.findViewById(R.id.text)!!
             textView.text = it.title
             return@setInfoWindowAdapter view
         }
 
-        mapmyIndiaMap?.setOnMarkerClickListener {
+        mapmyIndiaMap.setOnMarkerClickListener {
             Toast.makeText(this, it.position.toString(), Toast.LENGTH_SHORT).show()
             return@setOnMarkerClickListener false
         }
@@ -63,7 +63,7 @@ class AddCustomInfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
                 .includes(latLngList)
                 .build()
 
-        mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100, 10, 100, 10))
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100, 10, 100, 10))
 
     }
 

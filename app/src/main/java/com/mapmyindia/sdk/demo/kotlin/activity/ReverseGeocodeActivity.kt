@@ -3,17 +3,19 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
+import com.mapmyindia.sdk.maps.camera.CameraPosition
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mmi.services.api.OnResponseCallback
 import com.mmi.services.api.PlaceResponse
 import com.mmi.services.api.reversegeocode.MapmyIndiaReverseGeoCode
+import com.mmi.services.api.reversegeocode.MapmyIndiaReverseGeoCodeManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,7 +25,7 @@ import retrofit2.Response
  */
 class ReverseGeocodeActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private var mapView: MapView? = null
     private var transparentProgressDialog: TransparentProgressDialog? = null
 
@@ -36,7 +38,7 @@ class ReverseGeocodeActivity : AppCompatActivity(), OnMapReadyCallback {
         transparentProgressDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
         mapmyIndiaMap.cameraPosition = setCameraAndTilt()
 
@@ -51,6 +53,7 @@ class ReverseGeocodeActivity : AppCompatActivity(), OnMapReadyCallback {
             } else {
                 Toast.makeText(this@ReverseGeocodeActivity, getString(R.string.pleaseCheckInternetConnection), Toast.LENGTH_SHORT).show()
             }
+            return@addOnMapClickListener false
         }
     }
 
@@ -69,35 +72,29 @@ class ReverseGeocodeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun reverseGeocode(latitude: Double?, longitude: Double?) {
         progressDialogShow()
-        MapmyIndiaReverseGeoCode.builder()
+        val reverseGeoCode = MapmyIndiaReverseGeoCode.builder()
                 .setLocation(latitude!!, longitude!!)
-                .build().enqueueCall(object : Callback<PlaceResponse> {
-                    override fun onResponse(call: Call<PlaceResponse>, response: Response<PlaceResponse>) {
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                val placesList = response.body()!!.places
-                                val place = placesList[0]
-                                val add = place.formattedAddress
-                                Toast.makeText(this@ReverseGeocodeActivity, add, Toast.LENGTH_LONG).show()
-                            } else {
-                                Toast.makeText(this@ReverseGeocodeActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
-                            }
-                        } else {
-                            Toast.makeText(this@ReverseGeocodeActivity, response.message(), Toast.LENGTH_LONG).show()
-                        }
+                .build()
+        MapmyIndiaReverseGeoCodeManager.newInstance(reverseGeoCode).call(object : OnResponseCallback<PlaceResponse> {
+            override fun onSuccess(placeResponse: PlaceResponse?) {
+                if (placeResponse != null) {
+                    val placesList = placeResponse.places
+                    val place = placesList[0]
+                    val add = place.formattedAddress
+                    Toast.makeText(this@ReverseGeocodeActivity, add, Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this@ReverseGeocodeActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-                        progressDialogHide()
-                    }
-
-                    override fun onFailure(call: Call<PlaceResponse>, t: Throwable) {
-                        progressDialogHide()
-                        Toast.makeText(this@ReverseGeocodeActivity, t.toString(), Toast.LENGTH_LONG).show()
-                    }
-                })
+            override fun onError(p0: Int, p1: String?) {
+                Toast.makeText(this@ReverseGeocodeActivity, p1, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun addMarker(latitude: Double, longitude: Double) {
-        mapmyIndiaMap!!.addMarker(MarkerOptions().position(LatLng(
+        mapmyIndiaMap?.addMarker(MarkerOptions().position(LatLng(
                 latitude, longitude)))
     }
 

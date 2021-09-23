@@ -11,24 +11,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.mapbox.android.core.location.LocationEngine
-import com.mapbox.android.core.location.LocationEngineListener
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.LocationComponent
-import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.location.OnCameraTrackingChangedListener
-import com.mapbox.mapboxsdk.location.modes.CameraMode
-import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityLocationCameraOptionsBinding
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.Style
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.location.LocationComponent
+import com.mapmyindia.sdk.maps.location.LocationComponentActivationOptions
+import com.mapmyindia.sdk.maps.location.LocationComponentOptions
+import com.mapmyindia.sdk.maps.location.OnCameraTrackingChangedListener
+import com.mapmyindia.sdk.maps.location.engine.LocationEngine
+import com.mapmyindia.sdk.maps.location.engine.LocationEngineCallback
+import com.mapmyindia.sdk.maps.location.engine.LocationEngineRequest
+import com.mapmyindia.sdk.maps.location.engine.LocationEngineResult
+import com.mapmyindia.sdk.maps.location.modes.CameraMode
+import com.mapmyindia.sdk.maps.location.modes.RenderMode
+import java.lang.Exception
 
 
-class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, LocationEngineListener, OnCameraTrackingChangedListener {
+class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, LocationEngineCallback<LocationEngineResult>, OnCameraTrackingChangedListener {
     private lateinit var mBinding:ActivityLocationCameraOptionsBinding
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private lateinit var locationComponent: LocationComponent
     private var locationEngine: LocationEngine? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,23 +48,42 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
     override fun onMapError(p0: Int, p1: String?) {
     }
 
-    override fun onMapReady(mapmyIndia: MapboxMap?) {
-        this.mapmyIndiaMap = mapmyIndia
-        enableLocation()
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap
+        mapmyIndiaMap.getStyle {
+            enableLocation(it)
+        }
 
     }
 
-    fun enableLocation() {
+    fun enableLocation(style: Style) {
         val options: LocationComponentOptions = LocationComponentOptions.builder(this)
                 .trackingGesturesManagement(true)
                 .accuracyColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
                 .build()
-        locationComponent = mapmyIndiaMap!!.locationComponent
-        locationComponent.activateLocationComponent(this, options)
+        locationComponent = mapmyIndiaMap?.locationComponent!!
+        val locationComponentActivationOptions = LocationComponentActivationOptions.builder(this, style)
+                .locationComponentOptions(options)
+                .build()
+        locationComponent.activateLocationComponent(locationComponentActivationOptions)
         locationComponent.addOnCameraTrackingChangedListener(this)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         locationComponent.isLocationComponentEnabled = true
         locationEngine = locationComponent.locationEngine!!
-        locationEngine?.addLocationEngineListener(this)
+        val request = LocationEngineRequest.Builder(1000)
+                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
+                .build()
+        locationEngine?.requestLocationUpdates(request, this, mainLooper)
+        locationEngine?.getLastLocation(this)
         locationComponent.cameraMode = CameraMode.TRACKING
         locationComponent.renderMode = RenderMode.COMPASS
     }
@@ -71,10 +95,7 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
 
     override fun onResume() {
         super.onResume()
-        if (locationEngine != null) {
-            locationEngine?.removeLocationEngineListener(this);
-            locationEngine?.addLocationEngineListener(this);
-        }
+
         mBinding.addMapView.onResume();
 
     }
@@ -82,24 +103,18 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
     override fun onPause() {
         super.onPause()
         mBinding.addMapView.onPause();
-        if (locationEngine != null)
-            locationEngine?.removeLocationEngineListener(this);
     }
 
     override fun onStop() {
         super.onStop()
         mBinding.addMapView.onStop();
-        if (locationEngine != null) {
-            locationEngine?.removeLocationEngineListener(this);
-            locationEngine?.removeLocationUpdates();
-        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mBinding.addMapView.onDestroy();
         if (locationEngine != null) {
-            locationEngine?.deactivate();
+            locationEngine?.removeLocationUpdates(this)
         }
     }
 
@@ -113,27 +128,17 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
         mBinding.addMapView.onSaveInstanceState(outState)
     }
 
-    override fun onLocationChanged(location: Location?) {
-        mapmyIndiaMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location!!.latitude, location!!.longitude), 16.0))
-
-
-    }
-
-
-    override fun onConnected() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
+    override fun onSuccess(p0: LocationEngineResult?) {
+        if(p0 != null) {
+            val location = p0.lastLocation
+            mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location!!.latitude, location.longitude), 16.0))
         }
-        locationEngine!!.requestLocationUpdates();
-
     }
+
+    override fun onFailure(p0: Exception) {
+        p0.stackTrace
+    }
+
 
 
     private fun setButtonOnClickListener() {

@@ -1,26 +1,28 @@
 package com.mapmyindia.sdk.demo.kotlin.activity
 
+import android.location.Location
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import androidx.core.content.ContextCompat
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.kotlin.settings.MapmyIndiaPlaceWidgetSetting
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
+import com.mapmyindia.sdk.maps.camera.CameraPosition
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapmyindia.sdk.plugins.places.autocomplete.ui.PlaceAutocompleteFragment
 import com.mapmyindia.sdk.plugins.places.autocomplete.ui.PlaceSelectionListener
 import com.mmi.services.api.autosuggest.model.ELocation
 
 
-class CardModeFragmentAutocompleteActivity : AppCompatActivity(), OnMapReadyCallback{
+class CardModeFragmentAutocompleteActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mapView: MapView
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,13 +76,9 @@ class CardModeFragmentAutocompleteActivity : AppCompatActivity(), OnMapReadyCall
 
     override fun onMapError(p0: Int, p1: String?) {}
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
 
-        //mapmyIndiaMap?.setPadding(20, 20, 20, 20)
-
-        mapmyIndiaMap!!.setMinZoomPreference(4.0)
-        mapmyIndiaMap.setMaxZoomPreference(18.0)
         mapmyIndiaMap.cameraPosition = CameraPosition.Builder().target(LatLng(28.0, 77.0)).zoom(4.0).build()
         callAutoComplete()
 

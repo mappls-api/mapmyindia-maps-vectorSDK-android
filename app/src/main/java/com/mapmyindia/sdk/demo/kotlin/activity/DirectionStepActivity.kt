@@ -4,10 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mapbox.geojson.Point
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.kotlin.adapter.StepsAdapter
+import com.mapmyindia.sdk.geojson.Point
+import com.mmi.services.api.OnResponseCallback
 import com.mmi.services.api.directions.DirectionsCriteria
+import com.mmi.services.api.directions.MapmyIndiaDirectionManager
 import com.mmi.services.api.directions.MapmyIndiaDirections
 import com.mmi.services.api.directions.models.DirectionsResponse
 import com.mmi.services.api.directions.models.LegStep
@@ -26,36 +28,34 @@ class DirectionStepActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recycler)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        MapmyIndiaDirections.builder()
+        val directions = MapmyIndiaDirections.builder()
                 .origin(Point.fromLngLat(73.041932, 19.018686))
                 .destination(Point.fromLngLat(73.040028, 19.019499))
                 .profile(DirectionsCriteria.PROFILE_DRIVING)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE)
                 .steps(true)
                 .alternatives(false)
-                .overview(DirectionsCriteria.OVERVIEW_FULL).build().enqueueCall(object : Callback<DirectionsResponse> {
-                    override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {
-
-                    }
-
-                    override fun onResponse(call: Call<DirectionsResponse>, response: Response<DirectionsResponse>) {
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                val directionsResponse = response.body()
-                                val results = directionsResponse?.routes()
-                                if (results?.size ?: 0 > 0) {
-                                    val routeLegList = results?.get(0)?.legs()
-                                    val legSteps: MutableList<LegStep> = ArrayList()
-                                    for (routeLeg in routeLegList!!) {
-                                        legSteps.addAll(routeLeg.steps()!!)
-                                    }
-                                    if (legSteps.size > 0) {
-                                        recyclerView.adapter = StepsAdapter(legSteps)
-                                    }
-                                }
-                            }
+                .overview(DirectionsCriteria.OVERVIEW_FULL).build()
+        MapmyIndiaDirectionManager.newInstance(directions).call(object: OnResponseCallback<DirectionsResponse>{
+            override fun onSuccess(directionsResponse: DirectionsResponse?) {
+                if (directionsResponse != null) {
+                    val results = directionsResponse.routes()
+                    if (results.size ?: 0 > 0) {
+                        val routeLegList = results[0]?.legs()
+                        val legSteps: MutableList<LegStep> = ArrayList()
+                        for (routeLeg in routeLegList!!) {
+                            legSteps.addAll(routeLeg.steps()!!)
+                        }
+                        if (legSteps.size > 0) {
+                            recyclerView.adapter = StepsAdapter(legSteps)
                         }
                     }
-                })
+                }
+            }
+
+            override fun onError(p0: Int, p1: String?) {
+            }
+
+        })
     }
 }

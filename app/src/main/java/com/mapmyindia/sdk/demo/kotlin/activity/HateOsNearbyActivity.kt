@@ -13,19 +13,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.adapter.AutoSuggestSearchesAdapter
 import com.mapmyindia.sdk.demo.java.adapter.NearByAdapter
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mmi.services.api.OnResponseCallback
 import com.mmi.services.api.autosuggest.MapmyIndiaAutoSuggest
+import com.mmi.services.api.autosuggest.MapmyIndiaAutosuggestManager
 import com.mmi.services.api.autosuggest.model.AutoSuggestAtlasResponse
 import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearby
+import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearbyManager
 import com.mmi.services.api.nearby.model.NearbyAtlasResponse
 import com.mmi.services.api.nearby.model.NearbyAtlasResult
 import retrofit2.Call
@@ -35,7 +38,7 @@ import java.util.*
 
 class HateOsNearbyActivity : AppCompatActivity(), OnMapReadyCallback,TextView.OnEditorActionListener {
 
-    private lateinit var mapmyIndiaMap: MapboxMap
+    private lateinit var mapmyIndiaMap: MapmyIndiaMap
     private lateinit var autoSuggestText: EditText
     private lateinit var mapView: MapView
     private lateinit var transparentProgressDialog: TransparentProgressDialog
@@ -99,68 +102,56 @@ class HateOsNearbyActivity : AppCompatActivity(), OnMapReadyCallback,TextView.On
 
     private fun callAutoSuggestApi(searchString: String) {
         progressDialogShow()
-        MapmyIndiaAutoSuggest.builder()
+        val autoSuggest = MapmyIndiaAutoSuggest.builder()
                 .query(searchString)
                 .bridge(true)
                 .build()
-                .enqueueCall(object : Callback<AutoSuggestAtlasResponse?> {
-                    override fun onResponse(call: Call<AutoSuggestAtlasResponse?>, response: Response<AutoSuggestAtlasResponse?>) {
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                val suggestedSearches = response.body()!!.suggestedSearches
-                                if (suggestedSearches.size > 0) {
-                                    autoSuggestRecyclerView.visibility = View.VISIBLE
-                                    val autoSuggestAdapter = AutoSuggestSearchesAdapter(suggestedSearches, AutoSuggestSearchesAdapter.SuggestedSearches { hyperlink: String? ->
-                                        callHateOs(hyperlink!!)
-                                        autoSuggestRecyclerView.visibility = View.GONE
-                                    })
-                                    autoSuggestRecyclerView.adapter = autoSuggestAdapter
-                                } else {
-                                    Toast.makeText(this@HateOsNearbyActivity, "No hyperlinks found...", Toast.LENGTH_SHORT).show()
-                                }
-                            } else {
-                                showToast("Not able to get value, Try again.")
-                            }
-                        } else {
+        MapmyIndiaAutosuggestManager.newInstance(autoSuggest).call(object : OnResponseCallback<AutoSuggestAtlasResponse> {
+            override fun onSuccess(p0: AutoSuggestAtlasResponse?) {
+                val suggestedSearches =p0?.suggestedSearches
+                if (suggestedSearches?.size?:0 > 0) {
+                    autoSuggestRecyclerView.visibility = View.VISIBLE
+                    val autoSuggestAdapter = AutoSuggestSearchesAdapter(suggestedSearches, AutoSuggestSearchesAdapter.SuggestedSearches { hyperlink: String? ->
+                        callHateOs(hyperlink!!)
+                        autoSuggestRecyclerView.visibility = View.GONE
+                    })
+                    autoSuggestRecyclerView.adapter = autoSuggestAdapter
+                } else {
+                    progressDialogHide()
+                    Toast.makeText(this@HateOsNearbyActivity, "No hyperlinks found...", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-                            showToast(response.message())
-                        }
-                        progressDialogHide()
-                    }
-
-                    override fun onFailure(call: Call<AutoSuggestAtlasResponse?>, t: Throwable) {
-                        showToast(t.toString())
-                        progressDialogHide()
-                    }
-                })
+            override fun onError(p0: Int, p1: String?) {
+                progressDialogHide()
+                showToast(p1?:"Something went wrong")
+            }
+        })
     }
 
     private fun callHateOs(hyperlink: String) {
-        MapmyIndiaHateosNearby.builder()
+        val hateOs = MapmyIndiaHateosNearby.builder()
                 .hyperlink(hyperlink)
                 .build()
-                .enqueueCall(object : Callback<NearbyAtlasResponse?> {
-                    override fun onResponse(call: Call<NearbyAtlasResponse?>, response: Response<NearbyAtlasResponse?>) {
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                val nearByList = response.body()!!.suggestedLocations
-                                if (nearByList.size > 0) {
-                                    addMarker(nearByList)
-                                }
-                            } else {
-                                Toast.makeText(this@HateOsNearbyActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
-                            }
-                        } else {
-                            Toast.makeText(this@HateOsNearbyActivity, response.message(), Toast.LENGTH_LONG).show()
-                        }
-                        progressDialogHide()
+        MapmyIndiaHateosNearbyManager.newInstance(hateOs).call(object : OnResponseCallback<NearbyAtlasResponse> {
+            override fun onSuccess(nearbyAtlasResponse: NearbyAtlasResponse?) {
+                if (nearbyAtlasResponse != null) {
+                    val nearByList = nearbyAtlasResponse.suggestedLocations
+                    if (nearByList.size > 0) {
+                        addMarker(nearByList)
                     }
+                } else {
+                    Toast.makeText(this@HateOsNearbyActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
+                }
+                progressDialogHide()
+            }
 
-                    override fun onFailure(call: Call<NearbyAtlasResponse?>, t: Throwable) {
-                        showToast(t.toString())
-                        progressDialogHide()
-                    }
-                })
+            override fun onError(p0: Int, p1: String?) {
+                progressDialogHide()
+                showToast(p1?:"Something went wrong")
+            }
+
+        })
     }
 
     private fun addMarker(nearByList: ArrayList<NearbyAtlasResult>) {
@@ -178,7 +169,7 @@ class HateOsNearbyActivity : AppCompatActivity(), OnMapReadyCallback,TextView.On
     override fun onMapError(p0: Int, p1: String?) {
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
 
 

@@ -1,8 +1,8 @@
 package com.mapmyindia.sdk.demo.kotlin.activity
 
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityNearbyPluginBinding

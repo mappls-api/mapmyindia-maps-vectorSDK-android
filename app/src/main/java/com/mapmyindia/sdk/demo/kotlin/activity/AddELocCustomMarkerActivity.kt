@@ -3,13 +3,15 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.mapboxsdk.annotations.Icon
-import com.mapbox.mapboxsdk.annotations.IconFactory
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.annotations.Icon
+import com.mapmyindia.sdk.maps.annotations.IconFactory
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
+import com.mapmyindia.sdk.maps.camera.CameraELocUpdateFactory
 
 /**
  * Created by Saksham on 26-11-2020.
@@ -28,15 +30,13 @@ class AddELocCustomMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapError(p0: Int, p1: String?) {}
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
 
-
-        mapmyIndiaMap?.setPadding(20, 20, 20, 20)
 
 
         var iconFactory = IconFactory.getInstance(this)
         var icon: Icon = iconFactory.fromResource(R.drawable.placeholder)
-        mapmyIndiaMap?.addMarker(MarkerOptions().eLoc("MMI000").icon(icon), object : MapboxMap.OnMarkerAddedListener {
+        mapmyIndiaMap.addMarker(MarkerOptions().eLoc("MMI000").icon(icon), object : MapmyIndiaMap.OnMarkerAddedListener {
             override fun onSuccess() {
                 Toast.makeText(this@AddELocCustomMarkerActivity, "Marker added Successfully", Toast.LENGTH_SHORT).show()
             }
@@ -48,7 +48,7 @@ class AddELocCustomMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
         /* this is done for animating/moving camera to particular position */
-        mapmyIndiaMap?.animateCamera("MMI000", 16.0)
+        mapmyIndiaMap.animateCamera(CameraELocUpdateFactory.newELocZoom("MMI000", 16.0))
     }
 
     override fun onStart() {

@@ -7,21 +7,22 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.ActivityAddMarkerBinding;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.Marker;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraELocUpdateFactory;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddELocMarkerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private ActivityAddMarkerBinding mBinding;
 
     @Override
@@ -56,7 +57,7 @@ public class AddELocMarkerActivity extends AppCompatActivity implements OnMapRea
                 eLocs.add(eLoc);
             }
 
-            List<Marker> markers = mapmyIndiaMap.addMarkers(markerOptions, new MapboxMap.OnMarkerAddedListener() {
+            List<Marker> markers = mapmyIndiaMap.addMarkers(markerOptions, new MapmyIndiaMap.OnMarkerAddedListener() {
                 @Override
                 public void onSuccess() {
                     Toast.makeText(AddELocMarkerActivity.this, "Marker Added Successfully", Toast.LENGTH_SHORT).show();
@@ -70,9 +71,9 @@ public class AddELocMarkerActivity extends AppCompatActivity implements OnMapRea
 
             if(eLocs.size() > 0) {
                 if(eLocs.size() == 1) {
-                    mapmyIndiaMap.animateCamera(eLocs.get(0), 16);
+                    mapmyIndiaMap.animateCamera(CameraELocUpdateFactory.newELocZoom(eLocs.get(0), 16));
                 } else {
-                    mapmyIndiaMap.animateCamera(eLocs, 10 , 100, 10, 10);
+                    mapmyIndiaMap.animateCamera(CameraELocUpdateFactory.newELocBounds(eLocs, 10 , 100, 10, 10));
                 }
             }
 
@@ -124,7 +125,7 @@ public class AddELocMarkerActivity extends AppCompatActivity implements OnMapRea
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
+    public void onMapReady(MapmyIndiaMap mapboxMap) {
         this.mapmyIndiaMap = mapboxMap;
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(28, 77), 5));
         mBinding.layoutEloc.setVisibility(View.VISIBLE);

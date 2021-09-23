@@ -7,29 +7,29 @@ import android.animation.ValueAnimator
 import android.graphics.Color
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.content.ContextCompat
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.LineString
-import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapView.OnMapChangedListener
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.style.expressions.Expression
-import com.mapbox.mapboxsdk.style.layers.LineLayer
-import com.mapbox.mapboxsdk.style.layers.Property
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.mapboxsdk.utils.BitmapUtils
-import com.mapbox.turf.TurfMeasurement
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.geojson.Feature
+import com.mapmyindia.sdk.geojson.LineString
+import com.mapmyindia.sdk.geojson.Point
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.Style
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.style.expressions.Expression
+import com.mapmyindia.sdk.maps.style.layers.LineLayer
+import com.mapmyindia.sdk.maps.style.layers.Property
+import com.mapmyindia.sdk.maps.style.layers.PropertyFactory
+import com.mapmyindia.sdk.maps.style.layers.SymbolLayer
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource
+import com.mapmyindia.sdk.maps.utils.BitmapUtils
+import com.mapmyindia.sdk.turf.TurfMeasurement
 import com.mmi.services.api.directions.models.DirectionsRoute
 import com.mmi.services.utils.Constants
 
 /**
  ** Created by Saksham on 01-05-2021.
  **/
-class TrackingPlugin(private val mapView: MapView, private val mapmyIndiaMap: MapboxMap) : OnMapChangedListener {
+class TrackingPlugin(private val mapView: MapView, private val mapmyIndiaMap: MapmyIndiaMap) : MapView.OnDidFinishLoadingStyleListener {
 
 
     private var car: Car? = null
@@ -48,18 +48,20 @@ class TrackingPlugin(private val mapView: MapView, private val mapmyIndiaMap: Ma
     }
 
     init {
-        mapmyIndiaMap.addImage(CAR, BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(mapView.context, R.drawable.ic_bike_icon_grey)))
-        initialisePolylineLayerAndSource()
-        initialiseMarkerLayerAndSource()
-        mapView.addOnMapChangedListener(this)
+        mapmyIndiaMap.getStyle {
+            it.addImage(CAR, BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(mapView.context, R.drawable.ic_bike_icon_grey))!!)
+            initialisePolylineLayerAndSource(it)
+            initialiseMarkerLayerAndSource(it)
+        }
+        mapView.addOnDidFinishLoadingStyleListener(this)
     }
 
-    override fun onMapChanged(change: Int) {
-        if (change == MapView.DID_FINISH_LOADING_STYLE) {
-            mapmyIndiaMap.addImage(CAR, BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(mapView.context, R.drawable.ic_bike_icon_grey)))
-            updatePolylineSource()
-            updateMarkerSource()
+    override fun onDidFinishLoadingStyle() {
+        mapmyIndiaMap.getStyle {
+            it.addImage(CAR, BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(mapView.context, R.drawable.ic_bike_icon_grey))!!)
         }
+        updatePolylineSource()
+        updateMarkerSource()
     }
 
     fun addMarker(point: Point?) {
@@ -69,7 +71,7 @@ class TrackingPlugin(private val mapView: MapView, private val mapmyIndiaMap: Ma
     }
 
     fun updatePolyline(route: DirectionsRoute?) {
-        if (route != null && route.geometry() != null) {
+        if (route?.geometry() != null) {
             polylineFeature = Feature.fromGeometry(LineString.fromPolyline(route.geometry()!!, Constants.PRECISION_6))
             updatePolylineSource()
         }
@@ -114,35 +116,39 @@ class TrackingPlugin(private val mapView: MapView, private val mapmyIndiaMap: Ma
     }
 
     private fun updateMarkerSource() {
-        if (mapmyIndiaMap.getSource(CAR_SOURCE) == null) {
-            initialiseMarkerLayerAndSource()
-            return
+        mapmyIndiaMap.getStyle {
+            val source = it.getSource(CAR_SOURCE) as GeoJsonSource?
+            if (source == null) {
+                initialiseMarkerLayerAndSource(it)
+                return@getStyle
+            }
+            source.setGeoJson(markerFeature)
         }
-        val source = mapmyIndiaMap.getSource(CAR_SOURCE) as GeoJsonSource?
-        source!!.setGeoJson(markerFeature)
     }
 
     private fun updatePolylineSource() {
-        if (mapmyIndiaMap.getSource(POLYLINE_SOURCE) == null) {
-            initialisePolylineLayerAndSource()
-            return
+        mapmyIndiaMap.getStyle {
+            val source = it.getSource(POLYLINE_SOURCE) as GeoJsonSource?
+            if (source == null) {
+                initialisePolylineLayerAndSource(it)
+                return@getStyle
+            }
+            source.setGeoJson(polylineFeature)
         }
-        val source = mapmyIndiaMap.getSource(POLYLINE_SOURCE) as GeoJsonSource?
-        source!!.setGeoJson(polylineFeature)
     }
 
     /**
      * Initialise the marker
      */
-    private fun initialiseMarkerLayerAndSource() {
-        if (mapmyIndiaMap.getSource(CAR_SOURCE) == null) {
+    private fun initialiseMarkerLayerAndSource(style: Style) {
+        if (style.getSource(CAR_SOURCE) == null) {
             if (markerFeature == null) {
-                mapmyIndiaMap.addSource(GeoJsonSource(CAR_SOURCE))
+                style.addSource(GeoJsonSource(CAR_SOURCE))
             } else {
-                mapmyIndiaMap.addSource(GeoJsonSource(CAR_SOURCE, markerFeature))
+                style.addSource(GeoJsonSource(CAR_SOURCE, markerFeature))
             }
         }
-        if (mapmyIndiaMap.getLayer(CAR_LAYER) == null) {
+        if (style.getLayer(CAR_LAYER) == null) {
             //Symbol layer for car
             val symbolLayer = SymbolLayer(CAR_LAYER, CAR_SOURCE)
             symbolLayer.withProperties(
@@ -152,15 +158,15 @@ class TrackingPlugin(private val mapView: MapView, private val mapmyIndiaMap: Ma
                     PropertyFactory.iconIgnorePlacement(true),
                     PropertyFactory.iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
             )
-            mapmyIndiaMap.addLayerAbove(symbolLayer, POLYLINE_LAYER)
+            style.addLayerAbove(symbolLayer, POLYLINE_LAYER)
         }
     }
 
-    private fun initialisePolylineLayerAndSource() {
-        if (mapmyIndiaMap.getSource(POLYLINE_SOURCE) == null) {
-            mapmyIndiaMap.addSource(GeoJsonSource(POLYLINE_SOURCE))
+    private fun initialisePolylineLayerAndSource(style: Style) {
+        if (style.getSource(POLYLINE_SOURCE) == null) {
+            style.addSource(GeoJsonSource(POLYLINE_SOURCE))
         }
-        if (mapmyIndiaMap.getLayer(POLYLINE_LAYER) == null) {
+        if (style.getLayer(POLYLINE_LAYER) == null) {
             val lineLayer = LineLayer(POLYLINE_LAYER, POLYLINE_SOURCE)
             lineLayer.setProperties(
                     PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
@@ -168,7 +174,7 @@ class TrackingPlugin(private val mapView: MapView, private val mapmyIndiaMap: Ma
                     PropertyFactory.lineColor(Color.BLACK),
                     PropertyFactory.lineWidth(4f)
             )
-            mapmyIndiaMap.addLayer(lineLayer)
+            style.addLayer(lineLayer)
         }
     }
 

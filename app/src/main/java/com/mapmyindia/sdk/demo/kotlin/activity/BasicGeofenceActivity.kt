@@ -3,8 +3,7 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapboxMap
+
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.LayoutBasicGeofenceBinding
 import com.mapmyindia.sdk.demo.kotlin.settings.MapmyIndiaGeofenceSetting
@@ -12,6 +11,8 @@ import com.mapmyindia.sdk.geofence.ui.GeoFence
 import com.mapmyindia.sdk.geofence.ui.listeners.GeoFenceViewCallback
 import com.mapmyindia.sdk.geofence.ui.views.GeoFenceOptions
 import com.mapmyindia.sdk.geofence.ui.views.GeoFenceView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.geometry.LatLng
 
 class BasicGeofenceActivity: AppCompatActivity(), GeoFenceViewCallback {
 
@@ -28,7 +29,7 @@ class BasicGeofenceActivity: AppCompatActivity(), GeoFenceViewCallback {
          if (MapmyIndiaGeofenceSetting.instance.isDefault){
             geofenceView = GeoFenceView(this);
              geoFence.isPolygon= false
-             geoFence.circleCenter=LatLng(24.6496185, 77.3062072)
+             geoFence.circleCenter= LatLng(24.6496185, 77.3062072)
             geoFence.circleRadius=200
 
         }else {
@@ -105,7 +106,7 @@ class BasicGeofenceActivity: AppCompatActivity(), GeoFenceViewCallback {
 
     }
 
-    override fun onGeoFenceReady(p0: MapboxMap?) {
+    override fun onGeoFenceReady(p0: MapmyIndiaMap) {
 
     }
 

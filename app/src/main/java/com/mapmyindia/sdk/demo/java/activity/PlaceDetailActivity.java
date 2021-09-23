@@ -12,15 +12,13 @@ import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.ActivityPlaceDetailBinding;
 import com.mapmyindia.sdk.demo.java.adapter.PlaceDetailAdapter;
 import com.mapmyindia.sdk.demo.java.model.PlaceDetailModel;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.placedetail.MapmyIndiaPlaceDetail;
+import com.mmi.services.api.placedetail.MapmyIndiaPlaceDetailManager;
 import com.mmi.services.api.placedetail.model.PlaceDetailResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PlaceDetailActivity extends AppCompatActivity {
 
@@ -48,32 +46,22 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     private void callELoc(String eLoc) {
         mBinding.progressBar.setVisibility(View.VISIBLE);
-        MapmyIndiaPlaceDetail.builder()
+        MapmyIndiaPlaceDetail placeDetail = MapmyIndiaPlaceDetail.builder()
                 .eLoc(eLoc)
-                .build().enqueueCall(new Callback<PlaceDetailResponse>() {
+                .build();
+        MapmyIndiaPlaceDetailManager.newInstance(placeDetail).call(new OnResponseCallback<PlaceDetailResponse>() {
             @Override
-            public void onResponse(Call<PlaceDetailResponse> call, Response<PlaceDetailResponse> response) {
-                mBinding.progressBar.setVisibility(View.GONE);
-                if(response.code() == 200) {
-                    PlaceDetailResponse placeDetailResponse = response.body();
-                    if(placeDetailResponse != null) {
-                        setValues(placeDetailResponse);
-                    } else {
-                        Toast.makeText(PlaceDetailActivity.this, "No Data Found", Toast.LENGTH_SHORT).show();
-                    }
-                } else if( response.code() == 204) {
-                    Toast.makeText(PlaceDetailActivity.this, "No Data Found", Toast.LENGTH_SHORT).show();
+            public void onSuccess(PlaceDetailResponse placeDetailResponse) {
+                if(placeDetailResponse != null) {
+                    setValues(placeDetailResponse);
                 } else {
-                    Toast.makeText(PlaceDetailActivity.this, "" + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlaceDetailActivity.this, "No Data Found", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<PlaceDetailResponse> call, Throwable t) {
-                mBinding.progressBar.setVisibility(View.GONE);
-                t.printStackTrace();
-                Toast.makeText(PlaceDetailActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-
+            public void onError(int i, String s) {
+                Toast.makeText(PlaceDetailActivity.this, s, Toast.LENGTH_SHORT).show();
             }
         });
     }

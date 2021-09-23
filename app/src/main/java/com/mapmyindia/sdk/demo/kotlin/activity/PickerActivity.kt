@@ -8,11 +8,12 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.demo.java.settingscreen.PlaceAutocompleteSettingActivity
 import com.mapmyindia.sdk.demo.kotlin.settings.MapmyIndiaPlacePickerSetting
 import com.mapmyindia.sdk.demo.kotlin.settingscreen.PlacePickerSettingsActivity
+import com.mapmyindia.sdk.maps.camera.CameraPosition
+import com.mapmyindia.sdk.maps.geometry.LatLng
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapmyindia.sdk.plugins.places.placepicker.PlacePicker
 import com.mapmyindia.sdk.plugins.places.placepicker.model.PlacePickerOptions

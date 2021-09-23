@@ -14,30 +14,31 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
-import com.mapbox.mapboxsdk.maps.SupportMapFragment
+
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet
 import com.mapmyindia.sdk.demo.kotlin.adapter.AutoSuggestAdapter
-import com.mapmyindia.sdk.demo.kotlin.kotlin.utility.TransparentProgressDialog
+import com.mapmyindia.sdk.demo.kotlin.utility.TransparentProgressDialog
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.SupportMapFragment
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mmi.services.api.OnResponseCallback
 import com.mmi.services.api.autosuggest.MapmyIndiaAutoSuggest
+import com.mmi.services.api.autosuggest.MapmyIndiaAutosuggestManager
 import com.mmi.services.api.autosuggest.model.AutoSuggestAtlasResponse
 import com.mmi.services.api.autosuggest.model.ELocation
 import com.mmi.services.api.textsearch.MapmyIndiaTextSearch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.mmi.services.api.textsearch.MapmyIndiaTextSearchManager
 
 /**
  * Created by CEINFO on 26-02-2019.
  */
 class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher,TextView.OnEditorActionListener {
 
-    lateinit var mapmyIndiaMap: MapboxMap
+    lateinit var mapmyIndiaMap: MapmyIndiaMap
     private lateinit var autoSuggestText: EditText
     lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
     lateinit var handler: Handler
@@ -56,12 +57,10 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
         initReference()
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
-        this.mapmyIndiaMap = mapmyIndiaMap!!
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap
 
 
-
-        mapmyIndiaMap.setPadding(20, 20, 20, 20)
         mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
                 22.553147478403194,
                 77.23388671875), 4.0))
@@ -126,64 +125,64 @@ class AutoSuggestActivity : AppCompatActivity(), OnMapReadyCallback, TextWatcher
     @Synchronized
     private fun callAutoSuggestApi(searchString: String) {
 
-        MapmyIndiaAutoSuggest.builder()
+        val autoSuggest = MapmyIndiaAutoSuggest.builder()
                 .query(searchString)
                 .tokenizeAddress(true)
                 .build()
-                .enqueueCall(object : Callback<AutoSuggestAtlasResponse> {
-                    override fun onResponse(call: Call<AutoSuggestAtlasResponse>, response: Response<AutoSuggestAtlasResponse>) {
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                val suggestedList = response.body()!!.suggestedLocations
-                                if (suggestedList.size > 0) {
-                                    recyclerView.visibility = View.VISIBLE
-                                    val autoSuggestAdapter = AutoSuggestAdapter(suggestedList, object : AutoSuggestAdapter.PlaceData {
-                                        override fun dataOfPlace(eLocation: ELocation) {
-                                            selectedPlace(eLocation)
-                                            recyclerView.visibility = View.GONE
-                                        }
-                                    })
-                                    recyclerView.adapter = autoSuggestAdapter
-                                }
-                            } else {
-                                Toast.makeText(this@AutoSuggestActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
 
-                    override fun onFailure(call: Call<AutoSuggestAtlasResponse>, t: Throwable) {
-                        showToast(t.toString())
+        MapmyIndiaAutosuggestManager.newInstance(autoSuggest).call(object : OnResponseCallback<AutoSuggestAtlasResponse> {
+            override fun onSuccess(p0: AutoSuggestAtlasResponse?) {
+                if (p0 != null) {
+                    val suggestedList =p0.suggestedLocations
+                    if (suggestedList.size > 0) {
+                        recyclerView.visibility = View.VISIBLE
+                        val autoSuggestAdapter = AutoSuggestAdapter(suggestedList, object : AutoSuggestAdapter.PlaceData {
+                            override fun dataOfPlace(eLocation: ELocation) {
+                                selectedPlace(eLocation)
+                                recyclerView.visibility = View.GONE
+                            }
+                        })
+                        recyclerView.adapter = autoSuggestAdapter
                     }
-                })
+                } else {
+                    Toast.makeText(this@AutoSuggestActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onError(p0: Int, p1: String?) {
+                Toast.makeText(this@AutoSuggestActivity, p1, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun callTextSearchApi(searchString: String) {
-        MapmyIndiaTextSearch.builder()
+        val textSearch = MapmyIndiaTextSearch.builder()
                 .query(searchString)
-                .build().enqueueCall(object : Callback<AutoSuggestAtlasResponse> {
-                    override fun onResponse(call: Call<AutoSuggestAtlasResponse>, response: Response<AutoSuggestAtlasResponse>) {
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                val suggestedList = response.body()!!.suggestedLocations
-                                if (suggestedList.size > 0) {
-                                    recyclerView.visibility = View.VISIBLE
-                                    val autoSuggestAdapter = AutoSuggestAdapter(suggestedList, object : AutoSuggestAdapter.PlaceData {
-                                        override fun dataOfPlace(eLocation: ELocation) {
-                                            selectedPlace(eLocation)
-                                            recyclerView.visibility = View.GONE
-                                        }
-                                    })
-                                    recyclerView.adapter = autoSuggestAdapter
-                                }
-                            } else {
-                                Toast.makeText(this@AutoSuggestActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
+                .build()
+        MapmyIndiaTextSearchManager.newInstance(textSearch).call(object : OnResponseCallback<AutoSuggestAtlasResponse> {
+            override fun onSuccess(p0: AutoSuggestAtlasResponse?) {
+                if (p0 != null) {
+                    val suggestedList = p0.suggestedLocations
+                    if (suggestedList.size > 0) {
+                        recyclerView.visibility = View.VISIBLE
+                        val autoSuggestAdapter = AutoSuggestAdapter(suggestedList, object : AutoSuggestAdapter.PlaceData {
+                            override fun dataOfPlace(eLocation: ELocation) {
+                                selectedPlace(eLocation)
+                                recyclerView.visibility = View.GONE
                             }
-                        }
+                        })
+                        recyclerView.adapter = autoSuggestAdapter
                     }
-                    override fun onFailure(call: Call<AutoSuggestAtlasResponse>, t: Throwable) {
-                        showToast(t.toString())
-                    }
-                })
+                } else {
+                    Toast.makeText(this@AutoSuggestActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onError(p0: Int, p1: String?) {
+                Toast.makeText(this@AutoSuggestActivity, p1, Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 
 

@@ -11,15 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
-import com.mapbox.mapboxsdk.MapmyIndiaMapConfiguration;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.style.OnStyleLoadListener;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.StyleActivityBinding;
 import com.mapmyindia.sdk.demo.java.adapter.StyleAdapter;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.MapmyIndiaMapConfiguration;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.style.OnStyleLoadListener;
 
 import timber.log.Timber;
 
@@ -28,7 +29,7 @@ public class StyleActivity extends AppCompatActivity implements OnMapReadyCallba
     private StyleActivityBinding mBinding;
     private BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
     private StyleAdapter adapter;
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class StyleActivity extends AppCompatActivity implements OnMapReadyCallba
                     }
 
                     @Override
-                    public void onStyleLoaded() {
+                    public void onStyleLoaded(Style styles) {
                         Toast.makeText(StyleActivity.this, "onStyleLoaded", Toast.LENGTH_SHORT).show();
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
@@ -110,7 +111,7 @@ public class StyleActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         Timber.tag("onMapReady").e("SUCCESS");
         this.mapmyIndiaMap = mapmyIndiaMap;
         this.mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(28.6466772,76.8130614), 12));

@@ -1,5 +1,17 @@
 package com.mapmyindia.sdk.demo.java.plugin;
 
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.eq;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.get;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.literal;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconAllowOverlap;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconAnchor;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconIgnorePlacement;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconImage;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconOffset;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconRotate;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconRotationAlignment;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.visibility;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.TypeEvaluator;
@@ -20,19 +32,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.annotations.BubbleLayout;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.Layer;
-import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.turf.TurfMeasurement;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.geojson.Feature;
+import com.mapmyindia.sdk.geojson.FeatureCollection;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.annotations.BubbleLayout;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.style.layers.Layer;
+import com.mapmyindia.sdk.maps.style.layers.Property;
+import com.mapmyindia.sdk.maps.style.layers.SymbolLayer;
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource;
+import com.mapmyindia.sdk.turf.TurfMeasurement;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -42,20 +55,8 @@ import java.util.Objects;
 
 import timber.log.Timber;
 
-import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
-
-public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
+public class AnimatedCarPlugin {
 
 
     private static final String PROPERTY_BEARING = "bearing";
@@ -70,7 +71,7 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
     private static final String FILTER_TEXT = "filter_text";
     private static final String PROPERTY_ADDRESS = "address";
 
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private Car car;
     private GeoJsonSource carSource;
     private LatLng nextPoint;
@@ -79,21 +80,59 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
     private boolean isClearAllCallBacks;
     private FeatureCollection featureCollection;
     private LatLng latLng;
+    //List of Layer Ids
+    private List<String> layerIds;
+
+
+    public AnimatedCarPlugin(Context context, MapView mapView, MapmyIndiaMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
+        this.context = context;
+        updateState();
+        mapView.addOnDidFinishLoadingStyleListener(new MapView.OnDidFinishLoadingStyleListener() {
+            @Override
+            public void onDidFinishLoadingStyle() {
+                updateState();
+                addMainCar(latLng, false);
+            }
+        });
+
+
+        this.mapmyIndiaMap.addOnMapClickListener(this::handleClickIcon);
+    }
+
+    /**
+     * Calculate the sample size of the image
+     *
+     * @param options   BitmapFactory options
+     * @param reqWidth  required width
+     * @param reqHeight required height
+     * @return calculated sample size
+     */
+    private static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
 
     public void setOnUpdateNextPoint(OnUpdatePoint onUpdatePoint) {
         this.onUpdatePoint = onUpdatePoint;
-    }
-
-    @Override
-    public void onMapChanged(int change) {
-        if (change == MapView.DID_FINISH_LOADING_STYLE) {
-            updateState();
-            addMainCar(latLng, false);
-        }
-    }
-
-    public interface OnUpdatePoint {
-        void updateNextPoint();
     }
 
     /**
@@ -108,14 +147,6 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
      */
     public void addAllCallBacks() {
         isClearAllCallBacks = false;
-    }
-
-    public AnimatedCarPlugin(Context context, MapView mapView, MapboxMap mapmyIndiaMap) {
-        this.mapmyIndiaMap = mapmyIndiaMap;
-        this.context = context;
-        updateState();
-        mapView.addOnMapChangedListener(this);
-        this.mapmyIndiaMap.addOnMapClickListener(this::handleClickIcon);
     }
 
     /**
@@ -183,7 +214,6 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
         carSource.setGeoJson(car.feature);
     }
 
-
     /**
      * Add marker & Source
      *
@@ -193,36 +223,188 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
     public void addMainCar(LatLng latLng, boolean selected) {
         this.latLng = latLng;
         this.nextPoint = latLng;
-        setVisibility(true);
-        JsonObject properties = new JsonObject();
-        properties.addProperty(PROPERTY_BEARING, Car.getBearing(latLng, nextPoint));
-        properties.addProperty(FILTER_TEXT, "filter");
-        properties.addProperty(TITLE, "Tittle");
-        properties.addProperty(PROPERTY_NAME, "name");
-        properties.addProperty(PROPERTY_ADDRESS, "Address");
-        if (selected)
-            properties.addProperty(PROPERTY_SELECTED, false);
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                setVisibility(true,style);
+                JsonObject properties = new JsonObject();
+                properties.addProperty(PROPERTY_BEARING, Car.getBearing(latLng, nextPoint));
+                properties.addProperty(FILTER_TEXT, "filter");
+                properties.addProperty(TITLE, "Tittle");
+                properties.addProperty(PROPERTY_NAME, "name");
+                properties.addProperty(PROPERTY_ADDRESS, "Address");
+                if (selected)
+                    properties.addProperty(PROPERTY_SELECTED, false);
 
-        Feature feature = Feature.fromGeometry(
-                Point.fromLngLat(
-                        latLng.getLongitude(),
-                        latLng.getLatitude()), properties);
+                Feature feature = Feature.fromGeometry(
+                        Point.fromLngLat(
+                                latLng.getLongitude(),
+                                latLng.getLatitude()), properties);
 
-        featureCollection = FeatureCollection.fromFeatures(new Feature[]{feature});
+                featureCollection = FeatureCollection.fromFeatures(new Feature[]{feature});
 
-        car = new Car(feature, nextPoint);
-        mapmyIndiaMap.addImage(CAR,
-                ((BitmapDrawable) context.getResources().getDrawable(R.drawable.placeholder)).getBitmap());
+                car = new Car(feature, nextPoint);
 
-        if (mapmyIndiaMap.getSource(CAR_SOURCE) == null) {
+                style.addImage(CAR,
+                        ((BitmapDrawable) context.getResources().getDrawable(R.drawable.placeholder)).getBitmap());
+                if (style.getSource(CAR_SOURCE) == null) {
 
-            carSource = new GeoJsonSource(CAR_SOURCE, featureCollection);
-            mapmyIndiaMap.addSource(carSource);
-        }
+                    carSource = new GeoJsonSource(CAR_SOURCE, featureCollection);
+                    style.addSource(carSource);
+                }
+            }
+        });
+
 
         new GenerateViewIconTask(new WeakReference<>(this).get()).execute(featureCollection);
     }
 
+    private Context getContext() {
+        return context;
+    }
+
+    /**
+     * This method handles click events for SymbolLayer symbols.
+     * <p>
+     * When a SymbolLayer icon is clicked, we moved that feature to the selected state.
+     * </p>
+     *
+     * @param screenPoint the point on screen clicked
+     */
+    private boolean handleClickIcon(LatLng screenPoint) {
+        List<Feature> features = mapmyIndiaMap.queryRenderedFeatures(this.mapmyIndiaMap.getProjection().toScreenLocation(screenPoint), CAR_LAYER, SOURCE_LAYER_INFO_WINDOW);
+        if (!features.isEmpty()) {
+            String name = features.get(0).getStringProperty(PROPERTY_NAME);
+            List<Feature> featureList = featureCollection.features();
+            for (int i = 0; i < Objects.requireNonNull(featureList).size(); i++) {
+                if (featureList.get(i).hasProperty(PROPERTY_NAME)) {
+                    if (featureList.get(i).getStringProperty(PROPERTY_NAME).equals(name)) {
+                        Timber.tag("TAG").d(featureList.get(i).toJson());
+                        car.setSelected(!car.selected);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Add images on the map
+     *
+     * @param imageMap Hashmap of images
+     */
+    private void setImageGenResults(HashMap<String, Bitmap> imageMap) {
+        if (mapmyIndiaMap != null) {
+            mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+                @Override
+                public void onStyleLoaded(@NonNull Style style) {
+                    // calling addImages is faster as separate addImage calls for each bitmap.
+                    style.addImages(imageMap);
+                }
+            });
+
+        }
+    }
+
+    /**
+     * Refresh the Source to update state of the marker
+     */
+    private void refreshSource() {
+//        updateCarSource();
+        updateState();
+    }
+
+
+    /**
+     * Update the state of the marker.
+     */
+    private void updateState() {
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                GeoJsonSource source = (GeoJsonSource) style.getSource(CAR_SOURCE);
+                if (source == null) {
+                    initialise(style);
+                    return;
+                }
+                if (featureCollection != null) {
+                    carSource.setGeoJson(featureCollection);
+                }
+
+                setVisibility(true, style);
+            }
+        });
+
+    }
+
+
+    /**
+     * Set the visibility of all layers
+     *
+     * @param visible if it is true than layers will be visible
+     */
+    private void setVisibility(boolean visible, Style style) {
+        if (layerIds == null)
+            return;
+        List<Layer> layers = style.getLayers();
+        if (layers.size() > 0) {
+            for (Layer layer : layers) {
+                if (layerIds.contains(layer.getId())) {
+
+                    layer.setProperties(visibility(visible ? Property.VISIBLE : Property.NONE));
+                }
+            }
+        }
+    }
+
+    /**
+     * Initialise the marker
+     */
+    private void initialise(Style style) {
+        layerIds = new ArrayList<>();
+        if (style.getLayer(CAR_LAYER) == null) {
+            //Symbol layer for car
+            SymbolLayer symbolLayer = new SymbolLayer(CAR_LAYER, CAR_SOURCE);
+            symbolLayer.withProperties(
+                    iconImage(CAR),
+                    iconRotate(get(PROPERTY_BEARING)),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
+                    iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
+
+            );
+            style.addLayer(symbolLayer);
+            layerIds.add(symbolLayer.getId());
+        }
+
+        if (style.getLayer(SOURCE_LAYER_INFO_WINDOW) == null) {
+            //Symbol layer for Info Window
+            SymbolLayer symbolLayerInfoWindow = new SymbolLayer(SOURCE_LAYER_INFO_WINDOW, CAR_SOURCE)
+                    .withProperties(
+                            /* show image with id title based on the value of the name feature property */
+                            iconImage("{name}"),
+
+                            /* set anchor of icon to bottom-left */
+                            iconAnchor(Property.ICON_ANCHOR_BOTTOM_LEFT),
+
+                            /* all info window and marker image to appear at the same time*/
+                            iconAllowOverlap(true),
+
+                            /* offset the info window to be above the marker */
+                            iconOffset(new Float[]{-2f, -25f})
+                    )
+                    /* setData a filter to show only when selected feature property is true */
+                    .withFilter(eq((get(PROPERTY_SELECTED)), literal(true)));
+
+            style.addLayer(symbolLayerInfoWindow);
+            layerIds.add(symbolLayerInfoWindow.getId());
+        }
+    }
+
+    public interface OnUpdatePoint {
+        void updateNextPoint();
+    }
 
     /**
      * Generate Info window Icon
@@ -305,141 +487,6 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
         }
     }
 
-
-    private Context getContext() {
-        return context;
-    }
-
-    /**
-     * This method handles click events for SymbolLayer symbols.
-     * <p>
-     * When a SymbolLayer icon is clicked, we moved that feature to the selected state.
-     * </p>
-     *
-     * @param screenPoint the point on screen clicked
-     */
-    private void handleClickIcon(LatLng screenPoint) {
-        List<Feature> features = mapmyIndiaMap.queryRenderedFeatures(this.mapmyIndiaMap.getProjection().toScreenLocation(screenPoint), CAR_LAYER, SOURCE_LAYER_INFO_WINDOW);
-        if (!features.isEmpty()) {
-            String name = features.get(0).getStringProperty(PROPERTY_NAME);
-            List<Feature> featureList = featureCollection.features();
-            for (int i = 0; i < Objects.requireNonNull(featureList).size(); i++) {
-                if (featureList.get(i).hasProperty(PROPERTY_NAME)) {
-                    if (featureList.get(i).getStringProperty(PROPERTY_NAME).equals(name)) {
-                        Timber.tag("TAG").d(featureList.get(i).toJson());
-                        car.setSelected(!car.selected);
-                    }
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Add images on the map
-     *
-     * @param imageMap Hashmap of images
-     */
-    private void setImageGenResults(HashMap<String, Bitmap> imageMap) {
-        if (mapmyIndiaMap != null) {
-            // calling addImages is faster as separate addImage calls for each bitmap.
-            mapmyIndiaMap.addImages(imageMap);
-        }
-    }
-
-    /**
-     * Refresh the Source to update state of the marker
-     */
-    private void refreshSource() {
-//        updateCarSource();
-        updateState();
-    }
-
-
-    /**
-     * Update the state of the marker.
-     */
-    private void updateState() {
-        GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(CAR_SOURCE);
-        if (source == null) {
-            initialise();
-            return;
-        }
-        if (featureCollection != null) {
-            carSource.setGeoJson(featureCollection);
-        }
-
-        setVisibility(true);
-    }
-
-
-    /**
-     * Set the visibility of all layers
-     *
-     * @param visible if it is true than layers will be visible
-     */
-    private void setVisibility(boolean visible) {
-        if (layerIds == null)
-            return;
-        List<Layer> layers = mapmyIndiaMap.getLayers();
-        if (layers.size() > 0) {
-            for (Layer layer : layers) {
-                if (layerIds.contains(layer.getId())) {
-
-                    layer.setProperties(visibility(visible ? Property.VISIBLE : Property.NONE));
-                }
-            }
-        }
-    }
-
-    //List of Layer Ids
-    private List<String> layerIds;
-
-    /**
-     * Initialise the marker
-     */
-    private void initialise() {
-        layerIds = new ArrayList<>();
-        if (mapmyIndiaMap.getLayer(CAR_LAYER) == null) {
-            //Symbol layer for car
-            SymbolLayer symbolLayer = new SymbolLayer(CAR_LAYER, CAR_SOURCE);
-            symbolLayer.withProperties(
-                    iconImage(CAR),
-                    iconRotate(get(PROPERTY_BEARING)),
-                    iconAllowOverlap(true),
-                    iconIgnorePlacement(true),
-                    iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
-
-            );
-            mapmyIndiaMap.addLayer(symbolLayer);
-            layerIds.add(symbolLayer.getId());
-        }
-
-        if (mapmyIndiaMap.getLayer(SOURCE_LAYER_INFO_WINDOW) == null) {
-            //Symbol layer for Info Window
-            SymbolLayer symbolLayerInfoWindow = new SymbolLayer(SOURCE_LAYER_INFO_WINDOW, CAR_SOURCE)
-                    .withProperties(
-                            /* show image with id title based on the value of the name feature property */
-                            iconImage("{name}"),
-
-                            /* set anchor of icon to bottom-left */
-                            iconAnchor(Property.ICON_ANCHOR_BOTTOM_LEFT),
-
-                            /* all info window and marker image to appear at the same time*/
-                            iconAllowOverlap(true),
-
-                            /* offset the info window to be above the marker */
-                            iconOffset(new Float[]{-2f, -25f})
-                    )
-                    /* setData a filter to show only when selected feature property is true */
-                    .withFilter(eq((get(PROPERTY_SELECTED)), literal(true)));
-
-            mapmyIndiaMap.addLayer(symbolLayerInfoWindow);
-            layerIds.add(symbolLayerInfoWindow.getId());
-        }
-    }
-
-
     /**
      * Utility class to generate Bitmaps for Symbol.
      * <p>
@@ -481,38 +528,6 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
         }
     }
 
-
-    /**
-     * Calculate the sample size of the image
-     *
-     * @param options   BitmapFactory options
-     * @param reqWidth  required width
-     * @param reqHeight required height
-     * @return calculated sample size
-     */
-    private static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
-    }
-
     /**
      * Evaluator for LatLng pairs
      */
@@ -546,6 +561,20 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
         }
 
         /**
+         * Get the bearing between two points
+         *
+         * @param from Current point
+         * @param to   Next Point
+         * @return bearing value in degree
+         */
+        private static float getBearing(LatLng from, LatLng to) {
+            return (float) TurfMeasurement.bearing(
+                    Point.fromLngLat(from.getLongitude(), from.getLatitude()),
+                    Point.fromLngLat(to.getLongitude(), to.getLatitude())
+            );
+        }
+
+        /**
          * Set the value that marker is selected or not
          *
          * @param selected if it is true than Info window is visible
@@ -563,7 +592,6 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
             this.next = next;
         }
 
-
         /**
          * Update the feature of the marker
          */
@@ -580,21 +608,6 @@ public class AnimatedCarPlugin implements MapView.OnMapChangedListener {
             feature.properties().addProperty(PROPERTY_NAME, "name");
             feature.properties().addProperty(PROPERTY_ADDRESS, "Address");
             feature.properties().addProperty(PROPERTY_SELECTED, selected);
-        }
-
-
-        /**
-         * Get the bearing between two points
-         *
-         * @param from Current point
-         * @param to   Next Point
-         * @return bearing value in degree
-         */
-        private static float getBearing(LatLng from, LatLng to) {
-            return (float) TurfMeasurement.bearing(
-                    Point.fromLngLat(from.getLongitude(), from.getLatitude()),
-                    Point.fromLngLat(to.getLongitude(), to.getLatitude())
-            );
         }
     }
 }

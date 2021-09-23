@@ -4,14 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityGradientPolylineBinding
+import com.mapmyindia.sdk.demo.databinding.DistanceActivityBinding
 import com.mapmyindia.sdk.demo.kotlin.plugin.GradientPolylinePlugin
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds
 import java.util.*
 
 /**
@@ -38,7 +39,7 @@ class GradientPolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
 
         mapmyIndiaMap.setPadding(20, 20, 20, 20)
         val latLngBounds = LatLngBounds.Builder()

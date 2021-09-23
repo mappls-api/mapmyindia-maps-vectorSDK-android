@@ -16,35 +16,35 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.adapter.AutoSuggestSearchesAdapter;
 import com.mapmyindia.sdk.demo.java.adapter.NearByAdapter;
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.autosuggest.MapmyIndiaAutoSuggest;
+import com.mmi.services.api.autosuggest.MapmyIndiaAutosuggestManager;
 import com.mmi.services.api.autosuggest.model.AutoSuggestAtlasResponse;
 import com.mmi.services.api.autosuggest.model.SuggestedSearchAtlas;
 import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearby;
+import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearbyManager;
 import com.mmi.services.api.nearby.model.NearbyAtlasResponse;
 import com.mmi.services.api.nearby.model.NearbyAtlasResult;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class HateOsNearbyActivity extends AppCompatActivity implements OnMapReadyCallback, TextView.OnEditorActionListener {
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private EditText autoSuggestText;
     private MapView mapView;
     private TransparentProgressDialog transparentProgressDialog;
-    private RecyclerView nearbyRecyclerView, autoSuggestRecyclerView;;
+    private RecyclerView nearbyRecyclerView, autoSuggestRecyclerView;
+    ;
     private int count = 0;
     private FloatingActionButton floatingActionButton;
     private LinearLayoutManager mLayoutManager;
@@ -58,9 +58,6 @@ public class HateOsNearbyActivity extends AppCompatActivity implements OnMapRead
         mapView.getMapAsync(this);
         initReferences();
         initListeners();
-
-
-
 
 
         floatingActionButton = findViewById(R.id.marker_list);
@@ -98,7 +95,7 @@ public class HateOsNearbyActivity extends AppCompatActivity implements OnMapRead
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
 
 
@@ -124,82 +121,66 @@ public class HateOsNearbyActivity extends AppCompatActivity implements OnMapRead
     }
 
     private void callAutoSuggestApi(String searchString) {
-       progressDialogShow();
-        MapmyIndiaAutoSuggest.builder()
+        progressDialogShow();
+        MapmyIndiaAutoSuggest mapmyIndiaAutoSuggest = MapmyIndiaAutoSuggest.builder()
                 .query(searchString)
                 .bridge(true)
-                .build()
-                .enqueueCall(new Callback<AutoSuggestAtlasResponse>() {
-                    @Override
-                    public void onResponse(Call<AutoSuggestAtlasResponse> call, Response<AutoSuggestAtlasResponse> response) {
+                .build();
+        MapmyIndiaAutosuggestManager.newInstance(mapmyIndiaAutoSuggest).call(new OnResponseCallback<AutoSuggestAtlasResponse>() {
+            @Override
+            public void onSuccess(AutoSuggestAtlasResponse autoSuggestAtlasResponse) {
+                if (autoSuggestAtlasResponse != null) {
+                    ArrayList<SuggestedSearchAtlas> suggestedSearches = autoSuggestAtlasResponse.getSuggestedSearches();
+                    if (suggestedSearches.size() > 0) {
 
-                        if (response.code() == 200) {
-
-                            if (response.body() != null) {
-                                ArrayList<SuggestedSearchAtlas> suggestedSearches = response.body().getSuggestedSearches();
-                                       if (suggestedSearches.size()>0){
-
-                                           autoSuggestRecyclerView.setVisibility(View.VISIBLE);
-                                           AutoSuggestSearchesAdapter autoSuggestAdapter = new AutoSuggestSearchesAdapter(suggestedSearches, hyperlink -> {
-                                               callHateOs(hyperlink);
-                                               autoSuggestRecyclerView.setVisibility(View.GONE);
-                                           });
-                                           autoSuggestRecyclerView.setAdapter(autoSuggestAdapter);
-                                       }
-
-                                       else {
-                                           Toast.makeText(HateOsNearbyActivity.this, "No hyperlinks found...", Toast.LENGTH_SHORT).show(); }
-                            } else {
-                                showToast("Not able to get value, Try again.");
-                            }
-                        }else {
-
-                            showToast(response.message());
-                        }
-                        progressDialogHide();
+                        autoSuggestRecyclerView.setVisibility(View.VISIBLE);
+                        AutoSuggestSearchesAdapter autoSuggestAdapter = new AutoSuggestSearchesAdapter(suggestedSearches, hyperlink -> {
+                            callHateOs(hyperlink);
+                            autoSuggestRecyclerView.setVisibility(View.GONE);
+                        });
+                        autoSuggestRecyclerView.setAdapter(autoSuggestAdapter);
+                    } else {
+                        Toast.makeText(HateOsNearbyActivity.this, "No hyperlinks found...", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    showToast("Not able to get value, Try again.");
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<AutoSuggestAtlasResponse> call, Throwable t) {
-                        showToast(t.toString());
-                        progressDialogHide();
-                    }
-                });
+            @Override
+            public void onError(int i, String s) {
+                showToast(s);
+            }
+        });
 
     }
 
 
-private void callHateOs(String hyperlink){
-    MapmyIndiaHateosNearby.builder()
-            .hyperlink(hyperlink)
-            .build()
-            .enqueueCall(new Callback<NearbyAtlasResponse>() {
-                @Override
-                public void onResponse(Call<NearbyAtlasResponse> call, Response<NearbyAtlasResponse> response) {
-
-                    if (response.code() == 200) {
-                        if (response.body() != null) {
-                            ArrayList<NearbyAtlasResult> nearByList = response.body().getSuggestedLocations();
-                            if (nearByList.size() > 0) {
-                                addMarker(nearByList);
-                            }
-                        } else {
-                            Toast.makeText(HateOsNearbyActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(HateOsNearbyActivity.this, response.message(), Toast.LENGTH_LONG).show();
+    private void callHateOs(String hyperlink) {
+        MapmyIndiaHateosNearby hateosNearby = MapmyIndiaHateosNearby.builder()
+                .hyperlink(hyperlink)
+                .build();
+        MapmyIndiaHateosNearbyManager.newInstance(hateosNearby).call(new OnResponseCallback<NearbyAtlasResponse>() {
+            @Override
+            public void onSuccess(NearbyAtlasResponse nearbyAtlasResponse) {
+                if (nearbyAtlasResponse != null) {
+                    ArrayList<NearbyAtlasResult> nearByList = nearbyAtlasResponse.getSuggestedLocations();
+                    if (nearByList.size() > 0) {
+                        addMarker(nearByList);
                     }
-
-                    progressDialogHide();
+                } else {
+                    Toast.makeText(HateOsNearbyActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
                 }
+                progressDialogHide();
+            }
 
-                @Override
-                public void onFailure(Call<NearbyAtlasResponse> call, Throwable t) {
-                    showToast(t.toString());
-                    progressDialogHide();
-                }
-            });
-}
+            @Override
+            public void onError(int i, String s) {
+                progressDialogHide();
+                showToast(s);
+            }
+        });
+    }
 
     private void addMarker(ArrayList<NearbyAtlasResult> nearByList) {
         mapmyIndiaMap.clear();
@@ -216,13 +197,12 @@ private void callHateOs(String hyperlink){
     }
 
 
-
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId== EditorInfo.IME_ACTION_SEARCH){
-           callAutoSuggestApi(v.getText().toString());
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            callAutoSuggestApi(v.getText().toString());
             autoSuggestText.clearFocus();
-            InputMethodManager in = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             in.hideSoftInputFromWindow(autoSuggestText.getWindowToken(), 0);
             return true;
         }

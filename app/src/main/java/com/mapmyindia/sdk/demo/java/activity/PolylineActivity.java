@@ -8,16 +8,16 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.annotations.Polyline;
-import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.Polyline;
+import com.mapmyindia.sdk.maps.annotations.PolylineOptions;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds;
 
 import java.util.ArrayList;
 
@@ -45,11 +45,7 @@ public class PolylineActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
-
-
-        mapmyIndiaMap.setPadding(20, 20, 20, 20);
-
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
 
         mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
         listOfLatlang.add(new LatLng(28.705436, 77.100462));

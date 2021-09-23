@@ -1,6 +1,6 @@
 package com.mapmyindia.sdk.demo.kotlin.utility
 
-import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapmyindia.sdk.maps.geometry.LatLng
 import java.util.*
 import kotlin.math.*
 

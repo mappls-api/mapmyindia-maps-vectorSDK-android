@@ -4,17 +4,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.utils.SemiCirclePointsListHelper;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds;
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonOptions;
 import com.mapmyindia.sdk.plugin.annotation.LineManager;
 import com.mapmyindia.sdk.plugin.annotation.LineOptions;
 
@@ -70,23 +72,29 @@ public class SemiCirclePolylineActivity extends AppCompatActivity implements OnM
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .includes(listOfLatLng)
                 .build();
 
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
 
-        lineManager = new LineManager(mapView, mapmyIndiaMap, null, new GeoJsonOptions().withLineMetrics(true).withBuffer(2));
-        LineOptions lineOptions = new LineOptions()
-                .points(listOfLatLng)
-                .lineColor("#FF0000")
-                .lineWidth(4f);
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                lineManager = new LineManager(mapView, mapmyIndiaMap, style, new GeoJsonOptions().withLineMetrics(true).withBuffer(2));
+                LineOptions lineOptions = new LineOptions()
+                        .points(listOfLatLng)
+                        .lineColor("#FF0000")
+                        .lineWidth(4f);
 
-        lineManager.setLineDasharray(new Float[]{4f, 6f});
-        lineManager.create(lineOptions);
+                lineManager.setLineDasharray(new Float[]{4f, 6f});
+                lineManager.create(lineOptions);
 
-        btnRemove.setVisibility(View.VISIBLE);
+                btnRemove.setVisibility(View.VISIBLE);
+            }
+        });
+
 
 
     }

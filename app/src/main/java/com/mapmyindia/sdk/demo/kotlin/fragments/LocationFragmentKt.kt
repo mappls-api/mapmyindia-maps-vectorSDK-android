@@ -12,6 +12,8 @@ import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.activity.CustomCurrentLocationIconActivity
 import com.mapmyindia.sdk.demo.java.model.FeaturesList
 import com.mapmyindia.sdk.demo.kotlin.activity.CurrentLocationActivity
+import com.mapmyindia.sdk.demo.kotlin.activity.PlaceAutoCompleteActivity
+import com.mapmyindia.sdk.demo.kotlin.activity.SafetyPluginActivity
 import com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter
 import java.util.*
 

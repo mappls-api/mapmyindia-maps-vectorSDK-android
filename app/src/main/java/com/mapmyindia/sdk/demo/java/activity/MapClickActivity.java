@@ -3,15 +3,16 @@ package com.mapmyindia.sdk.demo.java.activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
 
 /**
  * Created by CEINFO on 26-02-2019.
@@ -37,14 +38,18 @@ public class MapClickActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
 
-
-      mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
       mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
-      mapmyIndiaMap.addOnMapClickListener(latLng -> Toast.makeText(MapClickActivity.this, latLng.toString(), Toast.LENGTH_LONG).show());
+      mapmyIndiaMap.addOnMapClickListener(new MapmyIndiaMap.OnMapClickListener() {
+          @Override
+          public boolean onMapClick(@NonNull LatLng latLng) {
+              Toast.makeText(MapClickActivity.this, latLng.toString(), Toast.LENGTH_LONG).show();
+              return false;
+          }
+      });
     }
 
     @Override

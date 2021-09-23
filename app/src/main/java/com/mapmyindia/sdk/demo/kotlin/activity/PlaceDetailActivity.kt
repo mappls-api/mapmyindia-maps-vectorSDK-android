@@ -10,7 +10,9 @@ import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityPlaceDetailBinding
 import com.mapmyindia.sdk.demo.kotlin.adapter.PlaceDetailAdapter
 import com.mapmyindia.sdk.demo.kotlin.model.PlaceDetailModel
+import com.mmi.services.api.OnResponseCallback
 import com.mmi.services.api.placedetail.MapmyIndiaPlaceDetail
+import com.mmi.services.api.placedetail.MapmyIndiaPlaceDetailManager
 import com.mmi.services.api.placedetail.model.PlaceDetailResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,31 +44,23 @@ class PlaceDetailActivity : AppCompatActivity() {
 
     private fun callELoc(eLoc: String) {
         mBinding.progressBar.visibility = View.VISIBLE
-        MapmyIndiaPlaceDetail.builder()
+        val placeDetail = MapmyIndiaPlaceDetail.builder()
                 .eLoc(eLoc)
-                .build().enqueueCall(object : Callback<PlaceDetailResponse?> {
-                    override fun onResponse(call: Call<PlaceDetailResponse?>, response: Response<PlaceDetailResponse?>) {
-                        mBinding.progressBar.visibility = View.GONE
-                        if (response.code() == 200) {
-                            val placeDetailResponse = response.body()
-                            if (placeDetailResponse != null) {
-                                setValues(placeDetailResponse)
-                            } else {
-                                Toast.makeText(this@PlaceDetailActivity, "No Data Found", Toast.LENGTH_SHORT).show()
-                            }
-                        } else if (response.code() == 204) {
-                            Toast.makeText(this@PlaceDetailActivity, "No Data Found", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this@PlaceDetailActivity, "" + response.code(), Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                .build()
+        MapmyIndiaPlaceDetailManager.newInstance(placeDetail).call(object : OnResponseCallback<PlaceDetailResponse> {
+            override fun onSuccess(placeDetailResponse: PlaceDetailResponse?) {
+                if (placeDetailResponse != null) {
+                    setValues(placeDetailResponse)
+                } else {
+                    Toast.makeText(this@PlaceDetailActivity, "No Data Found", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-                    override fun onFailure(call: Call<PlaceDetailResponse?>, t: Throwable) {
-                        mBinding.progressBar.visibility = View.GONE
-                        t.printStackTrace()
-                        Toast.makeText(this@PlaceDetailActivity, "Something went wrong", Toast.LENGTH_SHORT).show()
-                    }
-                })
+            override fun onError(p0: Int, p1: String?) {
+                Toast.makeText(this@PlaceDetailActivity, p1, Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 
     private fun setValues(placeDetailResponse: PlaceDetailResponse) {

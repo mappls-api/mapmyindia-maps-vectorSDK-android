@@ -6,18 +6,20 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.DistanceActivityBinding
 import com.mapmyindia.sdk.demo.java.activity.InputActivity
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog
+import com.mapmyindia.sdk.geojson.Point
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraPosition
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mmi.services.api.OnResponseCallback
 import com.mmi.services.api.directions.DirectionsCriteria
 import com.mmi.services.api.distance.MapmyIndiaDistanceMatrix
+import com.mmi.services.api.distance.MapmyIndiaDistanceMatrixManager
 import com.mmi.services.api.distance.models.DistanceResponse
 import com.mmi.services.api.distance.models.DistanceResults
 import retrofit2.Call
@@ -51,7 +53,7 @@ class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
 
 
         mapmyIndiaMap.setPadding(20, 20, 20, 20)
@@ -111,29 +113,25 @@ class DistanceActivity : AppCompatActivity(), OnMapReadyCallback {
         }
               builder.profile(DirectionsCriteria.PROFILE_DRIVING)
                 .resource(DirectionsCriteria.RESOURCE_DISTANCE_ETA)
-                .build()
-                .enqueueCall(object : Callback<DistanceResponse> {
-                    override fun onResponse(call: Call<DistanceResponse>, response: Response<DistanceResponse>) {
-                        progressDialogHide()
-                        if (response.code() == 200) {
-                            val legacyDistanceResponse = response.body()
-                            val distanceList = legacyDistanceResponse!!.results()
+        MapmyIndiaDistanceMatrixManager.newInstance(builder.build()).call(object : OnResponseCallback<DistanceResponse> {
+            override fun onSuccess(p0: DistanceResponse?) {
+                progressDialogHide()
 
-                            if (distanceList != null) {
-                                val distances = distanceList.distances()
-                                updateData(distanceList)
-                                Toast.makeText(this@DistanceActivity, "Distance: " + distances!![0][1], Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(this@DistanceActivity, "Failed: " + legacyDistanceResponse.responseCode(), Toast.LENGTH_SHORT).show()
-                            }
-//
-                        }
-                    }
+                val distanceList = p0?.results()
 
-                    override fun onFailure(call: Call<DistanceResponse>, t: Throwable) {
-                        progressDialogHide()
-                    }
-                })
+                if (distanceList != null) {
+                    val distances = distanceList.distances()
+                    updateData(distanceList)
+                    Toast.makeText(this@DistanceActivity, "Distance: " + distances!![0][1], Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@DistanceActivity, "Failed: " + p0?.responseCode(), Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onError(p0: Int, p1: String?) {
+                progressDialogHide()
+            }
+        })
     }
 
 

@@ -10,9 +10,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.mapbox.mapboxsdk.maps.style.model.MapmyIndiaStyle;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.LayoutStyleAdapterBinding;
+import com.mapmyindia.sdk.maps.style.model.MapmyIndiaStyle;
 
 import java.util.List;
 

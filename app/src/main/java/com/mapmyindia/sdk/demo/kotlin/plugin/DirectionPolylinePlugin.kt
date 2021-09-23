@@ -1,28 +1,28 @@
 package com.mapmyindia.sdk.demo.kotlin.plugin
 
 import android.graphics.Color
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.LineString
-import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.style.layers.LineLayer
-import com.mapbox.mapboxsdk.style.layers.Property
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
-import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.mapboxsdk.utils.ColorUtils
+import com.mapmyindia.sdk.geojson.Feature
+
+import com.mapmyindia.sdk.geojson.FeatureCollection
+import com.mapmyindia.sdk.geojson.LineString
+import com.mapmyindia.sdk.geojson.Point
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.Style
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.style.layers.LineLayer
+import com.mapmyindia.sdk.maps.style.layers.Property
+import com.mapmyindia.sdk.maps.style.layers.PropertyFactory.*
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonOptions
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource
+import com.mapmyindia.sdk.maps.utils.ColorUtils
 import com.mmi.services.api.directions.DirectionsCriteria
 import java.util.*
 
 /**
  * Created by Saksham on 20/9/19.
  */
-class DirectionPolylinePlugin(mapmyIndiaMap: MapboxMap, mapView: MapView, private var directionsCriteria: String?) : MapView.OnMapChangedListener {
-
-    private var mapmyIndiaMap: MapboxMap? = null
+class DirectionPolylinePlugin(val mapmyIndiaMap: MapmyIndiaMap, mapView: MapView, private var directionsCriteria: String?) : MapView.OnDidFinishLoadingStyleListener {
 
     private var featureCollection: FeatureCollection? = null
     private var latLngs: List<LatLng>? = null
@@ -34,11 +34,9 @@ class DirectionPolylinePlugin(mapmyIndiaMap: MapboxMap, mapView: MapView, privat
     private var lineLayer: LineLayer? = null
 
     init {
-        this.mapmyIndiaMap = mapmyIndiaMap
-        this.mapmyIndiaMap = mapmyIndiaMap
 
         updateSource()
-        mapView.addOnMapChangedListener(this)
+        mapView.addOnDidFinishLoadingStyleListener(this)
     }
 
     /**
@@ -94,37 +92,43 @@ class DirectionPolylinePlugin(mapmyIndiaMap: MapboxMap, mapView: MapView, privat
      * Add various sources to the map.
      */
     private fun initSources(featureCollection: FeatureCollection) {
-        if(mapmyIndiaMap?.getSource(UPPER_SOURCE_ID) == null) {
-            polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
-                    GeoJsonOptions().withLineMetrics(true).withBuffer(2))
-            mapmyIndiaMap?.addSource(polylineSource!!)
+        mapmyIndiaMap.getStyle {
+            if(it.getSource(UPPER_SOURCE_ID) == null) {
+                polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+                        GeoJsonOptions().withLineMetrics(true).withBuffer(2))
+                it.addSource(polylineSource!!)
+            }
         }
+
     }
 
     /**
      * Update Source and GeoJson properties
      */
     private fun updateSource() {
-        val source = mapmyIndiaMap?.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
-        if (source == null) {
-            create()
-            return
+        mapmyIndiaMap.getStyle {
+            val source = it.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
+            if (source == null) {
+                create(it)
+                return@getStyle
+            }
+            if (featureCollection != null) {
+                source.setGeoJson(featureCollection)
+            }
         }
-        if (featureCollection != null) {
-            polylineSource!!.setGeoJson(featureCollection)
-        }
+
     }
 
     /**
      * Add Line layer on map
      */
-    private fun create() {
-        if(mapmyIndiaMap?.getLayer(LAYER_ID) == null) {
+    private fun create(style: Style) {
+        if(style.getLayer(LAYER_ID) == null) {
             lineLayer = LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
                     lineCap(Property.LINE_CAP_ROUND),
                     lineJoin(Property.LINE_JOIN_ROUND),
                     lineWidth(5f))
-            mapmyIndiaMap?.addLayer(lineLayer!!)
+            style.addLayer(lineLayer!!)
 
 
             if (directionsCriteria!!.equals(DirectionsCriteria.PROFILE_WALKING, ignoreCase = true)) {
@@ -134,11 +138,9 @@ class DirectionPolylinePlugin(mapmyIndiaMap: MapboxMap, mapView: MapView, privat
     }
 
 
-    override fun onMapChanged(i: Int) {
-        if (i == MapView.DID_FINISH_LOADING_STYLE) {
-            updateSource()
-            createPolyline(latLngs!!)
-        }
+    override fun onDidFinishLoadingStyle() {
+        updateSource()
+        createPolyline(latLngs!!)
     }
 
     companion object {

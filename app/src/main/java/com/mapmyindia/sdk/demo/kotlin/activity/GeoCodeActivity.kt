@@ -3,17 +3,19 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
+import com.mapmyindia.sdk.maps.camera.CameraPosition
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mmi.services.api.OnResponseCallback
 import com.mmi.services.api.geocoding.GeoCodeResponse
 import com.mmi.services.api.geocoding.MapmyIndiaGeoCoding
+import com.mmi.services.api.geocoding.MapmyIndiaGeoCodingManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,7 +26,7 @@ import retrofit2.Response
 class GeoCodeActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private var mapView: MapView? = null
     private var transparentProgressDialog: TransparentProgressDialog? = null
 
@@ -37,7 +39,7 @@ class GeoCodeActivity : AppCompatActivity(), OnMapReadyCallback {
         transparentProgressDialog = TransparentProgressDialog(this, R.drawable.circle_loader, "")
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
 
 
@@ -70,35 +72,31 @@ class GeoCodeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun getGeoCode(geocodeText: String) {
         progressDialogShow()
-        MapmyIndiaGeoCoding.builder()
+        val geoCoding = MapmyIndiaGeoCoding.builder()
                 .setAddress(geocodeText)
-                .build().enqueueCall(object : Callback<GeoCodeResponse> {
-                    override fun onResponse(call: Call<GeoCodeResponse>, response: Response<GeoCodeResponse>) {
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                val placesList = response.body()!!.results
-                                val place = placesList[0]
-                                val add = "Latitude: " + place.latitude + " longitude: " + place.longitude
-                                addMarker(java.lang.Double.valueOf(place.latitude), java.lang.Double.valueOf(place.longitude))
-                                Toast.makeText(this@GeoCodeActivity, add, Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(this@GeoCodeActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
-                            }
-                        } else {
-                            Toast.makeText(this@GeoCodeActivity, response.message(), Toast.LENGTH_SHORT).show()
-                        }
-                        progressDialogHide()
-                    }
+                .build()
+        MapmyIndiaGeoCodingManager.newInstance(geoCoding).call(object : OnResponseCallback<GeoCodeResponse> {
+            override fun onSuccess(geoCodeResponse: GeoCodeResponse?) {
+                if (geoCodeResponse != null) {
+                    val placesList = geoCodeResponse.results
+                    val place = placesList[0]
+                    val add = "Latitude: " + place.latitude + " longitude: " + place.longitude
+                    addMarker(java.lang.Double.valueOf(place.latitude), java.lang.Double.valueOf(place.longitude))
+                    Toast.makeText(this@GeoCodeActivity, add, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@GeoCodeActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-                    override fun onFailure(call: Call<GeoCodeResponse>, t: Throwable) {
-                        Toast.makeText(this@GeoCodeActivity, t.toString(), Toast.LENGTH_SHORT).show()
-                        progressDialogHide()
-                    }
-                })
+            override fun onError(p0: Int, p1: String?) {
+                Toast.makeText(this@GeoCodeActivity, p1, Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 
     private fun addMarker(latitude: Double, longitude: Double) {
-        mapmyIndiaMap!!.addMarker(MarkerOptions().position(LatLng(
+        mapmyIndiaMap?.addMarker(MarkerOptions().position(LatLng(
                 latitude, longitude)))
     }
 
@@ -108,37 +106,37 @@ class GeoCodeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        mapView!!.onStart()
+        mapView?.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView!!.onStop()
+        mapView?.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView!!.onDestroy()
+        mapView?.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView!!.onPause()
+        mapView?.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView!!.onResume()
+        mapView?.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView!!.onLowMemory()
+        mapView?.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView!!.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
     }
 
 

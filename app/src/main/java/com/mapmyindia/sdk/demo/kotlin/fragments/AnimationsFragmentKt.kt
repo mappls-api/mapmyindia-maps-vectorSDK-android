@@ -10,9 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.model.FeaturesList
-import com.mapmyindia.sdk.demo.kotlin.activity.CarAnimationActivity
-import com.mapmyindia.sdk.demo.kotlin.activity.MarkerRotationTransitionActivity
-import com.mapmyindia.sdk.demo.kotlin.activity.TrackingActivity
+import com.mapmyindia.sdk.demo.kotlin.activity.*
 import com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter
 import java.util.*
 

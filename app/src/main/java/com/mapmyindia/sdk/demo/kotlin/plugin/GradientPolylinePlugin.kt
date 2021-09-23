@@ -1,25 +1,26 @@
 package com.mapmyindia.sdk.demo.kotlin.plugin
 
 import android.graphics.Color
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.LineString
-import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.style.expressions.Expression.*
-import com.mapbox.mapboxsdk.style.layers.LineLayer
-import com.mapbox.mapboxsdk.style.layers.Property
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
-import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapmyindia.sdk.geojson.Feature
+import com.mapmyindia.sdk.geojson.FeatureCollection
+import com.mapmyindia.sdk.geojson.LineString
+import com.mapmyindia.sdk.geojson.Point
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.Style
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.style.expressions.Expression.*
+import com.mapmyindia.sdk.maps.style.layers.LineLayer
+import com.mapmyindia.sdk.maps.style.layers.Property
+import com.mapmyindia.sdk.maps.style.layers.PropertyFactory.*
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonOptions
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource
 import java.util.*
 
 /**
  * Created by Saksham on 20/9/19.
  */
-class GradientPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapView) : MapView.OnMapChangedListener {
+class GradientPolylinePlugin(private val mapmyIndiaMap: MapmyIndiaMap, mapView: MapView) : MapView.OnDidFinishLoadingStyleListener {
 
     private var featureCollection: FeatureCollection? = null
     private var startColor = Color.parseColor("#3dd2d0")
@@ -48,7 +49,7 @@ class GradientPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapV
     init {
 
         updateSource()
-        mapView.addOnMapChangedListener(this)
+        mapView.addOnDidFinishLoadingStyleListener(this)
     }
 
     /**
@@ -70,9 +71,9 @@ class GradientPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapV
     /**
      * Add Line layer to map
      */
-    private fun create() {
-        if(mapmyIndiaMap.getLayer(LAYER_ID) == null) {
-            mapmyIndiaMap.addLayer(LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+    private fun create(style: Style) {
+        if (style.getLayer(LAYER_ID) == null) {
+            style.addLayer(LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
                     //                lineColor(Color.RED),
                     lineCap(Property.LINE_CAP_ROUND),
                     lineJoin(Property.LINE_JOIN_BEVEL),
@@ -89,38 +90,41 @@ class GradientPolylinePlugin(private val mapmyIndiaMap: MapboxMap, mapView: MapV
      * Add various sources to the map.
      */
     private fun initSources(featureCollection: FeatureCollection) {
-        if(mapmyIndiaMap.getSource(UPPER_SOURCE_ID) == null) {
-            polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
-                    GeoJsonOptions().withLineMetrics(true).withBuffer(2))
-            mapmyIndiaMap.addSource(polylineSource!!)
+        mapmyIndiaMap.getStyle {
+            if (it.getSource(UPPER_SOURCE_ID) == null) {
+                polylineSource = GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+                        GeoJsonOptions().withLineMetrics(true).withBuffer(2))
+                it.addSource(polylineSource!!)
+            }
         }
     }
 
-    override fun onMapChanged(i: Int) {
-        if (i == MapView.DID_FINISH_LOADING_STYLE) {
-            updateSource()
-            createPolyline(latLngs!!)
-        }
+    override fun onDidFinishLoadingStyle() {
+        updateSource()
+        createPolyline(latLngs!!)
     }
 
     /**
      * Update the source of the polyline
      */
     private fun updateSource() {
-        val source = mapmyIndiaMap.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
-        if (source == null) {
-            create()
-            return
+        mapmyIndiaMap.getStyle {
+            val source = it.getSource(UPPER_SOURCE_ID) as GeoJsonSource?
+            if (source == null) {
+                create(it)
+                return@getStyle
+            }
+            if (featureCollection != null) {
+                source.setGeoJson(featureCollection)
+            }
         }
-        if (featureCollection != null) {
-            polylineSource!!.setGeoJson(featureCollection)
-        }
+
     }
 
     /**
      * Remove dotted line
      */
-    fun clear(){
+    fun clear() {
         featureCollection = FeatureCollection.fromFeatures(ArrayList())
         updateSource()
     }

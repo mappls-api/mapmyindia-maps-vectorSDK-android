@@ -7,24 +7,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet;
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.Place;
 import com.mmi.services.api.PlaceResponse;
 import com.mmi.services.api.reversegeocode.MapmyIndiaReverseGeoCode;
+import com.mmi.services.api.reversegeocode.MapmyIndiaReverseGeoCodeManager;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by CEINFO on 26-02-2019.
@@ -32,7 +30,7 @@ import retrofit2.Response;
 
 public class ReverseGeocodeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private MapView mapView;
     private TransparentProgressDialog transparentProgressDialog;
 
@@ -47,16 +45,13 @@ public class ReverseGeocodeActivity extends AppCompatActivity implements OnMapRe
     }
 
     @Override
-    public void onMapReady(final MapboxMap mapmyIndiaMap) {
+    public void onMapReady(final MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
 
-
-        mapmyIndiaMap.setPadding(20, 20, 20, 20);
-
         mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
-        mapmyIndiaMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
+        mapmyIndiaMap.addOnMapClickListener(new MapmyIndiaMap.OnMapClickListener() {
             @Override
-            public void onMapClick(@NonNull LatLng latLng) {
+            public boolean onMapClick(@NonNull LatLng latLng) {
                 mapmyIndiaMap.clear();
                 if (CheckInternet.isNetworkAvailable(ReverseGeocodeActivity.this)) {
                     reverseGeocode(latLng.getLatitude(), latLng.getLongitude());
@@ -64,7 +59,7 @@ public class ReverseGeocodeActivity extends AppCompatActivity implements OnMapRe
                 } else {
                     Toast.makeText(ReverseGeocodeActivity.this, getString(R.string.pleaseCheckInternetConnection), Toast.LENGTH_SHORT).show();
                 }
-
+                return false;
             }
         });
     }
@@ -85,34 +80,53 @@ public class ReverseGeocodeActivity extends AppCompatActivity implements OnMapRe
 
     private void reverseGeocode(Double latitude, Double longitude) {
         progressDialogShow();
-        MapmyIndiaReverseGeoCode.builder()
+        MapmyIndiaReverseGeoCode mapmyIndiaReverseGeoCode = MapmyIndiaReverseGeoCode.builder()
                 .setLocation(latitude, longitude)
-                .build().enqueueCall(new Callback<PlaceResponse>() {
+                .build();
+        MapmyIndiaReverseGeoCodeManager.newInstance(mapmyIndiaReverseGeoCode).call(new OnResponseCallback<PlaceResponse>() {
             @Override
-            public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
-                if (response.code() == 200) {
-                    if (response.body() != null) {
-                        List<Place> placesList = response.body().getPlaces();
-                        Place place = placesList.get(0);
-                        String add = place.getFormattedAddress();
-                        Toast.makeText(ReverseGeocodeActivity.this, add, Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(ReverseGeocodeActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
-                    }
+            public void onSuccess(PlaceResponse placeResponse) {
+                if (placeResponse != null) {
+                    List<Place> placesList = placeResponse.getPlaces();
+                    Place place = placesList.get(0);
+                    String add = place.getFormattedAddress();
+                    Toast.makeText(ReverseGeocodeActivity.this, add, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(ReverseGeocodeActivity.this, response.message(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ReverseGeocodeActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
                 }
-
-                progressDialogHide();
-
             }
 
             @Override
-            public void onFailure(Call<PlaceResponse> call, Throwable t) {
-                progressDialogHide();
-                Toast.makeText(ReverseGeocodeActivity.this, t.toString(), Toast.LENGTH_LONG).show();
+            public void onError(int i, String s) {
+                Toast.makeText(ReverseGeocodeActivity.this, s, Toast.LENGTH_LONG).show();
             }
         });
+//        .enqueueCall(new Callback<PlaceResponse>() {
+//            @Override
+//            public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
+//                if (response.code() == 200) {
+//                    if (response.body() != null) {
+//                        List<Place> placesList = response.body().getPlaces();
+//                        Place place = placesList.get(0);
+//                        String add = place.getFormattedAddress();
+//                        Toast.makeText(ReverseGeocodeActivity.this, add, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        Toast.makeText(ReverseGeocodeActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Toast.makeText(ReverseGeocodeActivity.this, response.message(), Toast.LENGTH_LONG).show();
+//                }
+//
+//                progressDialogHide();
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<PlaceResponse> call, Throwable t) {
+//                progressDialogHide();
+//                Toast.makeText(ReverseGeocodeActivity.this, t.toString(), Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 
     private void addMarker(double latitude, double longitude) {

@@ -12,25 +12,28 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.android.core.location.LocationEngine;
-import com.mapbox.android.core.location.LocationEngineListener;
-import com.mapbox.android.core.location.LocationEnginePriority;
-import com.mapbox.android.core.location.LocationEngineProvider;
-import com.mapbox.android.core.permissions.PermissionsListener;
-import com.mapbox.android.core.permissions.PermissionsManager;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.location.LocationComponent;
-import com.mapbox.mapboxsdk.location.LocationComponentOptions;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.location.LocationComponent;
+import com.mapmyindia.sdk.maps.location.LocationComponentActivationOptions;
+import com.mapmyindia.sdk.maps.location.LocationComponentOptions;
+import com.mapmyindia.sdk.maps.location.engine.LocationEngine;
+import com.mapmyindia.sdk.maps.location.engine.LocationEngineCallback;
+import com.mapmyindia.sdk.maps.location.engine.LocationEngineProvider;
+import com.mapmyindia.sdk.maps.location.engine.LocationEngineRequest;
+import com.mapmyindia.sdk.maps.location.engine.LocationEngineResult;
+import com.mapmyindia.sdk.maps.location.permissions.PermissionsListener;
+import com.mapmyindia.sdk.maps.location.permissions.PermissionsManager;
 
 import java.util.List;
 
 public class SafetyStripActivity extends AppCompatActivity implements OnMapReadyCallback,
-        LocationEngineListener {
+        LocationEngineCallback<LocationEngineResult> {
 
   @Override
   public void onMapError(int errorCode, String message) {
@@ -45,7 +48,7 @@ public class SafetyStripActivity extends AppCompatActivity implements OnMapReady
 
   private LocationComponent locationComponent;
     private LocationEngine locationEngine;
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
 
 
 
@@ -111,34 +114,50 @@ public class SafetyStripActivity extends AppCompatActivity implements OnMapReady
 
     @SuppressLint("MissingPermission")
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
 
-        locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();
-        locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
-        locationEngine.setFastestInterval(1000);
-        locationEngine.addLocationEngineListener(this);
-        locationEngine.activate();
 
-        int[] padding;
+
+      int[] padding;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             padding = new int[]{0, 750, 0, 0};
     } else {
       padding = new int[] {0, 250, 0, 0};
     }
 
-    LocationComponentOptions options = LocationComponentOptions.builder(this)
-      .padding(padding)
-      .layerBelow("waterway-label")
-            .build();
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+          @Override
+          public void onStyleLoaded(@NonNull Style style) {
 
-        locationComponent = mapmyIndiaMap.getLocationComponent();
-        locationComponent.activateLocationComponent(this, locationEngine, options);
-        locationComponent.setLocationComponentEnabled(true);
-        Location location = locationComponent.getLastKnownLocation();
-        if(location != null) {
-          mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
-        }
+            LocationEngineRequest request = new LocationEngineRequest.Builder(100l)
+                    .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
+                    .setMaxWaitTime(5000l).build();
+
+            LocationComponentOptions options = LocationComponentOptions.builder(SafetyStripActivity.this)
+                    .padding(padding)
+                    .layerBelow("waterway-label")
+                    .build();
+
+            locationComponent = mapmyIndiaMap.getLocationComponent();
+            locationEngine = LocationEngineProvider.getBestLocationEngine(SafetyStripActivity.this);
+
+            LocationComponentActivationOptions locationComponentActivationOptions = LocationComponentActivationOptions.builder(SafetyStripActivity.this, style)
+                    .locationComponentOptions(options)
+                    .locationEngine(locationEngine)
+                    .locationEngineRequest(request)
+                    .build();
+            locationComponent.activateLocationComponent(locationComponentActivationOptions);
+            locationComponent.setLocationComponentEnabled(true);
+            Location location = locationComponent.getLastKnownLocation();
+            if(location != null) {
+              mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
+            }
+            locationEngine.requestLocationUpdates(request, SafetyStripActivity.this, getMainLooper());
+            locationEngine.getLastLocation(SafetyStripActivity.this);
+          }
+        });
+
 
         findViewById(R.id.btn_layout).setVisibility(View.VISIBLE);
         mapmyIndiaMap.getUiSettings().setSafetyStripGravity(Gravity.TOP);
@@ -149,14 +168,6 @@ public class SafetyStripActivity extends AppCompatActivity implements OnMapReady
   protected void onStart() {
     super.onStart();
     mapView.onStart();
-    if (locationEngine != null) {
-      locationEngine.addLocationEngineListener(this);
-      if (locationEngine.isConnected()) {
-        locationEngine.requestLocationUpdates();
-      } else {
-        locationEngine.activate();
-      }
-    }
   }
 
   @Override
@@ -175,19 +186,16 @@ public class SafetyStripActivity extends AppCompatActivity implements OnMapReady
   protected void onStop() {
     super.onStop();
     mapView.onStop();
-    if (locationEngine != null) {
-      locationEngine.removeLocationEngineListener(this);
-      locationEngine.removeLocationUpdates();
-    }
+
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    mapView.onDestroy();
     if (locationEngine != null) {
-      locationEngine.deactivate();
+      locationEngine.removeLocationUpdates(this);
     }
+    mapView.onDestroy();
   }
 
   @Override
@@ -197,15 +205,15 @@ public class SafetyStripActivity extends AppCompatActivity implements OnMapReady
   }
 
   @Override
-  @SuppressWarnings( {"MissingPermission"})
-  public void onConnected() {
-    locationEngine.requestLocationUpdates();
+  public void onSuccess(LocationEngineResult locationEngineResult) {
+    if(locationEngineResult.getLastLocation() != null) {
+      Location location = locationEngineResult.getLastLocation();
+      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
+    }
   }
 
   @Override
-  public void onLocationChanged(Location location) {
-    // no impl
-      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
+  public void onFailure(@NonNull Exception e) {
+    e.printStackTrace();
   }
-
 }

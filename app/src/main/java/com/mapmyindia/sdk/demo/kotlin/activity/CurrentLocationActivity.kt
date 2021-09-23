@@ -2,24 +2,21 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.mapbox.android.core.location.LocationEngineListener
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.location.LocationComponentActivationOptions
 
 /**
  * Created by CEINFO on 26-02-2019.
  */
-class CurrentLocationActivity : AppCompatActivity(), OnMapReadyCallback, LocationEngineListener {
+class CurrentLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private var mapView: MapView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,32 +27,21 @@ class CurrentLocationActivity : AppCompatActivity(), OnMapReadyCallback, Locatio
         mapView?.getMapAsync(this)
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
 
 
 
+        mapmyIndiaMap.getStyle {
 
-        mapmyIndiaMap.setPadding(20, 20, 20, 20)
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return@getStyle
+            }
 
-            return
+            mapmyIndiaMap.locationComponent.activateLocationComponent(LocationComponentActivationOptions.builder(this@CurrentLocationActivity, it).build())
+            mapmyIndiaMap.locationComponent.isLocationComponentEnabled = true
         }
-        mapmyIndiaMap.locationComponent.activateLocationComponent(this)
-        mapmyIndiaMap.locationComponent.isLocationComponentEnabled = true
-
-    }
-
-    override fun onConnected() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-    }
-
-    override fun onLocationChanged(location: Location) {
-        mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                LatLng(location.latitude, location.longitude), 16.0))
 
     }
 

@@ -11,15 +11,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.BaseLayoutBinding;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.Marker;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class AddCustomInfoWindowActivity extends AppCompatActivity implements On
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
 
 
 
@@ -56,7 +56,7 @@ public class AddCustomInfoWindowActivity extends AppCompatActivity implements On
                     .title("XYZ"));
         }
 
-        mapmyIndiaMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
+        mapmyIndiaMap.setInfoWindowAdapter(new MapmyIndiaMap.InfoWindowAdapter() {
             @Nullable
             @Override
             public View getInfoWindow(@NonNull Marker marker) {
@@ -67,7 +67,7 @@ public class AddCustomInfoWindowActivity extends AppCompatActivity implements On
             }
         });
 
-        mapmyIndiaMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
+        mapmyIndiaMap.setOnMarkerClickListener(new MapmyIndiaMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
 

@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.geojson.Point
+import com.mapmyindia.sdk.geojson.Point
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityDirectionWidgetSettingBinding
 import com.mapmyindia.sdk.demo.java.utils.InputFilterMinMax

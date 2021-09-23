@@ -1,5 +1,7 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +16,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.mapmyindia.sdk.demo.R;
-
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 /**
  * Created by CEINFO on 26-02-2019.

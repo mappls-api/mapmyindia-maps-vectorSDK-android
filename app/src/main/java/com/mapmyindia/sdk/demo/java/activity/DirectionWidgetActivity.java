@@ -27,7 +27,6 @@ public class DirectionWidgetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_direction_widget);
 
-
         DirectionOptions.Builder optionsBuilder = DirectionOptions.builder();
         if (!MapmyIndiaDirectionWidgetSetting.getInstance().isDefault()){
 

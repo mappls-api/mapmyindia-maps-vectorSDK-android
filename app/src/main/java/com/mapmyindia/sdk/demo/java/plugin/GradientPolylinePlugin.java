@@ -1,55 +1,54 @@
 package com.mapmyindia.sdk.demo.java.plugin;
 
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.color;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.interpolate;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.lineProgress;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.linear;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.stop;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.lineCap;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.lineGradient;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.lineJoin;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.lineWidth;
+
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.LineString;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.LineLayer;
-import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapmyindia.sdk.geojson.Feature;
+import com.mapmyindia.sdk.geojson.FeatureCollection;
+import com.mapmyindia.sdk.geojson.LineString;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.style.layers.LineLayer;
+import com.mapmyindia.sdk.maps.style.layers.Property;
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonOptions;
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mapbox.mapboxsdk.style.expressions.Expression.color;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.lineProgress;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.linear;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineGradient;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
-
 /**
  * Created by Saksham on 18-07-2019
  */
-public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
+public class GradientPolylinePlugin implements MapView.OnDidFinishLoadingStyleListener {
     private static final String UPPER_SOURCE_ID = "line-source-upper-id";
-
-  private MapboxMap mapmyIndiaMap;
-
+    private static final String LAYER_ID = "line-layer-upper-id";
+    private MapmyIndiaMap mapmyIndiaMap;
     private FeatureCollection featureCollection;
     private int startColor = Color.parseColor("#3dd2d0");
     private int endColor = Color.parseColor("#FF20d0");
-    private static final String LAYER_ID = "line-layer-upper-id";
     private List<LatLng> latLngs;
 
     private GeoJsonSource polylineSource;
 
-  public GradientPolylinePlugin(MapboxMap mapmyIndiaMap, MapView mapView) {
-    this.mapmyIndiaMap = mapmyIndiaMap;
+    public GradientPolylinePlugin(MapmyIndiaMap mapmyIndiaMap, MapView mapView) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
 
         updateSource();
-        mapView.addOnMapChangedListener(this);
+        mapView.addOnDidFinishLoadingStyleListener(this);
     }
 
     /**
@@ -89,9 +88,10 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
     /**
      * Add Line layer to map
      */
-    private void create() {
-        if(mapmyIndiaMap.getLayer(LAYER_ID) == null) {
-            mapmyIndiaMap.addLayer(new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
+    private void create(Style style) {
+
+        if (style.getLayer(LAYER_ID) == null) {
+            style.addLayer(new LineLayer(LAYER_ID, UPPER_SOURCE_ID).withProperties(
 //                lineColor(Color.RED),
                     lineCap(Property.LINE_CAP_ROUND),
                     lineJoin(Property.LINE_JOIN_BEVEL),
@@ -104,9 +104,9 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
     }
 
     /**
-     *Remove dotted line
+     * Remove dotted line
      */
-    public void clear(){
+    public void clear() {
         featureCollection = FeatureCollection.fromFeatures(new ArrayList<>());
         updateSource();
 
@@ -116,34 +116,42 @@ public class GradientPolylinePlugin implements MapView.OnMapChangedListener {
      * Add various sources to the map.
      */
     private void initSources(@NonNull FeatureCollection featureCollection) {
-        if(mapmyIndiaMap.getSource(UPPER_SOURCE_ID) == null) {
-            mapmyIndiaMap.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
-                    new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
-        }
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                if (style.getSource(UPPER_SOURCE_ID) == null) {
+                    style.addSource(polylineSource = new GeoJsonSource(UPPER_SOURCE_ID, featureCollection,
+                            new GeoJsonOptions().withLineMetrics(true).withBuffer(2)));
+                }
+            }
+        });
+
     }
+
 
     @Override
-    public void onMapChanged(int i) {
-        if(i == MapView.DID_FINISH_LOADING_STYLE) {
-            updateSource();
-            createPolyline(latLngs);
-        }
+    public void onDidFinishLoadingStyle() {
+        updateSource();
+        createPolyline(latLngs);
     }
-
-
-
 
     /**
      * Update the source of the polyline
      */
     private void updateSource() {
-      GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(UPPER_SOURCE_ID);
-        if(source == null) {
-            create();
-            return;
-        }
-        if(featureCollection != null) {
-            polylineSource.setGeoJson(featureCollection);
-        }
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                GeoJsonSource source = (GeoJsonSource) style.getSource(UPPER_SOURCE_ID);
+                if (source == null) {
+                    create(style);
+                    return;
+                }
+                if (featureCollection != null) {
+                    source.setGeoJson(featureCollection);
+                }
+            }
+        });
+
     }
 }

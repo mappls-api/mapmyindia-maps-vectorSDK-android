@@ -3,26 +3,26 @@ package com.mapmyindia.sdk.demo.kotlin.plugin
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
-import com.mapbox.core.constants.Constants
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.LineString
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapView.OnMapChangedListener
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.style.layers.LineLayer
-import com.mapbox.mapboxsdk.style.layers.Property
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapmyindia.sdk.geojson.Feature
+import com.mapmyindia.sdk.geojson.FeatureCollection
+import com.mapmyindia.sdk.geojson.LineString
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.Style
+import com.mapmyindia.sdk.maps.style.layers.LineLayer
+import com.mapmyindia.sdk.maps.style.layers.Property
+import com.mapmyindia.sdk.maps.style.layers.PropertyFactory
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource
 import com.mmi.services.api.directions.models.LegStep
+import com.mmi.services.utils.Constants
 import java.util.*
 
-class SnakePolyLinePlugin: OnMapChangedListener {
+class SnakePolyLinePlugin : MapView.OnDidFinishLoadingStyleListener {
 
-    private lateinit var  mapView: MapView
-    private lateinit var  mapmyIndiaMap: MapboxMap
+    private lateinit var mapView: MapView
+    private lateinit var mapmyIndiaMap: MapmyIndiaMap
 
-    companion object{
+    companion object {
         private const val NAVIGATION_LINE_WIDTH = 6f
         private const val NAVIGATION_LINE_OPACITY = .8f
         private const val DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID = "DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID"
@@ -31,24 +31,27 @@ class SnakePolyLinePlugin: OnMapChangedListener {
     }
 
     private val handler = Handler(Looper.getMainLooper())
-    private lateinit var  legSteps: List<LegStep>
+    private lateinit var legSteps: List<LegStep>
     private lateinit var runnable: Runnable
 
-   fun SnakePolyLinePlugin(mapView: MapView, mapmyIndiaMap: MapboxMap?) {
+    fun SnakePolyLinePlugin(mapView: MapView, mapmyIndiaMap: MapmyIndiaMap?) {
         this.mapView = mapView
         this.mapmyIndiaMap = mapmyIndiaMap!!
-        mapView.addOnMapChangedListener(this)
+        mapView.addOnDidFinishLoadingStyleListener(this)
         initialiseSourceAndLayer()
     }
 
     private fun initialiseSourceAndLayer() {
-        addSource()
-        addLayer()
+        mapmyIndiaMap.getStyle {
+            addSource(it)
+            addLayer(it)
+        }
     }
-    private fun addLayer() {
-        if (mapmyIndiaMap.getLayer(DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID) == null) {
-            mapmyIndiaMap.addLayer(LineLayer(DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID,
-                   DRIVING_ROUTE_POLYLINE_SOURCE_ID)
+
+    private fun addLayer(style: Style) {
+        if (style.getLayer(DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID) == null) {
+            style.addLayer(LineLayer(DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID,
+                    DRIVING_ROUTE_POLYLINE_SOURCE_ID)
                     .withProperties(
                             PropertyFactory.lineWidth(NAVIGATION_LINE_WIDTH),
                             PropertyFactory.lineOpacity(NAVIGATION_LINE_OPACITY),
@@ -59,9 +62,9 @@ class SnakePolyLinePlugin: OnMapChangedListener {
         }
     }
 
-    private fun addSource() {
-        if (mapmyIndiaMap.getSource(DRIVING_ROUTE_POLYLINE_SOURCE_ID) == null) {
-            mapmyIndiaMap.addSource(GeoJsonSource(DRIVING_ROUTE_POLYLINE_SOURCE_ID))
+    private fun addSource(style: Style) {
+        if (style.getSource(DRIVING_ROUTE_POLYLINE_SOURCE_ID) == null) {
+            style.addSource(GeoJsonSource(DRIVING_ROUTE_POLYLINE_SOURCE_ID))
         }
     }
 
@@ -78,15 +81,14 @@ class SnakePolyLinePlugin: OnMapChangedListener {
         }
     }
 
-    override fun onMapChanged(i: Int) {
-        if (i == MapView.DID_FINISH_LOADING_MAP) {
-            handler.removeCallbacks(runnable)
-            runnable = DrawRouteRunnable(mapmyIndiaMap, legSteps, handler)
-            handler.postDelayed(runnable, DRAW_SPEED_MILLISECONDS.toLong())
-        }
+
+    override fun onDidFinishLoadingStyle() {
+        handler.removeCallbacks(runnable)
+        runnable = DrawRouteRunnable(mapmyIndiaMap, legSteps, handler)
+        handler.postDelayed(runnable, DRAW_SPEED_MILLISECONDS.toLong())
     }
 
-    private class DrawRouteRunnable internal constructor(private val mapmyIndiaMap: MapboxMap?, private val steps: List<LegStep>, private val handler: Handler) : Runnable {
+    private class DrawRouteRunnable constructor(private val mapmyIndiaMap: MapmyIndiaMap?, private val steps: List<LegStep>, private val handler: Handler) : Runnable {
         private val drivingRoutePolyLineFeatureList: MutableList<Feature>
         private var counterIndex = 0
         override fun run() {
@@ -98,8 +100,8 @@ class SnakePolyLinePlugin: OnMapChangedListener {
                     val featureLineString = Feature.fromGeometry(lineStringRepresentingSingleStep)
                     drivingRoutePolyLineFeatureList.add(featureLineString)
                 }
-                if (mapmyIndiaMap != null) {
-                    val source = mapmyIndiaMap.getSourceAs<GeoJsonSource>(DRIVING_ROUTE_POLYLINE_SOURCE_ID)
+                mapmyIndiaMap?.getStyle {
+                    val source = it.getSourceAs<GeoJsonSource>(DRIVING_ROUTE_POLYLINE_SOURCE_ID)
                     source?.setGeoJson(FeatureCollection.fromFeatures(drivingRoutePolyLineFeatureList))
                 }
                 counterIndex++

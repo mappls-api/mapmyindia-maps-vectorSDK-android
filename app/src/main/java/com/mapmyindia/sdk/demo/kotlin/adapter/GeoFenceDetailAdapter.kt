@@ -7,8 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.kotlin.model.GeofenceDetail
+import com.mapmyindia.sdk.demo.R
 
 class GeoFenceDetailAdapter : RecyclerView.Adapter<GeoFenceDetailAdapter.ViewHolder>() {
     private var geofenceDetailList: List<GeofenceDetail>? = null

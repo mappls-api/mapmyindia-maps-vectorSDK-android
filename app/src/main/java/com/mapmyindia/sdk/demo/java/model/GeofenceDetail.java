@@ -1,7 +1,7 @@
 package com.mapmyindia.sdk.demo.java.model;
 
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
 
 import java.util.List;
 

@@ -1,5 +1,16 @@
 package com.mapmyindia.sdk.demo.java.plugin;
 
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.get;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconAllowOverlap;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconIgnorePlacement;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconImage;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconRotate;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconRotationAlignment;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.lineCap;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.lineColor;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.lineJoin;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.lineWidth;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.TypeEvaluator;
@@ -7,39 +18,31 @@ import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.LineString;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.LineLayer;
-import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.mapboxsdk.utils.BitmapUtils;
-import com.mapbox.turf.TurfMeasurement;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.geojson.Feature;
+import com.mapmyindia.sdk.geojson.LineString;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.style.layers.LineLayer;
+import com.mapmyindia.sdk.maps.style.layers.Property;
+import com.mapmyindia.sdk.maps.style.layers.SymbolLayer;
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource;
+import com.mapmyindia.sdk.maps.utils.BitmapUtils;
+import com.mapmyindia.sdk.turf.TurfMeasurement;
 import com.mmi.services.api.directions.models.DirectionsRoute;
 import com.mmi.services.utils.Constants;
 
-import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 
 /**
  ** Created by Saksham on 01-05-2021.
  **/
-public class TrackingPlugin implements MapView.OnMapChangedListener {
+public class TrackingPlugin implements MapView.OnDidFinishLoadingStyleListener {
 
 
     private static final String PROPERTY_BEARING = "bearing";
@@ -50,30 +53,39 @@ public class TrackingPlugin implements MapView.OnMapChangedListener {
     private static final String POLYLINE_LAYER = "polyline-layer";
     private static final String POLYLINE_SOURCE = "polyline-source";
 
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private MapView mMapView;
     private Car car;
     private Feature markerFeature;
     private Feature polylineFeature;
     private boolean isClearAllCallBacks;
 
-
     @Override
-    public void onMapChanged(int change) {
-        if (change == MapView.DID_FINISH_LOADING_STYLE) {
-            mapmyIndiaMap.addImage(CAR, BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(mMapView.getContext(), R.drawable.ic_bike_icon_grey)));
-            updatePolylineSource();
-            updateMarkerSource();
-        }
+    public void onDidFinishLoadingStyle() {
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                style.addImage(CAR, BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(mMapView.getContext(), R.drawable.ic_bike_icon_grey)));
+
+            }
+        });
+        updatePolylineSource();
+        updateMarkerSource();
     }
 
-    public TrackingPlugin(MapView mapView, MapboxMap mapmyIndiaMap) {
+    public TrackingPlugin(MapView mapView, MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
         this.mMapView = mapView;
-        mapmyIndiaMap.addImage(CAR, BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(mapView.getContext(), R.drawable.ic_bike_icon_grey)));
-        initialisePolylineLayerAndSource();
-        initialiseMarkerLayerAndSource();
-        mapView.addOnMapChangedListener(this);
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                style.addImage(CAR, BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(mapView.getContext(), R.drawable.ic_bike_icon_grey)));
+                initialisePolylineLayerAndSource(style);
+                initialiseMarkerLayerAndSource(style);
+            }
+        });
+
+        mapView.addOnDidFinishLoadingStyleListener(this);
     }
 
     public void addMarker(Point point) {
@@ -139,36 +151,48 @@ public class TrackingPlugin implements MapView.OnMapChangedListener {
     }
 
     private void updateMarkerSource() {
-        if (mapmyIndiaMap.getSource(CAR_SOURCE) == null) {
-            initialiseMarkerLayerAndSource();
-            return;
-        }
-        GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(CAR_SOURCE);
-        source.setGeoJson(markerFeature);
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                if (style.getSource(CAR_SOURCE) == null) {
+                    initialiseMarkerLayerAndSource(style);
+                    return;
+                }
+                GeoJsonSource source = (GeoJsonSource) style.getSource(CAR_SOURCE);
+                source.setGeoJson(markerFeature);
+            }
+        });
+
     }
 
     private void updatePolylineSource() {
-        if (mapmyIndiaMap.getSource(POLYLINE_SOURCE) == null) {
-            initialisePolylineLayerAndSource();
-            return;
-        }
-        GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(POLYLINE_SOURCE);
-        source.setGeoJson(polylineFeature);
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                if (style.getSource(POLYLINE_SOURCE) == null) {
+                    initialisePolylineLayerAndSource(style);
+                    return;
+                }
+                GeoJsonSource source = (GeoJsonSource) style.getSource(POLYLINE_SOURCE);
+                source.setGeoJson(polylineFeature);
+            }
+        });
+
     }
 
 
     /**
      * Initialise the marker
      */
-    private void initialiseMarkerLayerAndSource() {
-        if (mapmyIndiaMap.getSource(CAR_SOURCE) == null) {
+    private void initialiseMarkerLayerAndSource(Style style) {
+        if (style.getSource(CAR_SOURCE) == null) {
             if (markerFeature == null) {
-                mapmyIndiaMap.addSource(new GeoJsonSource(CAR_SOURCE));
+                style.addSource(new GeoJsonSource(CAR_SOURCE));
             } else {
-                mapmyIndiaMap.addSource(new GeoJsonSource(CAR_SOURCE, markerFeature));
+                style.addSource(new GeoJsonSource(CAR_SOURCE, markerFeature));
             }
         }
-        if (mapmyIndiaMap.getLayer(CAR_LAYER) == null) {
+        if (style.getLayer(CAR_LAYER) == null) {
             //Symbol layer for car
             SymbolLayer symbolLayer = new SymbolLayer(CAR_LAYER, CAR_SOURCE);
             symbolLayer.withProperties(
@@ -179,16 +203,16 @@ public class TrackingPlugin implements MapView.OnMapChangedListener {
                     iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
 
             );
-            mapmyIndiaMap.addLayerAbove(symbolLayer, POLYLINE_LAYER);
+            style.addLayerAbove(symbolLayer, POLYLINE_LAYER);
         }
 
     }
 
-    private void initialisePolylineLayerAndSource() {
-        if (mapmyIndiaMap.getSource(POLYLINE_SOURCE) == null) {
-            mapmyIndiaMap.addSource(new GeoJsonSource(POLYLINE_SOURCE));
+    private void initialisePolylineLayerAndSource(Style style) {
+        if (style.getSource(POLYLINE_SOURCE) == null) {
+            style.addSource(new GeoJsonSource(POLYLINE_SOURCE));
         }
-        if (mapmyIndiaMap.getLayer(POLYLINE_LAYER) == null) {
+        if (style.getLayer(POLYLINE_LAYER) == null) {
             LineLayer lineLayer = new LineLayer(POLYLINE_LAYER, POLYLINE_SOURCE);
             lineLayer.setProperties(
                     lineCap(Property.LINE_CAP_ROUND),
@@ -196,7 +220,7 @@ public class TrackingPlugin implements MapView.OnMapChangedListener {
                     lineColor(Color.BLACK),
                     lineWidth(4f)
             );
-            mapmyIndiaMap.addLayer(lineLayer);
+            style.addLayer(lineLayer);
         }
 
     }

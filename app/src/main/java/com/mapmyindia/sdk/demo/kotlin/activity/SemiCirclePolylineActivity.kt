@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
-import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivitySemiCirclePolylineBinding
 import com.mapmyindia.sdk.demo.kotlin.utility.SemiCirclePointsListHelper
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonOptions
 import com.mapmyindia.sdk.plugin.annotation.LineManager
 import com.mapmyindia.sdk.plugin.annotation.LineOptions
 
@@ -50,22 +50,25 @@ class SemiCirclePolylineActivity : AppCompatActivity(), OnMapReadyCallback {
         listOfLatLng = SemiCirclePointsListHelper.showCurvedPolyline(LatLng(28.7039, 77.101318), LatLng(28.704248, 77.102370), 0.5)
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         val latLngBounds = LatLngBounds.Builder()
-                .includes(listOfLatLng)
+                .includes(listOfLatLng!!)
                 .build()
 
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
+        mapmyIndiaMap.getStyle {
+            lineManager = LineManager(mBinding.mapView, mapmyIndiaMap, it, GeoJsonOptions().withLineMetrics(true).withBuffer(2))
+            lineManager?.lineDasharray = arrayOf(4f, 6f)
+            val lineOptions: LineOptions = LineOptions()
+                    .points(listOfLatLng)
+                    .lineColor("#FF0000")
+                    .lineWidth(4f)
+            lineManager?.create(lineOptions)
 
-        lineManager = LineManager(mBinding.mapView, mapmyIndiaMap, null, GeoJsonOptions().withLineMetrics(true).withBuffer(2))
-        lineManager?.lineDasharray = arrayOf(4f, 6f)
-        val lineOptions: LineOptions = LineOptions()
-                .points(listOfLatLng)
-                .lineColor("#FF0000")
-                .lineWidth(4f)
-        lineManager?.create(lineOptions)
+            mBinding.remove.visibility = View.VISIBLE
+        }
 
-        mBinding.remove.visibility = View.VISIBLE
+
 
     }
 

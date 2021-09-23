@@ -9,27 +9,26 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.android.core.location.LocationEngine
-import com.mapbox.android.core.location.LocationEngineListener
-import com.mapbox.android.core.location.LocationEnginePriority
-import com.mapbox.android.core.location.LocationEngineProvider
-import com.mapbox.android.core.permissions.PermissionsListener
-import com.mapbox.android.core.permissions.PermissionsManager
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.LocationComponent
-import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.location.LocationComponent
+import com.mapmyindia.sdk.maps.location.LocationComponentActivationOptions
+import com.mapmyindia.sdk.maps.location.LocationComponentOptions
+import com.mapmyindia.sdk.maps.location.engine.*
+import com.mapmyindia.sdk.maps.location.permissions.PermissionsListener
+import com.mapmyindia.sdk.maps.location.permissions.PermissionsManager
+import java.lang.Exception
 
-class SafetyStripActivity : AppCompatActivity(), OnMapReadyCallback, LocationEngineListener {
+class SafetyStripActivity : AppCompatActivity(), OnMapReadyCallback, LocationEngineCallback<LocationEngineResult> {
 
     private lateinit var mapView: MapView
     private lateinit var btnShowStrip: Button
     private lateinit var btnHideStrip: Button
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private var permissionsManager: PermissionsManager? = null
     private var locationEngine: LocationEngine? = null
     private var locationComponent: LocationComponent? = null
@@ -61,7 +60,7 @@ class SafetyStripActivity : AppCompatActivity(), OnMapReadyCallback, LocationEng
                 }
 
                 override fun onPermissionResult(granted: Boolean) {
-                    if(granted) {
+                    if (granted) {
                         mapView.getMapAsync(this@SafetyStripActivity)
                     } else {
                         finish()
@@ -84,13 +83,9 @@ class SafetyStripActivity : AppCompatActivity(), OnMapReadyCallback, LocationEng
     }
 
     @SuppressLint("MissingPermission")
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
-        locationEngine = LocationEngineProvider(this).obtainBestLocationEngineAvailable()
-        locationEngine?.priority = LocationEnginePriority.HIGH_ACCURACY
-        locationEngine?.fastestInterval = 1000
-        locationEngine?.addLocationEngineListener(this)
-        locationEngine?.activate()
+
         val padding: IntArray
         padding = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             intArrayOf(0, 750, 0, 0)
@@ -98,59 +93,69 @@ class SafetyStripActivity : AppCompatActivity(), OnMapReadyCallback, LocationEng
             intArrayOf(0, 250, 0, 0)
         }
 
-        val options = LocationComponentOptions.builder(this)
-                .padding(padding)
-                .layerBelow("waterway-label")
-                .build()
+        mapmyIndiaMap.getStyle {
 
-        locationComponent = mapmyIndiaMap?.locationComponent
-        locationComponent?.activateLocationComponent(this, locationEngine, options)
-        locationComponent?.isLocationComponentEnabled = true
-        val location: Location? = locationComponent?.lastKnownLocation
-        if(location != null) {
-            mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 14.0))
+            val request = LocationEngineRequest.Builder(100L)
+                    .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
+                    .setMaxWaitTime(5000L).build()
+
+            val options = LocationComponentOptions.builder(this@SafetyStripActivity)
+                    .padding(padding)
+                    .layerBelow("waterway-label")
+                    .build()
+
+            locationComponent = mapmyIndiaMap.locationComponent
+            locationEngine = LocationEngineProvider.getBestLocationEngine(this@SafetyStripActivity)
+
+            val locationComponentActivationOptions = LocationComponentActivationOptions.builder(this@SafetyStripActivity, it)
+                    .locationComponentOptions(options)
+                    .locationEngine(locationEngine)
+                    .locationEngineRequest(request)
+                    .build()
+            locationComponent?.activateLocationComponent(locationComponentActivationOptions)
+            locationComponent?.isLocationComponentEnabled = true
+            val location = locationComponent!!.lastKnownLocation
+            if (location != null) {
+                mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 14.0))
+            }
+            locationEngine!!.requestLocationUpdates(request, this@SafetyStripActivity, mainLooper)
+            locationEngine!!.getLastLocation(this@SafetyStripActivity)
         }
         findViewById<View>(R.id.btn_layout).visibility = View.VISIBLE
-        mapmyIndiaMap?.uiSettings?.safetyStripGravity = Gravity.TOP
+        mapmyIndiaMap.uiSettings?.safetyStripGravity = Gravity.TOP
     }
 
-    override fun onLocationChanged(location: Location?) {
-        if(location == null) {
-            // no impl
-            return
+
+    override fun onSuccess(p0: LocationEngineResult?) {
+        if(p0 != null) {
+            val location = p0.lastLocation
+                    ?: // no impl
+                    return
+            mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 14.0))
+
         }
-        mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 14.0))
-
     }
 
-    @SuppressLint("MissingPermission")
-    override fun onConnected() {
-        locationEngine?.requestLocationUpdates()
+    override fun onFailure(p0: Exception) {
+        p0.stackTrace
     }
 
     @SuppressLint("MissingPermission")
     override fun onStart() {
         super.onStart()
         mapView.onStart()
-        locationEngine?.addLocationEngineListener(this)
-        if (locationEngine?.isConnected?:false) {
-            locationEngine?.requestLocationUpdates()
-        } else {
-            locationEngine?.activate()
-        }
     }
 
     override fun onStop() {
         super.onStop()
         mapView.onStop()
-        locationEngine?.removeLocationEngineListener(this)
-        locationEngine?.removeLocationUpdates()
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        locationEngine?.removeLocationUpdates(this)
         mapView.onDestroy()
-        locationEngine?.deactivate()
     }
 
     override fun onPause() {

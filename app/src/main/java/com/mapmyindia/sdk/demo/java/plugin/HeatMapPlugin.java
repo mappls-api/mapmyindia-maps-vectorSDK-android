@@ -1,84 +1,98 @@
 package com.mapmyindia.sdk.demo.java.plugin;
 
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.CircleLayer;
-import com.mapbox.mapboxsdk.style.layers.HeatmapLayer;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.get;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.heatmapDensity;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.interpolate;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.linear;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.literal;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.rgb;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.rgba;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.stop;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.zoom;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.circleColor;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.circleOpacity;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.circleRadius;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.circleStrokeColor;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.circleStrokeWidth;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.heatmapColor;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.heatmapIntensity;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.heatmapOpacity;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.heatmapRadius;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.heatmapWeight;
+
+import androidx.annotation.NonNull;
+
+import com.mapmyindia.sdk.geojson.Feature;
+import com.mapmyindia.sdk.geojson.FeatureCollection;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.style.layers.CircleLayer;
+import com.mapmyindia.sdk.maps.style.layers.HeatmapLayer;
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.linear;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeWidth;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapWeight;
-
-public class HeatMapPlugin implements MapView.OnMapChangedListener {
+public class HeatMapPlugin implements MapView.OnDidFinishLoadingStyleListener {
 
 
-    private MapboxMap mapmyIndiaMap;
-    private FeatureCollection featureCollection;
     private static final String HEAT_MAP_SOURCE_ID = "heatMapSourceId";
     private static final String HEAT_MAP_LAYER_ID = "heatMapLayerId";
     private static final String CIRCLE_LAYER_ID = "heatMapCircleLayerId";
     private static final String PROPERTY_MAG = "mag";
+    private MapmyIndiaMap mapmyIndiaMap;
+    private FeatureCollection featureCollection;
     private Builder builder;
 
-    private HeatMapPlugin(MapboxMap mapmyIndiaMap, MapView mapView, Builder builder) {
+    private HeatMapPlugin(MapmyIndiaMap mapmyIndiaMap, MapView mapView, Builder builder) {
         this.mapmyIndiaMap = mapmyIndiaMap;
         this.builder = builder;
-        mapView.addOnMapChangedListener(this);
+        mapView.addOnDidFinishLoadingStyleListener(this);
         updateState();
 
+    }
+
+    public static Builder builder(MapmyIndiaMap mapmyIndiaMap, MapView mapView) {
+        return new Builder(mapmyIndiaMap, mapView)
+                .maxZoom(9.0f);
     }
 
     /**
      * Update the state of the marker
      */
     private void updateState() {
-        GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(HEAT_MAP_SOURCE_ID);
-        if (source == null) {
-            initialise();
-            return;
-        }
-        if (featureCollection != null) {
-            source.setGeoJson(featureCollection);
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                GeoJsonSource source = (GeoJsonSource) style.getSource(HEAT_MAP_SOURCE_ID);
+                if (source == null) {
+                    initialise(style);
+                    return;
+                }
+                if (featureCollection != null) {
+                    source.setGeoJson(featureCollection);
+                }
+            }
+        });
+
+    }
+
+    private void initialise(Style style) {
+        addHeatMapSource(style);
+        addHeatmapLayer(style);
+        addCircleLayer(style);
+    }
+
+    private void addHeatMapSource(Style style) {
+        if (style.getSource(HEAT_MAP_SOURCE_ID) == null) {
+            style.addSource(new GeoJsonSource(HEAT_MAP_SOURCE_ID, featureCollection));
         }
     }
 
-    private void initialise() {
-        addHeatMapSource();
-        addHeatmapLayer();
-        addCircleLayer();
-    }
-
-    private void addHeatMapSource() {
-        if(mapmyIndiaMap.getSource(HEAT_MAP_SOURCE_ID) == null) {
-            mapmyIndiaMap.addSource(new GeoJsonSource(HEAT_MAP_SOURCE_ID, featureCollection));
-        }
-    }
-
-    private void addCircleLayer() {
-        if (mapmyIndiaMap.getLayer(CIRCLE_LAYER_ID) == null) {
+    private void addCircleLayer(Style style) {
+        if (style.getLayer(CIRCLE_LAYER_ID) == null) {
             CircleLayer circleLayer = new CircleLayer(CIRCLE_LAYER_ID, HEAT_MAP_SOURCE_ID);
             circleLayer.setProperties(
 
@@ -124,12 +138,12 @@ public class HeatMapPlugin implements MapView.OnMapChangedListener {
                     circleStrokeWidth(1.0f)
             );
 
-            mapmyIndiaMap.addLayerBelow(circleLayer, HEAT_MAP_LAYER_ID);
+            style.addLayerBelow(circleLayer, HEAT_MAP_LAYER_ID);
         }
     }
 
-    private void addHeatmapLayer() {
-        if (mapmyIndiaMap.getLayer(HEAT_MAP_LAYER_ID) == null) {
+    private void addHeatmapLayer(Style style) {
+        if (style.getLayer(HEAT_MAP_LAYER_ID) == null) {
             HeatmapLayer layer = new HeatmapLayer(HEAT_MAP_LAYER_ID, HEAT_MAP_SOURCE_ID);
             layer.setMaxZoom(builder.maxZoom);
             layer.setSourceLayer(HEAT_MAP_LAYER_ID);
@@ -189,16 +203,14 @@ public class HeatMapPlugin implements MapView.OnMapChangedListener {
             );
 
 //            mapmyIndiaMap.addLayerAbove(layer, "waterway-label");
-            mapmyIndiaMap.addLayer(layer);
+            style.addLayer(layer);
         }
     }
 
     @Override
-    public void onMapChanged(int change) {
-        if (change == MapView.DID_FINISH_LOADING_STYLE) {
-            updateState();
-            addHeatMap();
-        }
+    public void onDidFinishLoadingStyle() {
+        updateState();
+        addHeatMap();
     }
 
     public void addHeatMap() {
@@ -214,19 +226,13 @@ public class HeatMapPlugin implements MapView.OnMapChangedListener {
         updateState();
     }
 
-    public static Builder builder(MapboxMap mapmyIndiaMap, MapView mapView) {
-        return new Builder(mapmyIndiaMap, mapView)
-                .maxZoom(9.0f);
-    }
-
-
     public static class Builder {
-        private MapboxMap mapmyIndiaMap;
+        private MapmyIndiaMap mapmyIndiaMap;
         private MapView mapView;
         private Float maxZoom;
         private List<HeatMapOption> heatMapOptionList = new ArrayList<>();
 
-        private Builder(MapboxMap mapmyIndiaMap, MapView mapView) {
+        private Builder(MapmyIndiaMap mapmyIndiaMap, MapView mapView) {
             this.mapmyIndiaMap = mapmyIndiaMap;
             this.mapView = mapView;
         }

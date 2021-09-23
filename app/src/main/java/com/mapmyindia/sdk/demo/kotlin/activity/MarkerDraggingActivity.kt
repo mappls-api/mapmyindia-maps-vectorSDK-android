@@ -6,14 +6,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
-import com.mapbox.mapboxsdk.utils.BitmapUtils
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.BaseLayoutBinding
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.utils.BitmapUtils
 import com.mapmyindia.sdk.plugin.annotation.OnSymbolDragListener
 import com.mapmyindia.sdk.plugin.annotation.Symbol
 import com.mapmyindia.sdk.plugin.annotation.SymbolManager
@@ -24,7 +23,7 @@ import com.mapmyindia.sdk.plugin.annotation.SymbolOptions
  */
 class MarkerDraggingActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mBinding:BaseLayoutBinding
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private val latLng = LatLng(28.705436, 77.100462)
     private var symbolManager: SymbolManager? = null
 
@@ -36,34 +35,37 @@ class MarkerDraggingActivity : AppCompatActivity(), OnMapReadyCallback {
         mBinding.mapView.getMapAsync(this)
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0))
         initMarker()
     }
 
     private fun initMarker() {
-        symbolManager = SymbolManager( mBinding.mapView, mapmyIndiaMap!!)
-        val symbolOptions = SymbolOptions()
-                .icon(BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(this, R.drawable.placeholder)))
-                .draggable(true)
-                .position(latLng)
-        symbolManager?.iconAllowOverlap = true
-        symbolManager?.iconIgnorePlacement = false
-        symbolManager?.create(symbolOptions)
-        symbolManager?.addDragListener(object : OnSymbolDragListener {
-            override fun onAnnotationDragStarted(p0: Symbol?) {
+        mapmyIndiaMap?.getStyle {
+            symbolManager = SymbolManager( mBinding.mapView, mapmyIndiaMap!!, it)
+            val symbolOptions = SymbolOptions()
+                    .icon(BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(this, R.drawable.placeholder)))
+                    .draggable(true)
+                    .position(latLng)
+            symbolManager?.iconAllowOverlap = true
+            symbolManager?.iconIgnorePlacement = false
+            symbolManager?.create(symbolOptions)
+            symbolManager?.addDragListener(object : OnSymbolDragListener {
+                override fun onAnnotationDragStarted(p0: Symbol?) {
 
-            }
+                }
 
-            override fun onAnnotationDrag(p0: Symbol?) {
+                override fun onAnnotationDrag(p0: Symbol?) {
 
-            }
+                }
 
-            override fun onAnnotationDragFinished(symbol: Symbol?) {
-                Toast.makeText(this@MarkerDraggingActivity, symbol?.position.toString(), Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onAnnotationDragFinished(symbol: Symbol?) {
+                    Toast.makeText(this@MarkerDraggingActivity, symbol?.position.toString(), Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
     }
 
     override fun onMapError(i: Int, s: String) {

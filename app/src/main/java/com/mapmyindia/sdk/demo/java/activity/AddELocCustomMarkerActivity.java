@@ -6,13 +6,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.Icon;
+import com.mapmyindia.sdk.maps.annotations.IconFactory;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraELocUpdateFactory;
 
 /**
  * Created by Saksham on 26-11-2019.
@@ -31,15 +32,12 @@ public class AddELocCustomMarkerActivity extends AppCompatActivity implements On
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
-
-
-        mapmyIndiaMap.setPadding(20, 20, 20, 20);
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
 
 
         IconFactory iconFactory = IconFactory.getInstance(this);
         Icon icon = iconFactory.fromResource(R.drawable.placeholder);
-        mapmyIndiaMap.addMarker(new MarkerOptions().eLoc("MMI000").icon(icon), new MapboxMap.OnMarkerAddedListener() {
+        mapmyIndiaMap.addMarker(new MarkerOptions().eLoc("MMI000").icon(icon), new MapmyIndiaMap.OnMarkerAddedListener() {
             public void onSuccess() {
                 Toast.makeText(AddELocCustomMarkerActivity.this, "Marker Added Successfully", Toast.LENGTH_SHORT).show();
             }
@@ -50,7 +48,7 @@ public class AddELocCustomMarkerActivity extends AppCompatActivity implements On
             }
         });
 
-        mapmyIndiaMap.animateCamera("MMI000", 16);
+        mapmyIndiaMap.animateCamera(CameraELocUpdateFactory.newELocZoom("MMI000", 16));
     }
 
     @Override

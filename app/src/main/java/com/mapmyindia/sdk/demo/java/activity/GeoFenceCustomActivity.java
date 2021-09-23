@@ -13,15 +13,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.gson.Gson;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.LayoutGeofenceUiActivityBinding;
 import com.mapmyindia.sdk.demo.java.model.GeofenceDetail;
 import com.mapmyindia.sdk.geofence.ui.GeoFence;
 import com.mapmyindia.sdk.geofence.ui.listeners.GeoFenceViewCallback;
 import com.mapmyindia.sdk.geofence.ui.util.Orientation;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class GeoFenceCustomActivity extends AppCompatActivity implements GeoFenc
     LayoutGeofenceUiActivityBinding mBinding;
     GeoFence geoFence;
     GeofenceDetail geofenceDetail;
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
 
 
     @Override
@@ -145,7 +145,7 @@ public class GeoFenceCustomActivity extends AppCompatActivity implements GeoFenc
     }
 
     @Override
-    public void onGeoFenceReady(MapboxMap mapmyIndiaMap) {
+    public void onGeoFenceReady(MapmyIndiaMap mapmyIndiaMap) {
         mBinding.toolsView.setVisibility(View.VISIBLE);
     }
 

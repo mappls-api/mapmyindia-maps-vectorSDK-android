@@ -3,12 +3,12 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraPosition
+import com.mapmyindia.sdk.maps.geometry.LatLng
 
 /**
  * Created by CEINFO on 26-02-2019.
@@ -29,13 +29,14 @@ class MapClickActivity : AppCompatActivity(), OnMapReadyCallback {
                 28.551087, 77.257373)).zoom(14.0).tilt(0.0).build()
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         mapmyIndiaMap.cameraPosition = setCameraAndTilt()
 
 
-
-        mapmyIndiaMap.setPadding(20, 20, 20, 20)
-        mapmyIndiaMap.addOnMapClickListener { latLng -> Toast.makeText(this@MapClickActivity, latLng.toString(), Toast.LENGTH_LONG).show() }
+        mapmyIndiaMap.addOnMapClickListener { latLng ->
+            Toast.makeText(this@MapClickActivity, latLng.toString(), Toast.LENGTH_LONG).show()
+            return@addOnMapClickListener false
+        }
     }
 
     override fun onMapError(i: Int, s: String) {

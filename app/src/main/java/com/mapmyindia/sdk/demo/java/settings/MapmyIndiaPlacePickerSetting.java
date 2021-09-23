@@ -1,6 +1,6 @@
 package com.mapmyindia.sdk.demo.java.settings;
 
-import com.mapbox.geojson.Point;
+import com.mapmyindia.sdk.geojson.Point;
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions;
 
 public class MapmyIndiaPlacePickerSetting {

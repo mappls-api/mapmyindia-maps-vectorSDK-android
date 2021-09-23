@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.ActivityGeoFenceBinding;
 import com.mapmyindia.sdk.demo.java.settingscreen.GeofenceWidgetSettingsActivity;
+import com.mapmyindia.sdk.demo.kotlin.activity.GeoFenceDetailActivity;
 
 
 public class GeoFenceActivity extends AppCompatActivity {

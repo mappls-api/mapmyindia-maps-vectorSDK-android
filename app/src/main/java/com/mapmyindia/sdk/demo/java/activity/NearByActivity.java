@@ -2,7 +2,6 @@ package com.mapmyindia.sdk.demo.java.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,26 +14,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.adapter.NearByAdapter;
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet;
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraELocUpdateFactory;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.nearby.MapmyIndiaNearby;
+import com.mmi.services.api.nearby.MapmyIndiaNearbyManager;
 import com.mmi.services.api.nearby.model.NearbyAtlasResponse;
 import com.mmi.services.api.nearby.model.NearbyAtlasResult;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by CEINFO on 26-02-2019.
@@ -42,7 +42,7 @@ import retrofit2.Response;
 
 public class NearByActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private MapView mapView;
     private TransparentProgressDialog transparentProgressDialog;
     private RecyclerView recyclerView;
@@ -54,6 +54,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
     private Button hitAPiBtn;
     private SeekBar radiusSeekbar;
     int radius = 1000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,20 +66,20 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
         recyclerView = findViewById(R.id.nearByRecyclerview);
         mLayoutManager = new LinearLayoutManager(NearByActivity.this);
         recyclerView.setLayoutManager(mLayoutManager);
-        keywordEt=findViewById(R.id.keyword_et);
-        hitAPiBtn=findViewById(R.id.hit_api_btn);
-        locationEt= findViewById(R.id.location_et);
+        keywordEt = findViewById(R.id.keyword_et);
+        hitAPiBtn = findViewById(R.id.hit_api_btn);
+        locationEt = findViewById(R.id.location_et);
         radiusSeekbar = findViewById(R.id.seekBar);
-       // radiusSeekbar.setMin(500);
+        // radiusSeekbar.setMin(500);
         radiusSeekbar.setMax(10000);
         radiusSeekbar.setProgress(1000);
         radiusSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (progress<500){
+                if (progress < 500) {
                     radiusSeekbar.setProgress(500);
-                }else {
-                    radius=progress;
+                } else {
+                    radius = progress;
                 }
             }
 
@@ -92,9 +93,9 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
 
             }
         });
-        hitAPiBtn.setOnClickListener(v->{
+        hitAPiBtn.setOnClickListener(v -> {
             String location = locationEt.getText().toString();
-            if (!TextUtils.isEmpty(location)){
+            if (!TextUtils.isEmpty(location)) {
                 getNearBy(locationEt.getText().toString());
             }
         });
@@ -118,21 +119,21 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onMapReady(final MapboxMap mapmyIndiaMap) {
+    public void onMapReady(final MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
 
 
-        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
-       mapmyIndiaMap.setCameraPosition(setCameraAndTilt(28.67,77.56));
+        mapmyIndiaMap.setCameraPosition(setCameraAndTilt(28.67, 77.56));
         mapmyIndiaMap.addOnMapClickListener(latLng -> {
             mapmyIndiaMap.clear();
-            locationEt.setText(latLng.getLatitude()+","+latLng.getLongitude());
+            locationEt.setText(latLng.getLatitude() + "," + latLng.getLongitude());
             if (CheckInternet.isNetworkAvailable(NearByActivity.this)) {
-                getNearBy(latLng.getLatitude()+","+latLng.getLongitude());
+                getNearBy(latLng.getLatitude() + "," + latLng.getLongitude());
             } else {
                 Toast.makeText(NearByActivity.this, getString(R.string.pleaseCheckInternetConnection), Toast.LENGTH_SHORT).show();
             }
+            return false;
         });
     }
 
@@ -141,7 +142,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
-    protected CameraPosition setCameraAndTilt(double lat , double lng) {
+    protected CameraPosition setCameraAndTilt(double lat, double lng) {
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
                 lat, lng)).zoom(11).tilt(0).build();
         return cameraPosition;
@@ -158,51 +159,42 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
     private void getNearBy(String location) {
         mapmyIndiaMap.clear();
         progressDialogShow();
-       MapmyIndiaNearby.Builder builder =  MapmyIndiaNearby.builder();
+        MapmyIndiaNearby.Builder builder = MapmyIndiaNearby.builder();
 
 
-                if (!TextUtils.isEmpty(location)){
-                    if (!location.contains(",")){
-                        mapmyIndiaMap.moveCamera(location,11);
-                        builder.setLocation(location);
-                    } else {
-                        mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(location.split(",")[0]),Double.parseDouble(location.split(",")[1])),11));
-                        builder.setLocation(Double.parseDouble(location.split(",")[0]),Double.parseDouble(location.split(",")[1]));
+        if (!TextUtils.isEmpty(location)) {
+            if (!location.contains(",")) {
+                mapmyIndiaMap.moveCamera(CameraELocUpdateFactory.newELocZoom(location, 11));
+                builder.setLocation(location);
+            } else {
+                mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(location.split(",")[0]), Double.parseDouble(location.split(",")[1])), 11));
+                builder.setLocation(Double.parseDouble(location.split(",")[0]), Double.parseDouble(location.split(",")[1]));
+            }
+        }
+
+        builder.keyword(keywordEt.getText().toString())
+                .radius(radius);
+        MapmyIndiaNearbyManager.newInstance(builder.build()).call(new OnResponseCallback<NearbyAtlasResponse>() {
+            @Override
+            public void onSuccess(NearbyAtlasResponse nearbyAtlasResponse) {
+                if (nearbyAtlasResponse != null) {
+                    Timber.tag("NEARBY").e(new Gson().toJson(nearbyAtlasResponse));
+                    ArrayList<NearbyAtlasResult> nearByList = nearbyAtlasResponse.getSuggestedLocations();
+                    if (nearByList.size() > 0) {
+                        addMarker(nearByList);
                     }
+                } else {
+                    Toast.makeText(NearByActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
                 }
+                progressDialogHide();
+            }
 
-                builder.keyword(keywordEt.getText().toString())
-                .page(2);
-
-                builder.radius(radius)
-                .build()
-                .enqueueCall(new Callback<NearbyAtlasResponse>() {
-                    @Override
-                    public void onResponse(Call<NearbyAtlasResponse> call, Response<NearbyAtlasResponse> response) {
-
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                Log.e("NEARBY", new Gson().toJson(response.body()));
-                                ArrayList<NearbyAtlasResult> nearByList = response.body().getSuggestedLocations();
-                                if (nearByList.size() > 0) {
-                                    addMarker(nearByList);
-                                }
-                            } else {
-                                Toast.makeText(NearByActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Log.e("NEARBY", new Gson().toJson(response.body()));
-                            Toast.makeText(NearByActivity.this, response.code() + "", Toast.LENGTH_LONG).show();
-                        }
-
-                        progressDialogHide();
-                    }
-
-                    @Override
-                    public void onFailure(Call<NearbyAtlasResponse> call, Throwable t) {
-                        progressDialogHide();
-                    }
-                });
+            @Override
+            public void onError(int i, String s) {
+                progressDialogHide();
+                Toast.makeText(NearByActivity.this, s, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
@@ -211,7 +203,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
 //            if (marker.getLatitude() == null || marker.getLongitude() == null) {
 //                mapmyIndiaMap.addMarker(new MarkerOptions().eLoc(marker.eLoc).title(marker.getPlaceName()));
 //            } else {
-                mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(marker.getLatitude(), marker.getLongitude())).title(marker.getPlaceName()));
+            mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(marker.getLatitude(), marker.getLongitude())).title(marker.getPlaceName()));
 //            }
         }
 

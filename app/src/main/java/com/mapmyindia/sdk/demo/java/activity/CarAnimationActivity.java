@@ -3,17 +3,19 @@ package com.mapmyindia.sdk.demo.java.activity;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.plugin.AnimatedCarPlugin;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.annotations.PolylineOptions;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,30 +66,34 @@ public class CarAnimationActivity extends AppCompatActivity implements OnMapRead
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .includes(listOfLatlang)
                 .build();
 
 //        this.mapmyIndiaMap = mapmyIndiaMap;
-      animatedCarPlugin = new AnimatedCarPlugin(getApplicationContext(), mapView, mapmyIndiaMap);
-      mapmyIndiaMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4));
-      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
-        animatedCarPlugin.addMainCar(listOfLatlang.get(index), true);
-        animatedCarPlugin.animateCar();
-
-        animatedCarPlugin.setOnUpdateNextPoint(new AnimatedCarPlugin.OnUpdatePoint() {
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
             @Override
-            public void updateNextPoint() {
-                if (index < listOfLatlang.size() - 1)
-                    index = index + 1;
-
-                animatedCarPlugin.updateNextPoint(listOfLatlang.get(index));
+            public void onStyleLoaded(@NonNull Style style) {
+                animatedCarPlugin = new AnimatedCarPlugin(getApplicationContext(), mapView, mapmyIndiaMap);
+                animatedCarPlugin.addMainCar(listOfLatlang.get(index), true);
                 animatedCarPlugin.animateCar();
+
+                animatedCarPlugin.setOnUpdateNextPoint(new AnimatedCarPlugin.OnUpdatePoint() {
+                    @Override
+                    public void updateNextPoint() {
+                        if (index < listOfLatlang.size() - 1)
+                            index = index + 1;
+
+                        animatedCarPlugin.updateNextPoint(listOfLatlang.get(index));
+                        animatedCarPlugin.animateCar();
+                    }
+                });
             }
         });
 
-//        mapmyIndiaMap.addMarker(new MarkerOptions().position(listOfLatlang.get(listOfLatlang.size() - 1)).title("Destination"));
+      mapmyIndiaMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4));
+      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
 
     }
 

@@ -6,15 +6,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.BaseLayoutBinding;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.Icon;
+import com.mapmyindia.sdk.maps.annotations.IconFactory;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
 
 /**
  * Created by CEINFO on 26-02-2019.
@@ -33,10 +33,7 @@ public class AddCustomMarkerActivity extends AppCompatActivity implements OnMapR
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
-
-
-      mapmyIndiaMap.setPadding(20, 20, 20, 20);
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
 
 
         IconFactory iconFactory = IconFactory.getInstance(this);

@@ -13,11 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.settings.MapmyIndiaPlacePickerSetting;
 import com.mapmyindia.sdk.demo.java.settingscreen.PlacePickerSettingsActivity;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapmyindia.sdk.plugins.places.placepicker.PlacePicker;
 import com.mapmyindia.sdk.plugins.places.placepicker.model.PlacePickerOptions;

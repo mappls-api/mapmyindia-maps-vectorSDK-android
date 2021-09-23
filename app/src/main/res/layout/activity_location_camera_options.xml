@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
 
-        <com.mapbox.mapboxsdk.maps.MapView
+        <com.mapmyindia.sdk.maps.MapView
             android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintLeft_toLeftOf="parent"

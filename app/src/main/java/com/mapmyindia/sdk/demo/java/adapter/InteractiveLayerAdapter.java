@@ -9,8 +9,8 @@ import android.widget.CompoundButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mapbox.mapboxsdk.maps.InteractiveLayer;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.maps.InteractiveLayer;
 
 import java.util.List;
 

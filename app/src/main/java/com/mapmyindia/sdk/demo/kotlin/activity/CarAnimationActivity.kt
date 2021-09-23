@@ -4,20 +4,20 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.mapboxsdk.annotations.PolylineOptions
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityCarAnimationBinding
 import com.mapmyindia.sdk.demo.kotlin.plugin.AnimatedCarPlugin
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.annotations.PolylineOptions
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds
 
 /**
  * Created by Saksham on 19/9/19.
  */
-class CarAnimationActivity: AppCompatActivity(),OnMapReadyCallback {
+class CarAnimationActivity: AppCompatActivity(), OnMapReadyCallback {
 
     private val listOfLatlang: MutableList<LatLng> = mutableListOf()
     private var animatedCarPlugin: AnimatedCarPlugin? = null
@@ -39,13 +39,13 @@ class CarAnimationActivity: AppCompatActivity(),OnMapReadyCallback {
         mBinding.mapView.getMapAsync(this)
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
 
         val latLngBounds: LatLngBounds = LatLngBounds.Builder()
                 .includes(listOfLatlang)
                 .build()
 
-        mapmyIndiaMap!!.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
 
         animatedCarPlugin = AnimatedCarPlugin(applicationContext, mBinding.mapView, mapmyIndiaMap)
         mapmyIndiaMap.addPolyline(PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4f))

@@ -10,15 +10,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.InteractiveLayer;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.covid.InteractiveItemDetails;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.adapter.InteractiveLayerAdapter;
+import com.mapmyindia.sdk.maps.InteractiveLayer;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.covid.InteractiveItemDetails;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import java.util.List;
 public class InteractiveLayerActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MapView mapView;
     private BottomSheetBehavior bottomSheetBehavior;
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private RecyclerView recyclerView;
     private InteractiveLayerAdapter adapter;
     private SwitchCompat toggleInfoWindow;
@@ -60,7 +60,6 @@ public class InteractiveLayerActivity extends AppCompatActivity implements OnMap
             @Override
             public void onLayerSelected(InteractiveLayer interactiveLayer, boolean isSelected) {
                 if(isSelected) {
-
                     mapmyIndiaMap.showInteractiveLayer(interactiveLayer);
                 } else {
                     mapmyIndiaMap.hideInteractiveLayer(interactiveLayer);
@@ -72,12 +71,12 @@ public class InteractiveLayerActivity extends AppCompatActivity implements OnMap
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(28, 77), 5));
 
 
-        mapmyIndiaMap.setOnInteractiveLayerClickListener(new MapboxMap.OnInteractiveLayerClickListener() {
+        mapmyIndiaMap.setOnInteractiveLayerClickListener(new MapmyIndiaMap.OnInteractiveLayerClickListener() {
             @Override
             public void onInteractiveLayerClicked(InteractiveItemDetails interactiveItemDetails) {
 
@@ -85,7 +84,7 @@ public class InteractiveLayerActivity extends AppCompatActivity implements OnMap
         });
         mapmyIndiaMap.showInteractiveLayerInfoWindow(toggleInfoWindow.isChecked());
 
-        mapmyIndiaMap.getInteractiveLayer(new MapboxMap.InteractiveLayerLoadingListener() {
+        mapmyIndiaMap.getInteractiveLayer(new MapmyIndiaMap.InteractiveLayerLoadingListener() {
             @Override
             public void onLayersLoaded(List<InteractiveLayer> list) {
                 adapter.setCovidLayers(list);

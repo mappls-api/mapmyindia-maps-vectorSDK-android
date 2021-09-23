@@ -10,15 +10,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
-import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.LayoutGeofenceUiActivityBinding
 import com.mapmyindia.sdk.demo.kotlin.model.GeofenceDetail
 import com.mapmyindia.sdk.geofence.ui.GeoFence
 import com.mapmyindia.sdk.geofence.ui.listeners.GeoFenceViewCallback
 import com.mapmyindia.sdk.geofence.ui.util.Orientation
+import com.mapmyindia.sdk.geojson.Point
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.geometry.LatLng
 
 class GeoFenceCustomActivity: AppCompatActivity(), GeoFenceViewCallback {
 
@@ -26,7 +26,7 @@ class GeoFenceCustomActivity: AppCompatActivity(), GeoFenceViewCallback {
     private lateinit var mBinding: LayoutGeofenceUiActivityBinding
     var geoFence: GeoFence? = null
     var geofenceDetail: GeofenceDetail? = null
-    private val mapmyIndiaMap: MapboxMap? = null
+    private val mapmyIndiaMap: MapmyIndiaMap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,7 +126,7 @@ class GeoFenceCustomActivity: AppCompatActivity(), GeoFenceViewCallback {
 
     }
 
-    override fun onGeoFenceReady(p0: MapboxMap?) {
+    override fun onGeoFenceReady(p0: MapmyIndiaMap?) {
         mBinding.toolsView.visibility = View.VISIBLE
     }
 

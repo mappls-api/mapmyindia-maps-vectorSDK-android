@@ -1,53 +1,57 @@
 package com.mapmyindia.sdk.demo.kotlin.plugin
 
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.style.expressions.Expression.*
-import com.mapbox.mapboxsdk.style.layers.CircleLayer
-import com.mapbox.mapboxsdk.style.layers.HeatmapLayer
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapmyindia.sdk.geojson.Feature
+import com.mapmyindia.sdk.geojson.FeatureCollection
+import com.mapmyindia.sdk.geojson.Point
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.Style
+import com.mapmyindia.sdk.maps.style.expressions.Expression.*
+import com.mapmyindia.sdk.maps.style.layers.CircleLayer
+import com.mapmyindia.sdk.maps.style.layers.HeatmapLayer
+import com.mapmyindia.sdk.maps.style.layers.PropertyFactory.*
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource
 
-class HeatMapPlugin private constructor(private val mapmyIndiaMap: MapboxMap, private val mapView: MapView, private val builder: Builder) : MapView.OnMapChangedListener {
+
+class HeatMapPlugin private constructor(private val mapmyIndiaMap: MapmyIndiaMap, mapView: MapView, private val builder: Builder) : MapView.OnDidFinishLoadingStyleListener {
 
     private var featureCollection: FeatureCollection? = null
 
     init {
         updateState()
-        mapView.addOnMapChangedListener(this)
+        mapView.addOnDidFinishLoadingStyleListener(this)
     }
 
     /**
      * Update the state of the heatmap
      */
     private fun updateState() {
-        val source: GeoJsonSource? = mapmyIndiaMap.getSource(HEAT_MAP_SOURCE_ID) as GeoJsonSource?
-        if (source == null) {
-            initialise()
-            return
-        }
+        mapmyIndiaMap.getStyle {
+            val source: GeoJsonSource? = it.getSource(HEAT_MAP_SOURCE_ID) as GeoJsonSource?
+            if (source == null) {
+                initialise(it)
+                return@getStyle
+            }
 
-        if (featureCollection != null)
-            source.setGeoJson(featureCollection)
-    }
-
-    private fun initialise() {
-        addHeatMapSource()
-        addHeatmapLayer()
-        addCircleLayer()
-    }
-
-    private fun addHeatMapSource() {
-        if (mapmyIndiaMap.getSource(HEAT_MAP_SOURCE_ID) == null) {
-            mapmyIndiaMap.addSource(GeoJsonSource(HEAT_MAP_SOURCE_ID, featureCollection))
+            if (featureCollection != null)
+                source.setGeoJson(featureCollection)
         }
     }
 
-    private fun addCircleLayer() {
-        if (mapmyIndiaMap.getLayer(CIRCLE_LAYER_ID) == null) {
+    private fun initialise(style: Style) {
+        addHeatMapSource(style)
+        addHeatmapLayer(style)
+        addCircleLayer(style)
+    }
+
+    private fun addHeatMapSource(style: Style) {
+        if (style.getSource(HEAT_MAP_SOURCE_ID) == null) {
+            style.addSource(GeoJsonSource(HEAT_MAP_SOURCE_ID, featureCollection))
+        }
+    }
+
+    private fun addCircleLayer(style: Style) {
+        if (style.getLayer(CIRCLE_LAYER_ID) == null) {
             val circleLayer: CircleLayer = CircleLayer(CIRCLE_LAYER_ID, HEAT_MAP_SOURCE_ID)
             circleLayer.setProperties(
 
@@ -92,12 +96,12 @@ class HeatMapPlugin private constructor(private val mapmyIndiaMap: MapboxMap, pr
                     circleStrokeColor("white"),
                     circleStrokeWidth(1.0f)
             )
-            mapmyIndiaMap.addLayerBelow(circleLayer, HEAT_MAP_LAYER_ID)
+            style.addLayerBelow(circleLayer, HEAT_MAP_LAYER_ID)
         }
     }
 
-    private fun addHeatmapLayer() {
-        if(mapmyIndiaMap.getLayer(HEAT_MAP_LAYER_ID) == null) {
+    private fun addHeatmapLayer(style: Style) {
+        if(style.getLayer(HEAT_MAP_LAYER_ID) == null) {
             val layer: HeatmapLayer = HeatmapLayer(HEAT_MAP_LAYER_ID, HEAT_MAP_SOURCE_ID)
             layer.maxZoom = builder.maxZoom!!;
             layer.sourceLayer = HEAT_MAP_LAYER_ID;
@@ -156,15 +160,13 @@ class HeatMapPlugin private constructor(private val mapmyIndiaMap: MapboxMap, pr
                     )
             )
 
-            mapmyIndiaMap.addLayer(layer)
+            style.addLayer(layer)
         }
     }
 
-    override fun onMapChanged(change: Int) {
-        if(change == MapView.DID_FINISH_LOADING_STYLE) {
-            updateState()
-            addHeatmap()
-        }
+    override fun onDidFinishLoadingStyle() {
+        updateState()
+        addHeatmap()
     }
 
     fun addHeatmap() {
@@ -186,14 +188,14 @@ class HeatMapPlugin private constructor(private val mapmyIndiaMap: MapboxMap, pr
         private const val CIRCLE_LAYER_ID: String = "heatMapCircleLayerId"
         private const val PROPERTY_MAG: String = "mag"
 
-        fun builder(mapmyIndiaMap: MapboxMap, mapView: MapView): Builder {
+        fun builder(mapmyIndiaMap: MapmyIndiaMap, mapView: MapView): Builder {
             return Builder(mapmyIndiaMap, mapView)
                     .maxZoom(9.0f)
         }
 
 
     }
-    class Builder internal constructor(private val mapmyIndiaMap: MapboxMap, private val mapView: MapView) {
+    class Builder internal constructor(private val mapmyIndiaMap: MapmyIndiaMap, private val mapView: MapView) {
 
         internal var maxZoom: Float? = null
         internal var heatmapOptionList: MutableList<HeatMapOption> = ArrayList()

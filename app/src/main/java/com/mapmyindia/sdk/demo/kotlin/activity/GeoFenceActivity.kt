@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityGeoFenceBinding
+import com.mapmyindia.sdk.demo.kotlin.settingscreen.DirectionWidgetSettingActivity
 import com.mapmyindia.sdk.demo.kotlin.settingscreen.GeofenceWidgetSettingsActivity
 
 class GeoFenceActivity : AppCompatActivity() {

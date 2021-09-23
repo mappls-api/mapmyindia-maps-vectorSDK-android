@@ -191,7 +191,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".kotlin.activity.FeatureListActivityKotlin" />
         <activity
-            android:name=".kotlin.activity.AddCustomMarkerActivitykt"
+            android:name=".kotlin.activity.AddCustomMarkerActivity"
             android:label="Custom Marker Kotlin" />
         <activity
             android:name=".kotlin.activity.AddMarkerActivity"

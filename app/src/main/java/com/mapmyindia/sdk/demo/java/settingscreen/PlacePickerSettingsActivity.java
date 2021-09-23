@@ -16,11 +16,11 @@ import androidx.databinding.DataBindingUtil;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
-import com.mapbox.geojson.Point;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.ActivityPlacePickerSettingsBinding;
 import com.mapmyindia.sdk.demo.java.settings.MapmyIndiaPlacePickerSetting;
 import com.mapmyindia.sdk.demo.java.utils.InputFilterMinMax;
+import com.mapmyindia.sdk.geojson.Point;
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mmi.services.api.autosuggest.AutoSuggestCriteria;
 

@@ -3,18 +3,18 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.android.gestures.AndroidGesturesManager
-import com.mapbox.android.gestures.MoveGestureDetector
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.gestures.AndroidGesturesManager
+import com.mapmyindia.sdk.gestures.MoveGestureDetector
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
 
 class GesturesActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mapView: MapView
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private var androidGesturesManager: AndroidGesturesManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +35,8 @@ class GesturesActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         androidGesturesManager?.setMoveGestureListener(object : MoveGestureDetector.OnMoveGestureListener {
-            override fun onMoveBegin(detector: MoveGestureDetector?): Boolean {
-                if (mapmyIndiaMap != null && detector?.pointersCount == 1) {
+            override fun onMoveBegin(detector: MoveGestureDetector): Boolean {
+                if (mapmyIndiaMap != null && detector.pointersCount == 1) {
                     val latLng = mapmyIndiaMap?.projection?.fromScreenLocation(detector.focalPoint)
                     Toast.makeText(this@GesturesActivity, "onMoveBegin: $latLng", Toast.LENGTH_SHORT).show()
                 }
@@ -44,17 +44,17 @@ class GesturesActivity : AppCompatActivity(), OnMapReadyCallback {
                 return true
             }
 
-            override fun onMove(detector: MoveGestureDetector?, distanceX: Float, distanceY: Float): Boolean {
-                if (mapmyIndiaMap != null && detector?.pointersCount == 1) {
+            override fun onMove(detector: MoveGestureDetector, distanceX: Float, distanceY: Float): Boolean {
+                if (mapmyIndiaMap != null && detector.pointersCount == 1) {
                     val latLng = mapmyIndiaMap?.projection?.fromScreenLocation(detector.focalPoint)
                     Toast.makeText(this@GesturesActivity, "onMove: $latLng", Toast.LENGTH_SHORT).show()
                 }
                 return false
             }
 
-            override fun onMoveEnd(detector: MoveGestureDetector?, velocityX: Float, velocityY: Float) {
+            override fun onMoveEnd(detector: MoveGestureDetector, velocityX: Float, velocityY: Float) {
                 if (mapmyIndiaMap != null) {
-                    val latLng = mapmyIndiaMap?.projection?.fromScreenLocation(detector!!.focalPoint)
+                    val latLng = mapmyIndiaMap?.projection?.fromScreenLocation(detector.focalPoint)
                     Toast.makeText(this@GesturesActivity, "onMoveEnd: $latLng", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -64,11 +64,11 @@ class GesturesActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapError(p0: Int, p1: String?) {}
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
 
 
-        mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(28.0, 77.0), 14.0))
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(28.0, 77.0), 14.0))
     }
 
     override fun onStart() {

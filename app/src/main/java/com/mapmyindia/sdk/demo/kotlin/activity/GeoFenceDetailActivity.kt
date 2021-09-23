@@ -11,22 +11,22 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.mapbox.geojson.LineString
-import com.mapbox.geojson.Point
-import com.mapbox.geojson.Polygon
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
-import com.mapbox.mapboxsdk.utils.BitmapUtils
-import com.mapbox.turf.TurfConstants
-import com.mapbox.turf.TurfTransformation
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityGeoFenceDetailBinding
 import com.mapmyindia.sdk.demo.kotlin.adapter.GeoFenceDetailAdapter
 import com.mapmyindia.sdk.demo.kotlin.model.GeofenceDetail
+import com.mapmyindia.sdk.geojson.LineString
+import com.mapmyindia.sdk.geojson.Point
+import com.mapmyindia.sdk.geojson.Polygon
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds
+import com.mapmyindia.sdk.maps.utils.BitmapUtils
 import com.mapmyindia.sdk.plugin.annotation.*
+import com.mapmyindia.sdk.turf.TurfConstants
+import com.mapmyindia.sdk.turf.TurfTransformation
 import java.util.concurrent.atomic.AtomicInteger
 
 class GeoFenceDetailActivity: AppCompatActivity(), OnMapReadyCallback {
@@ -37,7 +37,7 @@ class GeoFenceDetailActivity: AppCompatActivity(), OnMapReadyCallback {
     private var symbolManager: SymbolManager? = null
     private var  fillManager: FillManager? = null
     private var lineManager: LineManager? = null
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
 
     private val symbols: MutableList<Symbol> = ArrayList()
     private val fillList: MutableList<Fill> = ArrayList()
@@ -165,31 +165,34 @@ class GeoFenceDetailActivity: AppCompatActivity(), OnMapReadyCallback {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 101) {
             if (resultCode == Activity.RESULT_OK) {
-                val newGeofenceDetail = Gson().fromJson(data?.getStringExtra("GEOFENCE"), GeofenceDetail::class.java)
-                if (newGeofenceDetail.gfLabel == null) {
-                    newGeofenceDetail.gfLabel = "GeoFence" + ID.getAndIncrement()
-                    geofenceDetails.add(newGeofenceDetail)
-                    geoFenceDetailAdapter.setGeofenceDetailList(geofenceDetails)
-                    if (fillManager == null) {
-                        fillManager = FillManager(mBinding.mapView, mapmyIndiaMap!!)
-                    }
-                    if (lineManager == null) {
-                        lineManager = LineManager(mBinding.mapView, mapmyIndiaMap!!)
-                    }
-                    if (symbolManager == null) {
-                        symbolManager = SymbolManager(mBinding.mapView, mapmyIndiaMap!!)
-                    }
-                    addGeoFence(newGeofenceDetail)
-                } else {
-                    for (geofenceDetail in geofenceDetails) {
-                        if (geofenceDetail.gfLabel.equals(newGeofenceDetail.gfLabel, ignoreCase = true)) {
-                            updateGeoFenceData(geofenceDetail, newGeofenceDetail)
-                            updateGeoFence(geofenceDetail)
+                mapmyIndiaMap?.getStyle {
+                    val newGeofenceDetail = Gson().fromJson(data?.getStringExtra("GEOFENCE"), GeofenceDetail::class.java)
+                    if (newGeofenceDetail.gfLabel == null) {
+                        newGeofenceDetail.gfLabel = "GeoFence" + ID.getAndIncrement()
+                        geofenceDetails.add(newGeofenceDetail)
+                        geoFenceDetailAdapter.setGeofenceDetailList(geofenceDetails)
+                        if (fillManager == null) {
+                            fillManager = FillManager(mBinding.mapView, mapmyIndiaMap!!, it)
+                        }
+                        if (lineManager == null) {
+                            lineManager = LineManager(mBinding.mapView, mapmyIndiaMap!!, it)
+                        }
+                        if (symbolManager == null) {
+                            symbolManager = SymbolManager(mBinding.mapView, mapmyIndiaMap!!, it)
+                        }
+                        addGeoFence(newGeofenceDetail)
+                    } else {
+                        for (geofenceDetail in geofenceDetails) {
+                            if (geofenceDetail.gfLabel.equals(newGeofenceDetail.gfLabel, ignoreCase = true)) {
+                                updateGeoFenceData(geofenceDetail, newGeofenceDetail)
+                                updateGeoFence(geofenceDetail)
+                            }
                         }
                     }
+                    updateCamera()
                 }
-                updateCamera()
-            }
+                }
+
         }
     }
 
@@ -254,7 +257,7 @@ class GeoFenceDetailActivity: AppCompatActivity(), OnMapReadyCallback {
         if (symbolManager != null) {
             val symbolOptions: MutableList<SymbolOptions> = ArrayList()
             for (point in points) {
-                symbolOptions.add(SymbolOptions().geometry(point).data(jsonObject).icon(BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(this, R.drawable.mapbox_marker_icon_default))))
+                symbolOptions.add(SymbolOptions().geometry(point).data(jsonObject).icon(BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(this, R.drawable.mapmyindia_maps_marker_icon_default))))
             }
             val symbols = symbolManager?.create(symbolOptions)
             this.symbols.addAll(symbols?: ArrayList())
@@ -316,7 +319,7 @@ class GeoFenceDetailActivity: AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
     }
 

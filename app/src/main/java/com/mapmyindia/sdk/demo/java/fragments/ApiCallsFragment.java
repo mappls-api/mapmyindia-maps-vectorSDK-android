@@ -74,7 +74,7 @@ public class ApiCallsFragment extends Fragment {
                     Intent getDistanceIntent = new Intent(getContext(), DistanceActivity.class);
                     startActivity(getDistanceIntent);
                 }else if (position == 6) {
-                    Intent getDistanceIntent = new Intent(getContext(), HateOsNearbyActivity.class);
+                    Intent getDistanceIntent = new Intent(getContext(), HateOsNearbyActivity .class);
                     startActivity(getDistanceIntent);
                 }else if (position == 7) {
                     Intent getDistanceIntent = new Intent(getContext(), PoiAlongRouteActivity.class);

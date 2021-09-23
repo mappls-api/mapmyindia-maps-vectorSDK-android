@@ -1,5 +1,7 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
+import static java.lang.Double.parseDouble;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,46 +20,42 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.mapbox.core.constants.Constants;
-import com.mapbox.geojson.Point;
-import com.mapbox.geojson.utils.PolylineUtils;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.plugin.DirectionPolylinePlugin;
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet;
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.geojson.utils.PolylineUtils;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.directions.DirectionsCriteria;
+import com.mmi.services.api.directions.MapmyIndiaDirectionManager;
 import com.mmi.services.api.directions.MapmyIndiaDirections;
 import com.mmi.services.api.directions.models.DirectionsResponse;
 import com.mmi.services.api.directions.models.DirectionsRoute;
 import com.mmi.services.api.directions.models.DirectionsWaypoint;
+import com.mmi.services.utils.Constants;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static java.lang.Double.parseDouble;
-
 
 /**
  * Created by CEINFO on 26-02-2019.
  */
 
-public class DirectionActivity extends AppCompatActivity implements OnMapReadyCallback, MapboxMap.OnMapLongClickListener {
+public class DirectionActivity extends AppCompatActivity implements OnMapReadyCallback, MapmyIndiaMap.OnMapLongClickListener {
 
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private MapView mapView;
     private TransparentProgressDialog transparentProgressDialog;
     private String profile = DirectionsCriteria.PROFILE_DRIVING;
@@ -166,7 +164,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
 
 
@@ -253,40 +251,35 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                 .resource(resource)
                 .steps(true)
                 .alternatives(false)
-                .overview(DirectionsCriteria.OVERVIEW_FULL).build().enqueueCall(new Callback<DirectionsResponse>() {
+                .overview(DirectionsCriteria.OVERVIEW_FULL).build();
+        MapmyIndiaDirectionManager.newInstance(builder.build()).call(new OnResponseCallback<DirectionsResponse>() {
             @Override
-            public void onResponse(@NonNull Call<DirectionsResponse> call, @NonNull Response<DirectionsResponse> response) {
-                if (response.code() == 200) {
-                    if (response.body() != null) {
-                        DirectionsResponse directionsResponse = response.body();
-                        List<DirectionsRoute> results = directionsResponse.routes();
-                        mapmyIndiaMap.clear();
+            public void onSuccess(DirectionsResponse directionsResponse) {
+                if (directionsResponse != null) {
+                    List<DirectionsRoute> results = directionsResponse.routes();
+                    mapmyIndiaMap.clear();
 
-                        if (results.size() > 0) {
-                            DirectionsRoute directionsRoute = results.get(0);
-                            if (directionsRoute != null && directionsRoute.geometry() != null) {
-                                drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6));
-                                updateData(directionsRoute);
-                            }
-                        }
-                        List<DirectionsWaypoint> directionsWaypoints = directionsResponse.waypoints();
-                        if (directionsWaypoints != null && directionsWaypoints.size() > 0) {
-                            for (DirectionsWaypoint directionsWaypoint : directionsWaypoints) {
-                                mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(directionsWaypoint.location().latitude(), directionsWaypoint.location().longitude())));
-                            }
+                    if (results.size() > 0) {
+                        DirectionsRoute directionsRoute = results.get(0);
+                        if (directionsRoute != null && directionsRoute.geometry() != null) {
+                            drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6));
+                            updateData(directionsRoute);
                         }
                     }
-                } else {
-                    Toast.makeText(DirectionActivity.this, response.message() + response.code(), Toast.LENGTH_LONG).show();
+                    List<DirectionsWaypoint> directionsWaypoints = directionsResponse.waypoints();
+                    if (directionsWaypoints != null && directionsWaypoints.size() > 0) {
+                        for (DirectionsWaypoint directionsWaypoint : directionsWaypoints) {
+                            mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(directionsWaypoint.location().latitude(), directionsWaypoint.location().longitude())));
+                        }
+                    }
                 }
                 progressDialogHide();
             }
 
             @Override
-            public void onFailure(@NonNull Call<DirectionsResponse> call, @NonNull Throwable t) {
+            public void onError(int i, String s) {
                 progressDialogHide();
-                t.printStackTrace();
-
+                Toast.makeText(DirectionActivity.this, s + "----" + i, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -427,7 +420,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     @Override
-    public void onMapLongClick(@NonNull LatLng latLng) {
+    public boolean onMapLongClick(@NonNull LatLng latLng) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setMessage("Select Point as Source or Destination");
 
@@ -460,5 +453,6 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
         alertDialog.setCancelable(true);
         alertDialog.show();
+        return false;
     }
 }

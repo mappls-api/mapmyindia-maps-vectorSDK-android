@@ -6,7 +6,7 @@ public class MapmyIndiaGeofenceSetting {
 
     private static final MapmyIndiaGeofenceSetting INSTANCE= new MapmyIndiaGeofenceSetting();
 
-    public static MapmyIndiaGeofenceSetting getInstance(){
+    public static  MapmyIndiaGeofenceSetting getInstance(){
         return INSTANCE;
     }
 

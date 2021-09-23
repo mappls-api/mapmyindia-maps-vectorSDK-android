@@ -6,18 +6,19 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.camera.CameraELocUpdateFactory;
 
 /**
  * Created by Saksham on 26-11-2020.
  */
 
-public class ELocCameraActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, MapboxMap.OnCameraMoveListener, MapboxMap.OnCameraIdleListener, MapboxMap.OnCameraMoveCanceledListener {
+public class ELocCameraActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, MapmyIndiaMap.OnCameraMoveListener, MapmyIndiaMap.OnCameraIdleListener, MapmyIndiaMap.OnCameraMoveCanceledListener {
 
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private MapView mapView;
     private TextView moveCamera, easeCamera, animateCamera;
 
@@ -48,7 +49,7 @@ public class ELocCameraActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
 
 
@@ -59,7 +60,7 @@ public class ELocCameraActivity extends AppCompatActivity implements OnMapReadyC
 //                25.321684, 82.987289)).zoom(14).tilt(0).build();
 //        mapmyIndiaMap.setCameraPosition(cameraPosition);
 
-        mapmyIndiaMap.moveCamera("MMI000", 14);
+        mapmyIndiaMap.moveCamera(CameraELocUpdateFactory.newELocZoom("MMI000", 14));
         //Map related listeners
         mapmyIndiaMap.addOnCameraMoveListener(this);
         mapmyIndiaMap.addOnCameraIdleListener(this);
@@ -90,13 +91,13 @@ public class ELocCameraActivity extends AppCompatActivity implements OnMapReadyC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.moveCamera:
-                mapmyIndiaMap.moveCamera("2T7S17", 14);
+                mapmyIndiaMap.moveCamera(CameraELocUpdateFactory.newELocZoom("2T7S17", 14));
                 break;
             case R.id.easeCamera:
-                mapmyIndiaMap.easeCamera("5EU4EZ", 14);
+                mapmyIndiaMap.easeCamera(CameraELocUpdateFactory.newELocZoom("5EU4EZ", 14));
                 break;
             case R.id.animateCamera:
-                mapmyIndiaMap.animateCamera("IB3BR9", 14);
+                mapmyIndiaMap.animateCamera(CameraELocUpdateFactory.newELocZoom("IB3BR9", 14));
                 break;
         }
     }

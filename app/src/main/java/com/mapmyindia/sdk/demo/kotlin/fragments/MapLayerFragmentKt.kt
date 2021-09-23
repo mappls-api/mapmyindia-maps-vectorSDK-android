@@ -12,7 +12,7 @@ import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.model.FeaturesList
 import com.mapmyindia.sdk.demo.kotlin.activity.*
 import com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter
-import java.util.*
+import java.util.ArrayList
 
 /**
  ** Created by Saksham on 04-09-2020.

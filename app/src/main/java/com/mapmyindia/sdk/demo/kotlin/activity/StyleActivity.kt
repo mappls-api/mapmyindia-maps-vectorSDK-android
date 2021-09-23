@@ -8,16 +8,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
-import com.mapbox.mapboxsdk.MapmyIndiaMapConfiguration
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
-import com.mapbox.mapboxsdk.maps.style.OnStyleLoadListener
-import com.mapbox.mapboxsdk.maps.style.model.MapmyIndiaStyle
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.StyleActivityBinding
 import com.mapmyindia.sdk.demo.java.adapter.StyleAdapter
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.MapmyIndiaMapConfiguration
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.Style
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.style.OnStyleLoadListener
+import com.mapmyindia.sdk.maps.style.model.MapmyIndiaStyle
 import timber.log.Timber
 
 
@@ -26,7 +27,7 @@ class StyleActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mBinding: StyleActivityBinding
     private lateinit var adapter: StyleAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<RelativeLayout>
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +55,7 @@ class StyleActivity : AppCompatActivity(), OnMapReadyCallback {
                     Toast.makeText(this@StyleActivity, error, Toast.LENGTH_SHORT).show()
                 }
 
-                override fun onStyleLoaded() {
+                override fun onStyleLoaded(style: Style) {
                     Toast.makeText(this@StyleActivity, "onStyleLoaded", Toast.LENGTH_SHORT).show()
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
@@ -103,7 +104,7 @@ class StyleActivity : AppCompatActivity(), OnMapReadyCallback {
         Timber.tag("onMapError").e("$p0------$p1")
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         Timber.tag("onMapReady").e("SUCCESS")
         this.mapmyIndiaMap = mapmyIndiaMap
         this.mapmyIndiaMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(28.6466772, 76.8130614), 12.0))

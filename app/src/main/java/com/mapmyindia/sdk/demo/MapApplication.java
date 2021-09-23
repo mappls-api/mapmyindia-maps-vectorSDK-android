@@ -2,7 +2,7 @@ package com.mapmyindia.sdk.demo;
 
 import android.app.Application;
 
-import com.mapbox.mapboxsdk.MapmyIndia;
+import com.mapmyindia.sdk.maps.MapmyIndia;
 import com.mmi.services.account.MapmyIndiaAccountManager;
 
 /**

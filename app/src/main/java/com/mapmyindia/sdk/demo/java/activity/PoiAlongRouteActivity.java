@@ -19,40 +19,39 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.mapbox.core.constants.Constants;
-import com.mapbox.geojson.Point;
-import com.mapbox.geojson.utils.PolylineUtils;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.adapter.PoiAlongAdapter;
 import com.mapmyindia.sdk.demo.java.plugin.DirectionPolylinePlugin;
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet;
 import com.mapmyindia.sdk.demo.java.utils.InputFilterMinMax;
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.geojson.utils.PolylineUtils;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.alongroute.MapmyIndiaPOIAlongRoute;
+import com.mmi.services.api.alongroute.MapmyIndiaPOIAlongRouteManager;
 import com.mmi.services.api.alongroute.models.POIAlongRouteResponse;
 import com.mmi.services.api.alongroute.models.SuggestedPOI;
 import com.mmi.services.api.directions.DirectionsCriteria;
+import com.mmi.services.api.directions.MapmyIndiaDirectionManager;
 import com.mmi.services.api.directions.MapmyIndiaDirections;
 import com.mmi.services.api.directions.models.DirectionsResponse;
 import com.mmi.services.api.directions.models.DirectionsRoute;
+import com.mmi.services.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+public class PoiAlongRouteActivity extends AppCompatActivity implements OnMapReadyCallback, MapmyIndiaMap.OnMapLongClickListener {
 
-public class PoiAlongRouteActivity extends AppCompatActivity implements OnMapReadyCallback, MapboxMap.OnMapLongClickListener {
-
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private MapView mapView;
     private RecyclerView poiRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -108,7 +107,7 @@ public class PoiAlongRouteActivity extends AppCompatActivity implements OnMapRea
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
 
         mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
@@ -158,47 +157,39 @@ public class PoiAlongRouteActivity extends AppCompatActivity implements OnMapRea
         view.setVisibility(View.GONE);
         progressDialogShow();
 
-        MapmyIndiaDirections.builder()
+        MapmyIndiaDirections directions = MapmyIndiaDirections.builder()
                 .origin(Point.fromLngLat(startLng, startLat))
                 .destination(Point.fromLngLat(destLng, destLat))
                 .profile(profile)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE)
                 .steps(false)
                 .alternatives(false)
-                .overview(DirectionsCriteria.OVERVIEW_FULL).build().enqueueCall(new Callback<DirectionsResponse>() {
+                .overview(DirectionsCriteria.OVERVIEW_FULL).build();
+        MapmyIndiaDirectionManager.newInstance(directions).call(new OnResponseCallback<DirectionsResponse>() {
             @Override
-            public void onResponse(@NonNull Call<DirectionsResponse> call, @NonNull Response<DirectionsResponse> response) {
-                if (response.code() == 200) {
-                    if (response.body() != null) {
-                        DirectionsResponse directionsResponse = response.body();
-                        List<DirectionsRoute> results = directionsResponse.routes();
+            public void onSuccess(DirectionsResponse directionsResponse) {
+                if (directionsResponse != null) {
+                    List<DirectionsRoute> results = directionsResponse.routes();
 
-                        if (results.size() > 0) {
-                            mapmyIndiaMap.clear();
-                            DirectionsRoute directionsRoute = results.get(0);
-                            if (directionsRoute != null && directionsRoute.geometry() != null) {
+                    if (results.size() > 0) {
+                        mapmyIndiaMap.clear();
+                        DirectionsRoute directionsRoute = results.get(0);
+                        if (directionsRoute != null && directionsRoute.geometry() != null) {
 
-                                drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6));
+                            drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6));
 
-                                callPOIAlongRoute(directionsRoute.geometry(), keyword);
-                            }
+                            callPOIAlongRoute(directionsRoute.geometry(), keyword);
                         }
                     }
-                } else {
-                    Toast.makeText(PoiAlongRouteActivity.this, response.message() + response.code(), Toast.LENGTH_LONG).show();
                 }
-
             }
 
             @Override
-            public void onFailure(@NonNull Call<DirectionsResponse> call, @NonNull Throwable t) {
+            public void onError(int i, String s) {
                 progressDialogHide();
-                t.printStackTrace();
-
+                Toast.makeText(PoiAlongRouteActivity.this, s + "----" + i, Toast.LENGTH_LONG).show();
             }
         });
-
-
     }
 
 
@@ -207,36 +198,27 @@ public class PoiAlongRouteActivity extends AppCompatActivity implements OnMapRea
 
             return;
         }
-        MapmyIndiaPOIAlongRoute.builder()
+        MapmyIndiaPOIAlongRoute poiAlongRoute = MapmyIndiaPOIAlongRoute.builder()
                 .category(keyword)
                 .path(path)
                 .buffer(300)
-                .build().enqueueCall(new Callback<POIAlongRouteResponse>() {
+                .build();
+        MapmyIndiaPOIAlongRouteManager.newInstance(poiAlongRoute).call(new OnResponseCallback<POIAlongRouteResponse>() {
             @Override
-            public void onResponse(Call<POIAlongRouteResponse> call, Response<POIAlongRouteResponse> response) {
-                //handle response
+            public void onSuccess(POIAlongRouteResponse poiAlongRouteResponse) {
                 progressDialogHide();
-                if (response.code() == 200) {
-                    if (response.body() != null) {
-                        List<SuggestedPOI> pois = response.body().getSuggestedPOIs();
-                        view.setVisibility(View.VISIBLE);
-                        addMarker(pois);
-                        /*for (SuggestedPOI poi:pois){
+                if (poiAlongRouteResponse != null) {
+                    List<SuggestedPOI> pois = poiAlongRouteResponse.getSuggestedPOIs();
+                    view.setVisibility(View.VISIBLE);
+                    addMarker(pois);
 
-                        }*/
-
-                    }
-                } else {
-                    Toast.makeText(PoiAlongRouteActivity.this, response.message() + response.code(), Toast.LENGTH_LONG).show();
                 }
-
             }
 
             @Override
-            public void onFailure(Call<POIAlongRouteResponse> call, Throwable t) {
-                t.printStackTrace();
+            public void onError(int i, String s) {
                 progressDialogHide();
-
+                Toast.makeText(PoiAlongRouteActivity.this, s + "----" + i, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -329,7 +311,7 @@ public class PoiAlongRouteActivity extends AppCompatActivity implements OnMapRea
     }
 
     @Override
-    public void onMapLongClick(@NonNull LatLng latLng) {
+    public boolean onMapLongClick(@NonNull LatLng latLng) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setMessage("Select Point as Source or Destination");
 
@@ -352,5 +334,6 @@ public class PoiAlongRouteActivity extends AppCompatActivity implements OnMapRea
 
         alertDialog.setCancelable(true);
         alertDialog.show();
+        return false;
     }
 }

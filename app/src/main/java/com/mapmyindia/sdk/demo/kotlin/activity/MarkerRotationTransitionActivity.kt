@@ -6,14 +6,15 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityMarkerRotationTransitionBinding
+import com.mapmyindia.sdk.demo.databinding.BaseLayoutBinding
 import com.mapmyindia.sdk.demo.kotlin.plugin.MarkerPlugin
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds
 
 /**
  * Created by Saksham on 3/9/19.
@@ -21,7 +22,7 @@ import com.mapmyindia.sdk.demo.kotlin.plugin.MarkerPlugin
 class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListener {
 
     private lateinit var mBinding: ActivityMarkerRotationTransitionBinding
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private val latLngStart: LatLng = LatLng(28.705436, 77.100462)
     private val latLngEnd: LatLng = LatLng(28.703800, 77.101818)
     private var markerPlugin: MarkerPlugin? = null
@@ -41,7 +42,7 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
 
         val latLngBounds: LatLngBounds = LatLngBounds.Builder()
@@ -49,9 +50,11 @@ class MarkerRotationTransitionActivity : AppCompatActivity(), OnMapReadyCallback
                 .include(latLngEnd)
                 .build()
 
-        mapmyIndiaMap!!.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
 
-        initMarker()
+        mapmyIndiaMap.getStyle {
+            initMarker()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

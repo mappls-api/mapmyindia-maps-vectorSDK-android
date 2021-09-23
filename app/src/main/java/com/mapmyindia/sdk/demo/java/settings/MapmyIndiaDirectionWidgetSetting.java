@@ -1,6 +1,6 @@
 package com.mapmyindia.sdk.demo.java.settings;
 
-import com.mapbox.geojson.Point;
+import com.mapmyindia.sdk.geojson.Point;
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mmi.services.api.directions.DirectionsCriteria;
 
@@ -20,8 +20,8 @@ public class MapmyIndiaDirectionWidgetSetting {
     private boolean showStartNavigation= true;
     private boolean steps = true;
     private  String resource = DirectionsCriteria.RESOURCE_ROUTE;
-    private String profile= DirectionsCriteria.PROFILE_DRIVING;
-    private String overview = DirectionsCriteria.OVERVIEW_FULL;
+    private String profile=DirectionsCriteria.PROFILE_DRIVING;
+    private String overview =DirectionsCriteria.OVERVIEW_FULL;
     private List<String> excludes;
     private Point destination;
 

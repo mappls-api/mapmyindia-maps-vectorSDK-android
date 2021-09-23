@@ -2,12 +2,14 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.app.Activity
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityNearbyUiBinding
+import com.mapmyindia.sdk.nearby.plugin.IMapmyIndiaNearbyCallback
+import com.mapmyindia.sdk.nearby.plugin.MapmyIndiaNearbyFragment
 import com.mapmyindia.sdk.nearby.plugin.MapmyIndiaNearbyWidget
 import com.mmi.services.api.nearby.model.NearbyAtlasResult
 

@@ -2,14 +2,14 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.kotlin.plugin.HeatMapPlugin
+import com.mapmyindia.sdk.geojson.Point
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
 
 class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mapView: MapView
@@ -48,11 +48,11 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapError(p0: Int, p1: String?) {}
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap?) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
 
 
 
-        val heatMapPlugin: HeatMapPlugin = HeatMapPlugin.builder(mapmyIndiaMap!!, mapView)
+        val heatMapPlugin: HeatMapPlugin = HeatMapPlugin.builder(mapmyIndiaMap, mapView)
                 .addAll(heatMapOptionList)
                 .build()
         heatMapPlugin.addHeatmap()

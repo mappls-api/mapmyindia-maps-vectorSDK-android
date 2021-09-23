@@ -1,7 +1,7 @@
 package com.mapmyindia.sdk.demo.kotlin.settings
 
 import android.R
-import com.mapbox.geojson.Point
+import com.mapmyindia.sdk.geojson.Point
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mmi.services.api.directions.DirectionsCriteria
 

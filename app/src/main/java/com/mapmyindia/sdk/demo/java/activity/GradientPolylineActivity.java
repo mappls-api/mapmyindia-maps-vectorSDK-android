@@ -4,16 +4,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.plugin.GradientPolylinePlugin;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,22 +45,27 @@ public class GradientPolylineActivity extends AppCompatActivity implements OnMap
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
 
         mapmyIndiaMap.setPadding(20, 20, 20, 20);
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .includes(listOfLatLng)
                 .build();
       mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10));
+      mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+          @Override
+          public void onStyleLoaded(@NonNull Style style) {
+              GradientPolylinePlugin gradientPolylinePlugin = new GradientPolylinePlugin(mapmyIndiaMap, mapView);
+              gradientPolylinePlugin.createPolyline(listOfLatLng);
+              btn_remove.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      gradientPolylinePlugin.clear();
+                  }
+              });
+          }
+      });
 
-      GradientPolylinePlugin gradientPolylinePlugin = new GradientPolylinePlugin(mapmyIndiaMap, mapView);
-        gradientPolylinePlugin.createPolyline(listOfLatLng);
-        btn_remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gradientPolylinePlugin.clear();
-            }
-        });
     }
 
     @Override

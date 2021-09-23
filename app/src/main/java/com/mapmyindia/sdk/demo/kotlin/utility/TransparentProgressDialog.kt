@@ -1,4 +1,4 @@
-package com.mapmyindia.sdk.demo.kotlin.kotlin.utility
+package com.mapmyindia.sdk.demo.kotlin.utility
 
 import android.app.ActionBar
 import android.app.Dialog

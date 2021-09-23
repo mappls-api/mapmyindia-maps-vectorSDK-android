@@ -1,5 +1,15 @@
 package com.mapmyindia.sdk.demo.java.plugin;
 
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.eq;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.get;
+import static com.mapmyindia.sdk.maps.style.expressions.Expression.literal;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconAllowOverlap;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconAnchor;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconIgnorePlacement;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconImage;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconOffset;
+import static com.mapmyindia.sdk.maps.style.layers.PropertyFactory.iconRotate;
+
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -18,39 +28,30 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.annotations.BubbleLayout;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.mapboxsdk.utils.BitmapUtils;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.geojson.Feature;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.annotations.BubbleLayout;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.style.layers.Property;
+import com.mapmyindia.sdk.maps.style.layers.SymbolLayer;
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource;
+import com.mapmyindia.sdk.maps.utils.BitmapUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
-
 /**
  * Created by Saksham on 31/8/19.
  */
-public class MarkerPlugin implements MapView.OnMapChangedListener, MapboxMap.OnMapClickListener {
+public class MarkerPlugin implements MapView.OnDidFinishLoadingStyleListener, MapmyIndiaMap.OnMapClickListener {
 
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private Feature feature;
     private static final String SOURCE_ID = "SOURCE_ID";
     private static final String ICON_ID = "ICON_ID";
@@ -73,11 +74,11 @@ public class MarkerPlugin implements MapView.OnMapChangedListener, MapboxMap.OnM
     private OnMarkerDraggingListener onMarkerDraggingListener;
 
 
-    public MarkerPlugin(MapboxMap mapmyIndiaMap, MapView mapView) {
+    public MarkerPlugin(MapmyIndiaMap mapmyIndiaMap, MapView mapView) {
         this.mapmyIndiaMap = mapmyIndiaMap;
         this.mMapView = mapView;
         updateState();
-        mapView.addOnMapChangedListener(this);
+        mapView.addOnDidFinishLoadingStyleListener(this);
         mapmyIndiaMap.addOnMapClickListener(this);
         initialiseForDraggingMarker();
     }
@@ -141,10 +142,17 @@ public class MarkerPlugin implements MapView.OnMapChangedListener, MapboxMap.OnM
         this.position = position;
         feature = Feature.fromGeometry(Point.fromLngLat(position.getLongitude(), position.getLatitude()));
         feature.addBooleanProperty(PROPERTY_SELECTED, false);
-        mapmyIndiaMap.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(drawable));
-        if(mapmyIndiaMap.getSource(SOURCE_ID) == null) {
-            mapmyIndiaMap.addSource(markerSource = new GeoJsonSource(SOURCE_ID, feature));
-        }
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+
+                style.addImage(ICON_ID, BitmapUtils.getBitmapFromDrawable(drawable));
+                if(style.getSource(SOURCE_ID) == null) {
+                    style.addSource(markerSource = new GeoJsonSource(SOURCE_ID, feature));
+                }
+
+            }
+        });
         new GenerateViewIconTask(this).execute(feature);
     }
 
@@ -152,21 +160,27 @@ public class MarkerPlugin implements MapView.OnMapChangedListener, MapboxMap.OnM
      * Update the state of the marker
      */
     private void updateState() {
-        GeoJsonSource source = (GeoJsonSource) mapmyIndiaMap.getSource(SOURCE_ID);
-        if (source == null) {
-            initialise();
-            return;
-        }
-        if (feature != null) {
-            markerSource.setGeoJson(feature);
-        }
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                GeoJsonSource source = (GeoJsonSource) style.getSource(SOURCE_ID);
+                if (source == null) {
+                    initialise(style);
+                    return;
+                }
+                if (feature != null) {
+                    source.setGeoJson(feature);
+                }
+            }
+        });
+
     }
 
     /**
      * Add symbol layer on map
      */
-    private void initialise() {
-        if(mapmyIndiaMap.getLayer(LAYER_ID) == null) {
+    private void initialise(Style style) {
+        if(style.getLayer(LAYER_ID) == null) {
             SymbolLayer symbolLayer = new SymbolLayer(LAYER_ID, SOURCE_ID);
             symbolLayer.withProperties(
                     iconImage(ICON_ID),
@@ -174,9 +188,9 @@ public class MarkerPlugin implements MapView.OnMapChangedListener, MapboxMap.OnM
                     iconAllowOverlap(true),
                     iconIgnorePlacement(false)
             );
-            mapmyIndiaMap.addLayer(symbolLayer);
+            style.addLayer(symbolLayer);
         }
-        if(mapmyIndiaMap.getLayer(INFOWINDOW_LAYER_ID) == null) {
+        if(style.getLayer(INFOWINDOW_LAYER_ID) == null) {
             //Symbol layer for Info Window
             SymbolLayer symbolLayerInfoWindow = new SymbolLayer(INFOWINDOW_LAYER_ID, SOURCE_ID)
                     .withProperties(
@@ -195,7 +209,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener, MapboxMap.OnM
                     /* setData a filter to show only when selected feature property is true */
                     .withFilter(eq((get(PROPERTY_SELECTED)), literal(true)));
 
-            mapmyIndiaMap.addLayer(symbolLayerInfoWindow);
+            style.addLayer(symbolLayerInfoWindow);
         }
     }
 
@@ -259,14 +273,14 @@ public class MarkerPlugin implements MapView.OnMapChangedListener, MapboxMap.OnM
     }
 
     @Override
-    public void onMapClick(@NonNull LatLng latLng) {
+    public boolean onMapClick(@NonNull LatLng latLng) {
 
         if(feature != null) {
             if(feature.hasProperty(PROPERTY_SELECTED)) {
                 if(feature.getBooleanProperty(PROPERTY_SELECTED)) {
                     feature.addBooleanProperty(PROPERTY_SELECTED, false);
                     updateState();
-                    return;
+                    return false;
                 }
             }
         }
@@ -276,6 +290,7 @@ public class MarkerPlugin implements MapView.OnMapChangedListener, MapboxMap.OnM
             feature.addBooleanProperty(PROPERTY_SELECTED, true);
             new GenerateViewIconTask(this).execute(feature);
         }
+        return false;
     }
 
     /**
@@ -369,8 +384,13 @@ public class MarkerPlugin implements MapView.OnMapChangedListener, MapboxMap.OnM
      */
     private void setImageGenResults(HashMap<String, Bitmap> imageMap) {
         if (mapmyIndiaMap != null) {
-            // calling addImages is faster as separate addImage calls for each bitmap.
-            mapmyIndiaMap.addImages(imageMap);
+            mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+                @Override
+                public void onStyleLoaded(@NonNull Style style) {
+                    // calling addImages is faster as separate addImage calls for each bitmap.
+                    style.addImages(imageMap);
+                }
+            });
         }
     }
 
@@ -492,11 +512,9 @@ public class MarkerPlugin implements MapView.OnMapChangedListener, MapboxMap.OnM
     }
 
     @Override
-    public void onMapChanged(int change) {
-        if (change == MapView.DID_FINISH_LOADING_STYLE) {
-            updateState();
-            addMarker(position);
-        }
+    public void onDidFinishLoadingStyle() {
+        updateState();
+        addMarker(position);
     }
 
     /**

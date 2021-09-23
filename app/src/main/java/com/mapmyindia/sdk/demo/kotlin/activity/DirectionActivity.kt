@@ -1,5 +1,6 @@
 package com.mapmyindia.sdk.demo.kotlin.activity
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,25 +12,28 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
-import com.mapbox.core.constants.Constants
-import com.mapbox.geojson.Point
-import com.mapbox.geojson.utils.PolylineUtils
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityDirectionLayoutBinding
 import com.mapmyindia.sdk.demo.java.activity.InputActivity
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog
 import com.mapmyindia.sdk.demo.kotlin.plugin.DirectionPolylinePlugin
+import com.mapmyindia.sdk.geojson.Point
+import com.mapmyindia.sdk.geojson.utils.PolylineUtils
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.camera.CameraPosition
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds
+import com.mmi.services.api.OnResponseCallback
 import com.mmi.services.api.directions.DirectionsCriteria
+import com.mmi.services.api.directions.MapmyIndiaDirectionManager
 import com.mmi.services.api.directions.MapmyIndiaDirections
 import com.mmi.services.api.directions.models.DirectionsResponse
 import com.mmi.services.api.directions.models.DirectionsRoute
+import com.mmi.services.utils.Constants
+import com.mmi.services.utils.Constants.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,9 +43,9 @@ import java.util.*
 /**
  * Created by CEINFO on 26-02-2019.
  */
-class DirectionActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapLongClickListener{
+class DirectionActivity : AppCompatActivity(), OnMapReadyCallback, MapmyIndiaMap.OnMapLongClickListener{
 
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private var transparentProgressDialog: TransparentProgressDialog? = null
 
     private var profile: String = DirectionsCriteria.PROFILE_DRIVING
@@ -121,7 +125,7 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnM
         }
     }
 
-    override fun onMapReady(mapmyIndiaMap: MapboxMap) {
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
 
 
@@ -209,30 +213,28 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnM
                 .resource(resource)
                 .steps(true)
                 .alternatives(false)
-                .overview(DirectionsCriteria.OVERVIEW_FULL).build().enqueueCall(object : Callback<DirectionsResponse> {
-                     override fun onResponse(call: Call<DirectionsResponse>, response: Response<DirectionsResponse>) {
-                         if (response.code() == 200) {
-                             if (response.body() != null) {
-                                 val directionsResponse = response.body()
-                                 val results = directionsResponse!!.routes()
+                .overview(DirectionsCriteria.OVERVIEW_FULL)
+         MapmyIndiaDirectionManager.newInstance(builder.build()).call(object : OnResponseCallback<DirectionsResponse> {
+             override fun onSuccess(directionsResponse: DirectionsResponse?) {
+                 if (directionsResponse != null) {
+                     val results = directionsResponse.routes()
 
-                                 if (results.size > 0) {
-                                     mapmyIndiaMap!!.clear()
-                                     val directionsRoute = results[0]
-                                     drawPath(PolylineUtils.decode(directionsRoute.geometry()!!, Constants.PRECISION_6))
-                                     updateData(directionsRoute)
-                                 }
-                             }
-                         } else {
-                             Toast.makeText(this@DirectionActivity, response.message(), Toast.LENGTH_LONG).show()
-                         }
-                         progressDialogHide()
+                     if (results.size > 0) {
+                         mapmyIndiaMap?.clear()
+                         val directionsRoute = results[0]
+                         drawPath(PolylineUtils.decode(directionsRoute.geometry()!!, PRECISION_6))
+                         updateData(directionsRoute)
                      }
+                 }
+                 progressDialogHide()
 
-                     override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {
-                         progressDialogHide()
-                     }
-                 })
+             }
+
+             override fun onError(p0: Int, p1: String?) {
+                 progressDialogHide()
+                 Toast.makeText(this@DirectionActivity, p1, Toast.LENGTH_LONG).show()
+             }
+         })
     }
 
     /**
@@ -355,7 +357,7 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnM
         }
     }
 
-    override fun onMapLongClick(latlng: LatLng) {
+    override fun onMapLongClick(latlng: LatLng): Boolean {
        val alertDialog = AlertDialog.Builder(this);
         alertDialog.setMessage("Select Point as Source or Destination");
 
@@ -379,6 +381,6 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnM
 
         alertDialog.setCancelable(true);
         alertDialog.show();
-
+        return false
     }
 }

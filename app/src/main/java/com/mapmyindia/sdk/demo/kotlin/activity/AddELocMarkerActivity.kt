@@ -5,14 +5,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.MapboxMap.OnMarkerAddedListener
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityAddMarkerBinding
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.OnMapReadyCallback
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
+import com.mapmyindia.sdk.maps.camera.CameraELocUpdateFactory
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
+import com.mapmyindia.sdk.maps.geometry.LatLng
 import java.util.*
 
 /**
@@ -20,7 +21,7 @@ import java.util.*
  **/
 
 class AddELocMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
-    private var mapmyIndiaMap: MapboxMap? = null
+    private var mapmyIndiaMap: MapmyIndiaMap? = null
     private lateinit var mBinding: ActivityAddMarkerBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +48,7 @@ class AddELocMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
                 markerOptions.add(MarkerOptions().eLoc(eLoc).title(eLoc))
                 eLocs.add(eLoc)
             }
-            mapmyIndiaMap?.addMarkers(markerOptions, object : OnMarkerAddedListener {
+            mapmyIndiaMap?.addMarkers(markerOptions, object : MapmyIndiaMap.OnMarkerAddedListener {
                 override fun onSuccess() {
                     Toast.makeText(this@AddELocMarkerActivity, "Marker Added Successfully", Toast.LENGTH_SHORT).show()
                 }
@@ -58,9 +59,9 @@ class AddELocMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
             })
             if (eLocs.size > 0) {
                 if (eLocs.size == 1) {
-                    mapmyIndiaMap?.animateCamera(eLocs[0], 16.0)
+                    mapmyIndiaMap?.animateCamera(CameraELocUpdateFactory.newELocZoom(eLocs[0], 16.0))
                 } else {
-                    mapmyIndiaMap?.animateCamera(eLocs, 10, 100, 10, 10)
+                    mapmyIndiaMap?.animateCamera(CameraELocUpdateFactory.newELocBounds(eLocs, 10, 100, 10, 10))
                 }
             }
 
@@ -103,9 +104,9 @@ class AddELocMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
         mBinding.mapView.onSaveInstanceState(outState)
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap?) {
-        mapmyIndiaMap = mapboxMap
-        mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(28.0, 77.0), 5.0))
+    override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap
+        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(28.0, 77.0), 5.0))
         mBinding.layoutEloc.visibility = View.VISIBLE
     }
 

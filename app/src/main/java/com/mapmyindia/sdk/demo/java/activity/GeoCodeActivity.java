@@ -6,24 +6,22 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet;
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.geocoding.GeoCode;
 import com.mmi.services.api.geocoding.GeoCodeResponse;
 import com.mmi.services.api.geocoding.MapmyIndiaGeoCoding;
+import com.mmi.services.api.geocoding.MapmyIndiaGeoCodingManager;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by CEINFO on 26-02-2019.
@@ -31,7 +29,7 @@ import retrofit2.Response;
 
 public class GeoCodeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private MapView mapView;
     private TransparentProgressDialog transparentProgressDialog;
 
@@ -46,11 +44,8 @@ public class GeoCodeActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
-
-
-        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
         mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
@@ -79,31 +74,29 @@ public class GeoCodeActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void getGeoCode(String geocodeText) {
         progressDialogShow();
-        MapmyIndiaGeoCoding.builder()
+        MapmyIndiaGeoCoding mapmyIndiaGeoCoding = MapmyIndiaGeoCoding.builder()
                 .setAddress(geocodeText)
-                .build().enqueueCall(new Callback<GeoCodeResponse>() {
+                .build();
+        MapmyIndiaGeoCodingManager.newInstance(mapmyIndiaGeoCoding).call(new OnResponseCallback<GeoCodeResponse>() {
             @Override
-            public void onResponse(Call<GeoCodeResponse> call, Response<GeoCodeResponse> response) {
-                if (response.code() == 200) {
-                    if (response.body() != null) {
-                        List<GeoCode> placesList = response.body().getResults();
-                        GeoCode place = placesList.get(0);
-                        String add = "Latitude: " + place.latitude + " longitude: " + place.longitude;
-                        addMarker(place.latitude, place.longitude);
-                        Toast.makeText(GeoCodeActivity.this, add, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(GeoCodeActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
-                    }
+            public void onSuccess(GeoCodeResponse geoCodeResponse) {
+
+                if (geoCodeResponse != null) {
+                    List<GeoCode> placesList = geoCodeResponse.getResults();
+                    GeoCode place = placesList.get(0);
+                    String add = "Latitude: " + place.latitude + " longitude: " + place.longitude;
+                    addMarker(place.latitude, place.longitude);
+                    Toast.makeText(GeoCodeActivity.this, add, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(GeoCodeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GeoCodeActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
                 }
                 progressDialogHide();
             }
 
             @Override
-            public void onFailure(Call<GeoCodeResponse> call, Throwable t) {
-                Toast.makeText(GeoCodeActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+            public void onError(int i, String s) {
                 progressDialogHide();
+                Toast.makeText(GeoCodeActivity.this, s, Toast.LENGTH_SHORT).show();
             }
         });
     }

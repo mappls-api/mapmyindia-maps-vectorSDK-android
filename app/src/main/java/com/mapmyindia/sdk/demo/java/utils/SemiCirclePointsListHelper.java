@@ -1,7 +1,8 @@
 package com.mapmyindia.sdk.demo.java.utils;
 
 
-import com.mapbox.mapboxsdk.geometry.LatLng;
+
+import com.mapmyindia.sdk.maps.geometry.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;

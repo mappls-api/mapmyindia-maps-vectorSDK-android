@@ -2,28 +2,27 @@ package com.mapmyindia.sdk.demo.java.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.mapbox.android.core.location.LocationEngineListener;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.location.LocationComponentActivationOptions;
 
 /**
  * Created by CEINFO on 26-02-2019.
  */
 
-public class CurrentLocationActivity extends AppCompatActivity implements OnMapReadyCallback, LocationEngineListener {
+public class CurrentLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-  private MapboxMap mapmyIndiaMap;
+  private MapmyIndiaMap mapmyIndiaMap;
     private MapView mapView;
 
     @Override
@@ -36,31 +35,25 @@ public class CurrentLocationActivity extends AppCompatActivity implements OnMapR
     }
 
     @Override
-    public void onMapReady(final MapboxMap mapmyIndiaMap) {
+    public void onMapReady(final MapmyIndiaMap mapmyIndiaMap) {
       this.mapmyIndiaMap = mapmyIndiaMap;
 
 
       mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-      mapmyIndiaMap.getLocationComponent().activateLocationComponent(this);
-      mapmyIndiaMap.getLocationComponent().setLocationComponentEnabled(true);
-    }
 
-    @Override
-    public void onConnected() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-    }
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                if (ActivityCompat.checkSelfPermission(CurrentLocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(CurrentLocationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+                mapmyIndiaMap.getLocationComponent().activateLocationComponent(LocationComponentActivationOptions.builder(CurrentLocationActivity.this, style).build());
+                mapmyIndiaMap.getLocationComponent().setLocationComponentEnabled(true);
+            }
+        });
 
-    @Override
-    public void onLocationChanged(Location location) {
-      mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(location.getLatitude(), location.getLongitude()), 16));
     }
 
     @Override

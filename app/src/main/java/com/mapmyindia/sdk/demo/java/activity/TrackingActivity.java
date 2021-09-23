@@ -8,17 +8,20 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.mapbox.geojson.Point;
-import com.mapbox.geojson.utils.PolylineUtils;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.BaseLayoutBinding;
 import com.mapmyindia.sdk.demo.java.plugin.TrackingPlugin;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.geojson.utils.PolylineUtils;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.directions.DirectionsCriteria;
+import com.mmi.services.api.directions.MapmyIndiaDirectionManager;
 import com.mmi.services.api.directions.MapmyIndiaDirections;
 import com.mmi.services.api.directions.models.DirectionsResponse;
 import com.mmi.services.api.directions.models.DirectionsRoute;
@@ -27,22 +30,15 @@ import com.mmi.services.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class TrackingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private final int MARKER_TRANSLATION_COMPLETE = 125;
+    private final Handler trackingHandler = new Handler(Looper.getMainLooper());
     private BaseLayoutBinding mBinding;
     private List<Point> travelledPoints;
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private TrackingPlugin trackingPlugin;
     private int index = 0;
-
-
-    private final int MARKER_TRANSLATION_COMPLETE = 125;
-
-    private final Handler trackingHandler = new Handler(Looper.getMainLooper());
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -51,7 +47,6 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             trackingHandler.postDelayed(runnable, 3000);
         }
     };
-
 
 
     @Override
@@ -78,7 +73,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onResume() {
         super.onResume();
         mBinding.mapView.onResume();
-        if(travelledPoints != null) {
+        if (travelledPoints != null) {
             trackingHandler.post(runnable);
         }
     }
@@ -109,12 +104,16 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
+    public void onMapReady(MapmyIndiaMap mapboxMap) {
         this.mapmyIndiaMap = mapboxMap;
         mapmyIndiaMap.setMaxZoomPreference(16);
-        mapboxMap.setPadding(0,0,0,0);
-        trackingPlugin = new TrackingPlugin(mBinding.mapView, mapmyIndiaMap);
-        callRouteETA();
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                trackingPlugin = new TrackingPlugin(mBinding.mapView, TrackingActivity.this.mapmyIndiaMap);
+                callRouteETA();
+            }
+        });
     }
 
 
@@ -144,24 +143,22 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                 .destination(Point.fromLngLat(72.9344, 19.1478))
                 .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
                 .overview(DirectionsCriteria.OVERVIEW_SIMPLIFIED);
-
-        builder.build().enqueueCall(new Callback<DirectionsResponse>() {
+        MapmyIndiaDirectionManager.newInstance(builder.build()).call(new OnResponseCallback<DirectionsResponse>() {
             @Override
-            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                if (response.isSuccessful()) {
-                    DirectionsResponse directionsResponse = response.body();
-                    if (directionsResponse != null && directionsResponse.routes() != null && directionsResponse.routes().size() > 0) {
-                        DirectionsRoute directionsRoute = directionsResponse.routes().get(0);
-                        if (directionsRoute != null && directionsRoute.geometry() != null) {
-                            travelledPoints = PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6);
-                            startTracking();
-                        }
+            public void onSuccess(DirectionsResponse directionsResponse) {
+
+                if (directionsResponse != null && directionsResponse.routes() != null && directionsResponse.routes().size() > 0) {
+                    DirectionsRoute directionsRoute = directionsResponse.routes().get(0);
+                    if (directionsRoute != null && directionsRoute.geometry() != null) {
+                        travelledPoints = PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6);
+                        startTracking();
                     }
                 }
+
             }
 
             @Override
-            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+            public void onError(int i, String s) {
 
             }
         });
@@ -176,36 +173,34 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void callTravelledRoute() {
-        MapmyIndiaDirections.builder()
+        MapmyIndiaDirections mapmyIndiaDirections = MapmyIndiaDirections.builder()
                 .origin(travelledPoints.get(index))
                 .destination(Point.fromLngLat(72.9344, 19.1478))
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
                 .steps(true)
-                .routeType(DirectionsCriteria.DISTANCE_ROUTE_TYPE_SHORTEST)
+                .routeType(DirectionsCriteria.ROUTE_TYPE_SHORTEST)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE)
-                .build().enqueueCall(new Callback<DirectionsResponse>() {
+                .build();
+        MapmyIndiaDirectionManager.newInstance(mapmyIndiaDirections).call(new OnResponseCallback<DirectionsResponse>() {
             @Override
-            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                if(response.isSuccessful()) {
-                    DirectionsResponse directionsResponse = response.body();
-                    if (directionsResponse != null && directionsResponse.routes() != null && directionsResponse.routes().size() > 0) {
-                        DirectionsRoute directionsRoute = directionsResponse.routes().get(0);
-                        if (directionsRoute != null && directionsRoute.geometry() != null) {
-                            trackingPlugin.updatePolyline(directionsRoute);
-                            List<Point> remainingPath = PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6);
-                            List<LatLng> latLngList = new ArrayList<>();
-                            for(Point point: remainingPath) {
-                                latLngList.add(new LatLng(point.latitude(), point.longitude()));
-                            }
-                            if(latLngList.size() > 0) {
-                                if(latLngList.size() == 1) {
-                                    mapmyIndiaMap.easeCamera(CameraUpdateFactory.newLatLngZoom(latLngList.get(0), 12));
-                                } else {
-                                    LatLngBounds latLngBounds = new LatLngBounds.Builder()
-                                            .includes(latLngList)
-                                            .build();
-                                    mapmyIndiaMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 180, 0, 180, 0));
-                                }
+            public void onSuccess(DirectionsResponse directionsResponse) {
+                if (directionsResponse != null && directionsResponse.routes() != null && directionsResponse.routes().size() > 0) {
+                    DirectionsRoute directionsRoute = directionsResponse.routes().get(0);
+                    if (directionsRoute != null && directionsRoute.geometry() != null) {
+                        trackingPlugin.updatePolyline(directionsRoute);
+                        List<Point> remainingPath = PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6);
+                        List<LatLng> latLngList = new ArrayList<>();
+                        for (Point point : remainingPath) {
+                            latLngList.add(new LatLng(point.latitude(), point.longitude()));
+                        }
+                        if (latLngList.size() > 0) {
+                            if (latLngList.size() == 1) {
+                                mapmyIndiaMap.easeCamera(CameraUpdateFactory.newLatLngZoom(latLngList.get(0), 12));
+                            } else {
+                                LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                                        .includes(latLngList)
+                                        .build();
+                                mapmyIndiaMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 180, 0, 180, 0));
                             }
                         }
                     }
@@ -213,11 +208,10 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             }
 
             @Override
-            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+            public void onError(int i, String s) {
 
             }
         });
-
     }
 
     @Override

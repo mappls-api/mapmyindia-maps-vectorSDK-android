@@ -10,7 +10,7 @@ import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.mapbox.geojson.Point
+import com.mapmyindia.sdk.geojson.Point
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.databinding.ActivityPlaceAutocompleteSettingBinding
 import com.mapmyindia.sdk.demo.java.utils.InputFilterMinMax

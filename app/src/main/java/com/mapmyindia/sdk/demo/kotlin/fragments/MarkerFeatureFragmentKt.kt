@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.java.model.FeaturesList
-import com.mapmyindia.sdk.demo.kotlin.activity.AddCustomMarkerActivitykt
+import com.mapmyindia.sdk.demo.kotlin.activity.AddCustomMarkerActivity
 import com.mapmyindia.sdk.demo.kotlin.activity.AddELocCustomMarkerActivity
 import com.mapmyindia.sdk.demo.kotlin.activity.AddELocMarkerActivity
 import com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter
@@ -58,7 +58,7 @@ class MarkerFeatureFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick
             val addCustomInfowindowIntent = Intent(context, com.mapmyindia.sdk.demo.kotlin.activity.AddCustomInfoWindowActivity::class.java)
             startActivity(addCustomInfowindowIntent)
         } else if (position == 2) {
-            val addCustomMarkerIntent = Intent(context, AddCustomMarkerActivitykt::class.java)
+            val addCustomMarkerIntent = Intent(context, AddCustomMarkerActivity::class.java)
             startActivity(addCustomMarkerIntent)
         } else if (position == 3) {
             val markerDraggingIntent = Intent(context, com.mapmyindia.sdk.demo.kotlin.activity.MarkerDraggingActivity::class.java)

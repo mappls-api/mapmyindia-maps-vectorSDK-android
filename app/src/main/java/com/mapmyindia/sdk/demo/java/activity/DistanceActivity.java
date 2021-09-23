@@ -11,27 +11,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.utils.CheckInternet;
 import com.mapmyindia.sdk.demo.java.utils.TransparentProgressDialog;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.camera.CameraPosition;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.directions.DirectionsCriteria;
 import com.mmi.services.api.distance.MapmyIndiaDistanceMatrix;
+import com.mmi.services.api.distance.MapmyIndiaDistanceMatrixManager;
 import com.mmi.services.api.distance.models.DistanceResponse;
 import com.mmi.services.api.distance.models.DistanceResults;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by CEINFO on 26-02-2019.
@@ -62,7 +60,7 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
         mapView.getMapAsync(this);
         transparentProgressDialog = new TransparentProgressDialog(this, R.drawable.circle_loader, "");
         floatingActionButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, InputActivity.class);
+            Intent intent = new Intent(this,InputActivity.class);
             intent.putExtra("origin", mSource);
             intent.putExtra("destination", mDestination);
             intent.putExtra("waypoints", waypoints);
@@ -71,10 +69,9 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
 
 
-        mapmyIndiaMap.setPadding(20, 20, 20, 20);
 
 
         mapmyIndiaMap.setCameraPosition(setCameraAndTilt());
@@ -107,7 +104,7 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
         transparentProgressDialog.dismiss();
     }
 
-    private void calculateDistance(List<Point> pointList,List<String> elocs) {
+    private void calculateDistance(List<Point> pointList, List<String> elocs) {
         progressDialogShow();
        MapmyIndiaDistanceMatrix.Builder builder =   MapmyIndiaDistanceMatrix.builder();
             if (mSource!=null){
@@ -135,30 +132,28 @@ public class DistanceActivity extends AppCompatActivity implements OnMapReadyCal
         }
                 builder.profile(DirectionsCriteria.PROFILE_DRIVING)
                 .resource(DirectionsCriteria.RESOURCE_DISTANCE_ETA)
-                .build()
-                .enqueueCall(new Callback<DistanceResponse>() {
-                    @Override
-                    public void onResponse(Call<DistanceResponse> call, Response<DistanceResponse> response) {
-                        progressDialogHide();
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                DistanceResponse legacyDistanceResponse = response.body();
-                                DistanceResults distanceResults = legacyDistanceResponse.results();
+                .build();
+        MapmyIndiaDistanceMatrixManager.newInstance(builder.build()).call(new OnResponseCallback<DistanceResponse>() {
+            @Override
+            public void onSuccess(DistanceResponse distanceResponse) {
+                progressDialogHide();
+                if (distanceResponse != null) {
+                    DistanceResults distanceResults = distanceResponse.results();
 
-                                if (distanceResults != null) {
-                                    updateData(distanceResults);
-                                } else {
-                                    Toast.makeText(DistanceActivity.this, "Failed: " + legacyDistanceResponse.responseCode(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
+                    if (distanceResults != null) {
+                        updateData(distanceResults);
+                    } else {
+                        Toast.makeText(DistanceActivity.this, "Failed: " + distanceResponse.responseCode(), Toast.LENGTH_SHORT).show();
                     }
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<DistanceResponse> call, Throwable t) {
-                        progressDialogHide();
-                    }
-                });
+            @Override
+            public void onError(int i, String s) {
+                progressDialogHide();
+                Toast.makeText(DistanceActivity.this, "Failed: " + s, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

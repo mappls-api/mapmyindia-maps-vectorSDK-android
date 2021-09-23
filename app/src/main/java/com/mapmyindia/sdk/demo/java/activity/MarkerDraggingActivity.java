@@ -3,16 +3,18 @@ package com.mapmyindia.sdk.demo.java.activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.utils.BitmapUtils;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.utils.BitmapUtils;
 import com.mapmyindia.sdk.plugin.annotation.OnSymbolDragListener;
 import com.mapmyindia.sdk.plugin.annotation.Symbol;
 import com.mapmyindia.sdk.plugin.annotation.SymbolManager;
@@ -21,7 +23,7 @@ import com.mapmyindia.sdk.plugin.annotation.SymbolOptions;
 public class MarkerDraggingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private LatLng latLng = new LatLng(28.705436, 77.100462);
     private SymbolManager symbolManager;
 
@@ -36,37 +38,43 @@ public class MarkerDraggingActivity extends AppCompatActivity implements OnMapRe
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMap) {
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
       this.mapmyIndiaMap = mapmyIndiaMap;
       mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
         initMarker();
     }
 
     private void initMarker() {
-        symbolManager = new SymbolManager(mapView, mapmyIndiaMap);
-        SymbolOptions symbolOptions = new SymbolOptions()
-                .position(latLng)
-                .icon(BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(this, R.drawable.placeholder)))
-                .draggable(true);
-        symbolManager.setIconIgnorePlacement(false);
-        symbolManager.setIconAllowOverlap(true);
-        symbolManager.create(symbolOptions);
-        symbolManager.addDragListener(new OnSymbolDragListener() {
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
             @Override
-            public void onAnnotationDragStarted(Symbol symbol) {
+            public void onStyleLoaded(@NonNull Style style) {
+                symbolManager = new SymbolManager(mapView, mapmyIndiaMap, style);
+                SymbolOptions symbolOptions = new SymbolOptions()
+                        .position(latLng)
+                        .icon(BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(MarkerDraggingActivity.this, R.drawable.placeholder)))
+                        .draggable(true);
+                symbolManager.setIconIgnorePlacement(false);
+                symbolManager.setIconAllowOverlap(true);
+                symbolManager.create(symbolOptions);
+                symbolManager.addDragListener(new OnSymbolDragListener() {
+                    @Override
+                    public void onAnnotationDragStarted(Symbol symbol) {
 
-            }
+                    }
 
-            @Override
-            public void onAnnotationDrag(Symbol symbol) {
+                    @Override
+                    public void onAnnotationDrag(Symbol symbol) {
 
-            }
+                    }
 
-            @Override
-            public void onAnnotationDragFinished(Symbol symbol) {
-                Toast.makeText(MarkerDraggingActivity.this, symbol.getPosition().toString(), Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onAnnotationDragFinished(Symbol symbol) {
+                        Toast.makeText(MarkerDraggingActivity.this, symbol.getPosition().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
+
     }
 
     @Override

@@ -1,31 +1,54 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.mapbox.android.core.location.LocationEngine;
-import com.mapbox.android.core.location.LocationEngineListener;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.location.LocationComponent;
-import com.mapbox.mapboxsdk.location.LocationComponentOptions;
-import com.mapbox.mapboxsdk.location.modes.CameraMode;
-import com.mapbox.mapboxsdk.location.modes.RenderMode;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapmyindia.sdk.demo.R;
+import com.mapmyindia.sdk.maps.MapView;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.location.LocationComponent;
+import com.mapmyindia.sdk.maps.location.LocationComponentActivationOptions;
+import com.mapmyindia.sdk.maps.location.LocationComponentOptions;
+import com.mapmyindia.sdk.maps.location.engine.LocationEngine;
+import com.mapmyindia.sdk.maps.location.engine.LocationEngineCallback;
+import com.mapmyindia.sdk.maps.location.engine.LocationEngineRequest;
+import com.mapmyindia.sdk.maps.location.engine.LocationEngineResult;
+import com.mapmyindia.sdk.maps.location.modes.CameraMode;
+import com.mapmyindia.sdk.maps.location.modes.RenderMode;
 
-public class CustomCurrentLocationIconActivity extends AppCompatActivity implements OnMapReadyCallback, LocationEngineListener {
+public class CustomCurrentLocationIconActivity extends AppCompatActivity implements OnMapReadyCallback {
     LocationComponent locationComponent;
-    MapboxMap mapmyIndiaMaps;
+    MapmyIndiaMap mapmyIndiaMap;
     LocationEngine locationEngine;
     MapView mapView;
+    private static final long DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L;
+    private static final long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
+    LocationEngineCallback<LocationEngineResult> locationEngineCallback = new LocationEngineCallback<LocationEngineResult>() {
+        @Override
+        public void onSuccess(LocationEngineResult locationEngineResult) {
+            if(locationEngineResult.getLastLocation() != null) {
+                Location location = locationEngineResult.getLastLocation();
+                mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
+            }
+        }
+
+        @Override
+        public void onFailure(@NonNull Exception e) {
+            e.printStackTrace();
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,9 +60,14 @@ public class CustomCurrentLocationIconActivity extends AppCompatActivity impleme
     }
 
     @Override
-    public void onMapReady(MapboxMap mapmyIndiaMaps) {
-        this.mapmyIndiaMaps = mapmyIndiaMaps;
-        enableLocation();
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
+        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                enableLocation(style);
+            }
+        });
     }
 
     @Override
@@ -47,21 +75,37 @@ public class CustomCurrentLocationIconActivity extends AppCompatActivity impleme
 
     }
 
-    private void enableLocation() {
+    private void enableLocation(Style style) {
         LocationComponentOptions options = LocationComponentOptions.builder(this)
                 .trackingGesturesManagement(true)
                 .accuracyColor(ContextCompat.getColor(this, R.color.colorAccent))
                 .foregroundDrawable(R.drawable.location_pointer)
                 .build();
 // Get an instance of the component LocationComponent
-        locationComponent = mapmyIndiaMaps.getLocationComponent();
+        locationComponent = mapmyIndiaMap.getLocationComponent();
+        LocationComponentActivationOptions locationComponentActivationOptions = LocationComponentActivationOptions.builder(this, style)
+                .locationComponentOptions(options)
+                .build();
 // Activate with options
-        locationComponent.activateLocationComponent(this, options);
+        locationComponent.activateLocationComponent(locationComponentActivationOptions);
 // Enable to make component visiblelocationEngine
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         locationComponent.setLocationComponentEnabled(true);
         locationEngine = locationComponent.getLocationEngine();
-
-        locationEngine.addLocationEngineListener(this);
+        LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
+                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
+                .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
+        locationEngine.requestLocationUpdates(request, locationEngineCallback, getMainLooper());
+        locationEngine.getLastLocation(locationEngineCallback);
 // Set the component's camera mode
         locationComponent.setCameraMode(CameraMode.TRACKING);
         locationComponent.setRenderMode(RenderMode.COMPASS);
@@ -77,18 +121,12 @@ public class CustomCurrentLocationIconActivity extends AppCompatActivity impleme
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-        if (locationEngine != null) {
-            locationEngine.removeLocationEngineListener(this);
-            locationEngine.addLocationEngineListener(this);
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-        if (locationEngine != null)
-            locationEngine.removeLocationEngineListener(this);
     }
 
 
@@ -96,18 +134,15 @@ public class CustomCurrentLocationIconActivity extends AppCompatActivity impleme
     protected void onStop() {
         super.onStop();
         mapView.onStop();
-        if (locationEngine != null) {
-            locationEngine.removeLocationEngineListener(this);
-            locationEngine.removeLocationUpdates();
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        // Prevent leaks
         if (locationEngine != null) {
-            locationEngine.deactivate();
+            locationEngine.removeLocationUpdates(locationEngineCallback);
         }
     }
 
@@ -115,17 +150,5 @@ public class CustomCurrentLocationIconActivity extends AppCompatActivity impleme
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onConnected() {
-        locationEngine.requestLocationUpdates();
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        mapmyIndiaMaps.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
-
     }
 }

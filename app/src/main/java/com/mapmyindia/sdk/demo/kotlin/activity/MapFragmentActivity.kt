@@ -1,7 +1,7 @@
 package com.mapmyindia.sdk.demo.kotlin.activity
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import com.mapmyindia.sdk.demo.R
 import com.mapmyindia.sdk.demo.kotlin.fragments.MapFragment
 

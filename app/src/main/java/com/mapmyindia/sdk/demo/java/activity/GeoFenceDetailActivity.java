@@ -14,21 +14,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.mapbox.geojson.LineString;
-import com.mapbox.geojson.Point;
-import com.mapbox.geojson.Polygon;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.utils.BitmapUtils;
-import com.mapbox.turf.TurfConstants;
-import com.mapbox.turf.TurfTransformation;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.databinding.ActivityGeoFenceDetailBinding;
 import com.mapmyindia.sdk.demo.java.adapter.GeoFenceDetailAdapter;
 import com.mapmyindia.sdk.demo.java.model.GeofenceDetail;
+import com.mapmyindia.sdk.geojson.LineString;
+import com.mapmyindia.sdk.geojson.Point;
+import com.mapmyindia.sdk.geojson.Polygon;
+import com.mapmyindia.sdk.maps.MapmyIndiaMap;
+import com.mapmyindia.sdk.maps.OnMapReadyCallback;
+import com.mapmyindia.sdk.maps.Style;
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
+import com.mapmyindia.sdk.maps.geometry.LatLng;
+import com.mapmyindia.sdk.maps.geometry.LatLngBounds;
+import com.mapmyindia.sdk.maps.utils.BitmapUtils;
 import com.mapmyindia.sdk.plugin.annotation.Fill;
 import com.mapmyindia.sdk.plugin.annotation.FillManager;
 import com.mapmyindia.sdk.plugin.annotation.FillOptions;
@@ -38,6 +37,8 @@ import com.mapmyindia.sdk.plugin.annotation.LineOptions;
 import com.mapmyindia.sdk.plugin.annotation.Symbol;
 import com.mapmyindia.sdk.plugin.annotation.SymbolManager;
 import com.mapmyindia.sdk.plugin.annotation.SymbolOptions;
+import com.mapmyindia.sdk.turf.TurfConstants;
+import com.mapmyindia.sdk.turf.TurfTransformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class GeoFenceDetailActivity extends AppCompatActivity implements OnMapRe
     private SymbolManager symbolManager;
     private FillManager fillManager;
     private LineManager lineManager;
-    private MapboxMap mapmyIndiaMap;
+    private MapmyIndiaMap mapmyIndiaMap;
     private List<Symbol> symbols = new ArrayList<>();
     private List<Fill> fillList = new ArrayList<>();
     private List<Line> lines = new ArrayList<>();
@@ -144,29 +145,34 @@ public class GeoFenceDetailActivity extends AppCompatActivity implements OnMapRe
         if (requestCode == 101) {
             if (resultCode == RESULT_OK) {
                 GeofenceDetail newGeofenceDetail = new Gson().fromJson(data.getStringExtra("GEOFENCE"), GeofenceDetail.class);
-                if (newGeofenceDetail.getGfLabel() == null) {
-                    newGeofenceDetail.setGfLabel("GeoFence" + ID.getAndIncrement());
-                    geofenceDetails.add(newGeofenceDetail);
-                    geoFenceDetailAdapter.setGeofenceDetailList(geofenceDetails);
+                mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        if (newGeofenceDetail.getGfLabel() == null) {
+                            newGeofenceDetail.setGfLabel("GeoFence" + ID.getAndIncrement());
+                            geofenceDetails.add(newGeofenceDetail);
+                            geoFenceDetailAdapter.setGeofenceDetailList(geofenceDetails);
 
-                    if (fillManager == null) {
-                        fillManager = new FillManager(mBinding.mapView, mapmyIndiaMap);
-                    }
-                    if (lineManager == null) {
-                        lineManager = new LineManager(mBinding.mapView, mapmyIndiaMap);
-                    }
-                    if (symbolManager == null) {
-                        symbolManager = new SymbolManager(mBinding.mapView, mapmyIndiaMap);
-                    }
-                    addGeoFence(newGeofenceDetail);
-                } else {
-                    for (GeofenceDetail geofenceDetail : geofenceDetails) {
-                        if (geofenceDetail.getGfLabel().equalsIgnoreCase(newGeofenceDetail.getGfLabel())) {
-                            updateGeoFenceData(geofenceDetail, newGeofenceDetail);
-                            updateGeoFence(geofenceDetail);
+                            if (fillManager == null) {
+                                fillManager = new FillManager(mBinding.mapView, mapmyIndiaMap, style);
+                            }
+                            if (lineManager == null) {
+                                lineManager = new LineManager(mBinding.mapView, mapmyIndiaMap, style);
+                            }
+                            if (symbolManager == null) {
+                                symbolManager = new SymbolManager(mBinding.mapView, mapmyIndiaMap, style);
+                            }
+                            addGeoFence(newGeofenceDetail);
+                        } else {
+                            for (GeofenceDetail geofenceDetail : geofenceDetails) {
+                                if (geofenceDetail.getGfLabel().equalsIgnoreCase(newGeofenceDetail.getGfLabel())) {
+                                    updateGeoFenceData(geofenceDetail, newGeofenceDetail);
+                                    updateGeoFence(geofenceDetail);
+                                }
+                            }
                         }
                     }
-                }
+                });
 
                 updateCamera();
 
@@ -318,7 +324,7 @@ public class GeoFenceDetailActivity extends AppCompatActivity implements OnMapRe
 
             List<SymbolOptions> symbolOptions = new ArrayList<>();
             for (Point point : points) {
-                symbolOptions.add(new SymbolOptions().geometry(point).data(jsonObject).icon(BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(this, R.drawable.mapbox_marker_icon_default))));
+                symbolOptions.add(new SymbolOptions().geometry(point).data(jsonObject).icon(BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(this, R.drawable.mapmyindia_maps_marker_icon_default))));
             }
             List<Symbol> symbols = symbolManager.create(symbolOptions);
             this.symbols.addAll(symbols);
@@ -390,8 +396,8 @@ public class GeoFenceDetailActivity extends AppCompatActivity implements OnMapRe
 
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
-        this.mapmyIndiaMap = mapboxMap;
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
 
 
     }

@@ -18,27 +18,29 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.google.gson.JsonObject
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.annotations.BubbleLayout
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.style.expressions.Expression.*
-import com.mapbox.mapboxsdk.style.layers.Property
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.turf.TurfMeasurement
 import com.mapmyindia.sdk.demo.R
+import com.mapmyindia.sdk.geojson.Feature
+import com.mapmyindia.sdk.geojson.FeatureCollection
+import com.mapmyindia.sdk.geojson.Point
+import com.mapmyindia.sdk.maps.MapView
+import com.mapmyindia.sdk.maps.MapmyIndiaMap
+import com.mapmyindia.sdk.maps.Style
+import com.mapmyindia.sdk.maps.annotations.BubbleLayout
+import com.mapmyindia.sdk.maps.geometry.LatLng
+import com.mapmyindia.sdk.maps.style.expressions.Expression.*
+import com.mapmyindia.sdk.maps.style.layers.Property
+import com.mapmyindia.sdk.maps.style.layers.PropertyFactory.*
+import com.mapmyindia.sdk.maps.style.layers.SymbolLayer
+import com.mapmyindia.sdk.maps.style.sources.GeoJsonSource
+import com.mapmyindia.sdk.turf.TurfMeasurement
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.*
 
 
-class AnimatedCarPlugin(private val context: Context, mapView: MapView, private val mapmyIndiaMap: MapboxMap?) : MapView.OnMapChangedListener {
+class AnimatedCarPlugin(private val context: Context, mapView: MapView, private val mapmyIndiaMap: MapmyIndiaMap?) {
     private var car: Car? = null
     private var carSource: GeoJsonSource? = null
     private var nextPoint: LatLng? = null
@@ -53,12 +55,7 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
         this.onUpdatePoint = onUpdatePoint
     }
 
-    override fun onMapChanged(change: Int) {
-        if (change == MapView.DID_FINISH_LOADING_STYLE) {
-            updateState()
-            addMainCar(latLng, false)
-        }
-    }
+
 
     interface OnUpdatePoint {
         fun updateNextPoint()
@@ -80,9 +77,13 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
 
     init {
         updateState()
-        mapView.addOnMapChangedListener(this)
-        this.mapmyIndiaMap!!.addOnMapClickListener {
+        mapView.addOnDidFinishLoadingStyleListener {
+            updateState()
+            addMainCar(latLng, false)
+        }
+        this.mapmyIndiaMap?.addOnMapClickListener {
             this.handleClickIcon(it)
+            return@addOnMapClickListener false
         }
     }
 
@@ -141,8 +142,8 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
      * Update the maker feature
      */
     private fun updateCarSource() {
-        car!!.updateFeature()
-        carSource!!.setGeoJson(car!!.feature)
+        car?.updateFeature()
+        carSource?.setGeoJson(car?.feature!!)
     }
 
     /**
@@ -154,31 +155,34 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
     fun addMainCar(latLng: LatLng?, selected: Boolean) {
         this.latLng = latLng
         this.nextPoint = latLng
-        setVisibility(true)
-        val properties = JsonObject()
-        properties.addProperty(PROPERTY_BEARING, Car.getBearing(latLng!!, nextPoint!!))
-        properties.addProperty(FILTER_TEXT, "filter")
-        properties.addProperty(TITLE, "Tittle")
-        properties.addProperty(PROPERTY_NAME, "name")
-        properties.addProperty(PROPERTY_ADDRESS, "Address")
-        if (selected)
-            properties.addProperty(PROPERTY_SELECTED, false)
+        mapmyIndiaMap?.getStyle {
+            setVisibility(true, it)
+            val properties = JsonObject()
+            properties.addProperty(PROPERTY_BEARING, Car.getBearing(latLng!!, nextPoint!!))
+            properties.addProperty(FILTER_TEXT, "filter")
+            properties.addProperty(TITLE, "Tittle")
+            properties.addProperty(PROPERTY_NAME, "name")
+            properties.addProperty(PROPERTY_ADDRESS, "Address")
+            if (selected)
+                properties.addProperty(PROPERTY_SELECTED, false)
 
-        val feature = Feature.fromGeometry(
-                Point.fromLngLat(
-                        latLng.longitude,
-                        latLng.latitude), properties)
+            val feature = Feature.fromGeometry(
+                    Point.fromLngLat(
+                            latLng.longitude,
+                            latLng.latitude), properties)
 
-        featureCollection = FeatureCollection.fromFeatures(arrayOf(feature))
+            featureCollection = FeatureCollection.fromFeatures(arrayOf(feature))
 
-        car = Car(feature, nextPoint)
-        mapmyIndiaMap!!.addImage(CAR,
-                (context.resources.getDrawable(R.drawable.placeholder, null) as BitmapDrawable).bitmap)
+            car = Car(feature, nextPoint)
+            it.addImage(CAR,
+                    (ContextCompat.getDrawable(context, R.drawable.placeholder) as BitmapDrawable).bitmap)
 
-        if(mapmyIndiaMap.getSource(CAR_SOURCE) == null) {
+            if(it.getSource(CAR_SOURCE) == null) {
 
-            carSource = GeoJsonSource(CAR_SOURCE, featureCollection)
-            mapmyIndiaMap.addSource(carSource!!)
+                carSource = GeoJsonSource(CAR_SOURCE, featureCollection)
+                it.addSource(carSource!!)
+            }
+
         }
 
         GenerateViewIconTask(WeakReference(this).get()!!).execute(featureCollection)
@@ -287,7 +291,10 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
      * @param imageMap Hashmap of images
      */
     private fun setImageGenResults(imageMap: HashMap<String, Bitmap>) {
-        mapmyIndiaMap?.addImages(imageMap)
+        mapmyIndiaMap?.getStyle {
+            it.addImages(imageMap)
+        }
+
     }
 
 
@@ -304,16 +311,19 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
      * Update the state of the Marker.
      */
     private fun updateState() {
-        val source = mapmyIndiaMap!!.getSource(CAR_SOURCE) as GeoJsonSource?
-        if (source == null) {
-            initialise()
-            return
-        }
-        if (featureCollection != null) {
-            carSource!!.setGeoJson(featureCollection)
+        mapmyIndiaMap?.getStyle {
+            val source = it.getSource(CAR_SOURCE) as GeoJsonSource?
+            if (source == null) {
+                initialise(it)
+                return@getStyle
+            }
+            if (featureCollection != null) {
+                source.setGeoJson(featureCollection)
+            }
+
+            setVisibility(true, it)
         }
 
-        setVisibility(true)
     }
 
 
@@ -322,10 +332,10 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
      *
      * @param visible if it is true than layers will be visible
      */
-    private fun setVisibility(visible: Boolean) {
+    private fun setVisibility(visible: Boolean, style: Style) {
         if (layerIds == null)
             return
-        val layers = mapmyIndiaMap!!.layers
+        val layers = style.layers
         if (layers.size > 0) {
             for (layer in layers) {
                 if (layerIds!!.contains(layer.id)) {
@@ -339,9 +349,9 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
     /**
      * Initialise the marker
      */
-    private fun initialise() {
+    private fun initialise(style: Style) {
         layerIds = ArrayList()
-        if(mapmyIndiaMap?.getLayer(CAR_LAYER) == null) {
+        if(style.getLayer(CAR_LAYER) == null) {
             val symbolLayer = SymbolLayer(CAR_LAYER, CAR_SOURCE)
             symbolLayer.withProperties(
                     iconImage(CAR),
@@ -351,11 +361,11 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
                     iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP)
 
             )
-            mapmyIndiaMap!!.addLayer(symbolLayer)
+            style.addLayer(symbolLayer)
             layerIds!!.add(symbolLayer.id)
         }
 
-        if(mapmyIndiaMap.getLayer(SOURCE_LAYER_INFO_WINDOW) == null) {
+        if(style.getLayer(SOURCE_LAYER_INFO_WINDOW) == null) {
             val symbolLayerInfoWindow = SymbolLayer(SOURCE_LAYER_INFO_WINDOW, CAR_SOURCE)
                     .withProperties(
                             /* show image with id title based on the value of the name feature property */
@@ -373,7 +383,7 @@ class AnimatedCarPlugin(private val context: Context, mapView: MapView, private 
                     /* setData a filter to show only when selected feature property is true */
                     .withFilter(eq(get(PROPERTY_SELECTED), literal(true)))
 
-            mapmyIndiaMap.addLayer(symbolLayerInfoWindow)
+            style.addLayer(symbolLayerInfoWindow)
             layerIds?.add(symbolLayerInfoWindow.id)
         }
     }
