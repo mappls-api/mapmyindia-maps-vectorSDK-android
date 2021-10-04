@@ -27,7 +27,7 @@ Powered with India's most comprehensive and robust mapping functionalities.
 | v6.8.11 | 26 April 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  - Added Page Info in Nearby API response<br/>- Added Android Auto Support |
 
 
-For more details of previous versions , [click here](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android/wiki/version_history).
+For more details of previous versions , [click here](./Version-History.md).
 
 
 ## [Getting Started](#getting-started)

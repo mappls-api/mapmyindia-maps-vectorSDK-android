@@ -27,9 +27,9 @@ Powered with India's most comprehensive and robust mapping functionalities.
 | v6.8.14 | 24 May 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  Added MapmyIndia Style support |
 
 
-For more details of previous versions , [click here](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android/wiki/version_history).
+For more details of previous versions , [click here](./Version-History.md).
 
-**v7.0.0 is a major release, to update sdk please follow [reference guide](../Reference-Guide.md)  to update SDK from v6+ to v7.0.0**
+**v7.0.0 is a major release, to update sdk please follow [reference guide](./Reference-Guide.md)  to update SDK from v6+ to v7.0.0**
 
 ## [Getting Started](#getting-started)
 
