@@ -16,7 +16,7 @@ Powered with India's most comprehensive and robust mapping functionalities.
 
 | Version | Supported SDK Version |
 | ---- | ---- | 
-| [v1.0.0](./README.md) | - Map SDK v6.8.16 <br/> - Geo Analytics v0.1.0 <br/> - Place Search Widget v1.4.0 <br/> - GeoFence Widget v0.9.5 <br/> - Scalebar Plugin v0.1.0 <br/> - Direction Widget v0.1.0 <br/> - Nearby UI Widget v0.1.0 |
+| [v1.0.0](./README.md) | - Map SDK v6.8.16 <br/> - Geo Analytics v0.1.0 <br/> - Place Search Widget v1.4.0 <br/> - GeoFence Widget v0.9.5 <br/> - Scalebar Plugin v0.1.0 <br/> - Direction Widget v0.2.0 <br/> - Nearby UI Widget v0.1.0 |
 
 ## [Version History](#Version-History)
 

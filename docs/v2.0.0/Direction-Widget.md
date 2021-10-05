@@ -33,7 +33,7 @@ Follow these steps to add the SDK to your project –
 
 - Add below dependency in your app-level build.gradle	
 ~~~groovy	
-    implementation 'com.mapmyindia.sdk:direction-ui:0.2.0'
+    implementation 'com.mapmyindia.sdk:direction-ui:0.3.0'
 ~~~	
 
 ### Add your API keys to the SDK	
