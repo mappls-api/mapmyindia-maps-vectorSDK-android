@@ -47,7 +47,7 @@ dependencies {
 
 
     implementation 'com.mapmyindia.sdk:place-widget:1.4.0'
-    implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.8.14'
+    implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.9.0'
     implementation 'com.mapmyindia.sdk:mapmyindia-safety-plugin:0.1.0'
 
     //Annotation Plugin
