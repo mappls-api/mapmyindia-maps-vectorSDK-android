@@ -36,7 +36,7 @@ Powered with India's most comprehensive and robust mapping functionalities.
 
 For more details of previous versions , [click here](./docs/v2.0.0/Version-History.md).
 
-**v7.0.0 is a major release, to update sdk please follow [reference guide](./docs/v2.0.0/Reference-Guide)  to update SDK from v6+ to v7.0.0**
+**v7.0.0 is a major release, to update sdk please follow [reference guide](./docs/v2.0.0/Reference-Guide.md)  to update SDK from v6+ to v7.0.0**
 
 ## [Table Of Content](#Table-Of-Content)
 - [Vector Android Map](docs/v2.0.0/Getting-Started.md)
