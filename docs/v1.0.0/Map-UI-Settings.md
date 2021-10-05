@@ -125,16 +125,6 @@ mapmyIndiaMap.getUiSettings().setZoomGesturesEnabled(false);
 ~~~kotlin
 mapmyIndiaMap?.uiSettings?.isZoomGesturesEnabled = false
 ~~~
-## SDK Error Codes
-Map will fail with following error codes
-* MAPS_SDK_KEY_MISSING=1; //when map sdk key is not passed
-* REST_API_KEY_MISSING=2; //when rest api key is not passed
-* ATLAS_CLIENT_ID_MISSING=3; //when atlas client id is not passed
-* ATLAS_CLIENT_SECRET_MISSING=4; //when atlas client secret is not passed
-* ATLAS_GRANT_TYPE_MISSING=5; //* //when atlas grant type is not passed
-* AUTHENTICATION_FAILED=7; //when map fails to authenticate itself with MapmyIndia server
-* UNKNOWN=8; // when map loading failed due to unknown error
-
 For any queries and support, please contact:
 
 ![Email](https://www.google.com/a/cpanel/mapmyindia.co.in/images/logo.gif?service=google_gsuite)

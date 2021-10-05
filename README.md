@@ -19,8 +19,8 @@ Powered with India's most comprehensive and robust mapping functionalities.
 | Version | Supported SDK Version |
 | ---- | ---- | 
 | [v1.0.0](./docs/v1.0.0/README.md) | - Map SDK v6.8.16 <br/> - Geo Analytics v0.1.0 <br/> - Place Search Widget v1.4.0 <br/> - GeoFence Widget v0.9.5 <br/> - Scalebar Plugin v0.1.0 <br/> - Direction Widget v0.1.0 <br/> - Nearby UI Widget v0.1.0 |
-| [v1.0.1](./docs/v1.0.1/README.md) | - Map SDK v6.9.0 <br/> - Geo Analytics v0.1.0 <br/> - Place Search Widget v1.4.0 <br/> - GeoFence Widget v0.9.5 <br/> - Scalebar Plugin v0.1.0 <br/> - Direction Widget v0.1.0 <br/> - Nearby UI Widget v0.1.0 |
-| [v2.0.0](./docs/v2.0.0/README.md) | - Map SDK v7.0.0 <br/> - Geo Analytics v0.2.0 <br/> - Place Search Widget v1.5.0 <br/> - GeoFence Widget v0.10.0 <br/> - Scalebar Plugin v0.2.0 <br/> - Direction Widget v0.2.0 <br/> - Nearby UI Widget v0.2.0 |
+| [v1.0.1](docs/v1.0.1/README.md) | - Map SDK v6.9.0 <br/> - Geo Analytics v0.1.0 <br/> - Place Search Widget v1.4.0 <br/> - GeoFence Widget v0.9.5 <br/> - Scalebar Plugin v0.1.0 <br/> - Direction Widget v0.1.0 <br/> - Nearby UI Widget v0.1.0 |
+| [v2.0.0](docs/v2.0.0/README.md) | - Map SDK v7.0.0 <br/> - Geo Analytics v0.2.0 <br/> - Place Search Widget v1.5.0 <br/> - GeoFence Widget v0.10.0 <br/> - Scalebar Plugin v0.2.0 <br/> - Direction Widget v0.2.0 <br/> - Nearby UI Widget v0.2.0 |
 
 ## [Version History](#Version-History)
 
@@ -34,31 +34,30 @@ Powered with India's most comprehensive and robust mapping functionalities.
 | v6.8.14 | 24 May 2021 | MapmyIndia API Team ([MA](https://github.com/mdakram)) ([ST](https://github.com/saksham66)) |  Added MapmyIndia Style support |
 
 
-For more details of previous versions , [click here](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android/wiki/version_history).
+For more details of previous versions , [click here](./docs/v2.0.0/Version-History.md).
 
-**v7.0.0 is a major release, to update sdk please follow [reference guide](https://github.com/MapmyIndia/mapmyindia-maps-vectorSDK-android/wiki/Reference-Guide)  to update SDK from v6+ to v7.0.0**
+**v7.0.0 is a major release, to update sdk please follow [reference guide](./docs/v2.0.0/Reference-Guide)  to update SDK from v6+ to v7.0.0**
 
 ## [Table Of Content](#Table-Of-Content)
-- [Vector Android Map](./docs/v2.0.0/README.md)
-   * [Version-History](./docs/v2.0.0/README.md#Version-History)
-   * [Getting Started](./docs/v2.0.0/README.md#getting-started)
-   * [Setup your project](./docs/v2.0.0/README.md#setup-your-project)
-   * [Add your API keys to the SDK](./docs/v2.0.0/README.md#add-your-api-keys-to-the-sdk)
-   * [Add a MapmyIndia Map to your application](./docs/v2.0.0/README.md#add-a-mapmyindia-map-to-your-application)
-   * [Map Interactions](./docs/v2.0.0/README.md#map-interactions)
-   * [Map Events](./docs/v2.0.0/README.md#map-events)
-   * [Map Click/Long Press](./docs/v2.0.0/README.md#map-click-long-press)
-   * [Map Overlays](./docs/v2.0.0/README.md#map-overlays)
-       - [Add A Marker](./docs/v2.0.0/README.md#add-a-marker)
-       - [Remove A Marker](./docs/v2.0.0/README.md#remove-a-marker)
-       - [Customize A Marker](./docs/v2.0.0/README.md#customize-a-marker)
-       - [Add A Polyline](./docs/v2.0.0/README.md#add-a-polyline)
-       - [Remove Polyline](./docs/v2.0.0/README.md#remove-polyline)
-       - [Add A Polygon](./docs/v2.0.0/README.md#add-a-polygon)
-       - [Remove Polygon](./docs/v2.0.0/README.md#remove-polygon)
-    * [Show User Location](./docs/v2.0.0/README.md#show-user-location)
-    * [Calculate distance between two points](./docs/v2.0.0/README.md#calculate-distance-between-points)
-    * [Proguard](./docs/v2.0.0/README.md#proguard)
+- [Vector Android Map](docs/v2.0.0/Getting-Started.md)
+   * [Getting Started](docs/v2.0.0/Getting-Started.md#getting-started)
+   * [Setup your project](docs/v2.0.0/Getting-Started.md#setup-your-project)
+   * [Add your API keys to the SDK](docs/v2.0.0/Getting-Started.md#add-your-api-keys-to-the-sdk)
+   * [Add a MapmyIndia Map to your application](docs/v2.0.0/Getting-Started.md#add-a-mapmyindia-map-to-your-application)
+   * [Map Interactions](docs/v2.0.0/Getting-Started.md#map-interactions)
+   * [Map Events](docs/v2.0.0/Getting-Started.md#map-events)
+   * [Map Click/Long Press](docs/v2.0.0/Getting-Started.md#map-click-long-press)
+   * [Map Overlays](docs/v2.0.0/Getting-Started.md#map-overlays)
+       - [Add A Marker](docs/v2.0.0/Getting-Started.md#add-a-marker)
+       - [Remove A Marker](docs/v2.0.0/Getting-Started.md#remove-a-marker)
+       - [Customize A Marker](docs/v2.0.0/Getting-Started.md#customize-a-marker)
+       - [Add A Polyline](docs/v2.0.0/Getting-Started.md#add-a-polyline)
+       - [Remove Polyline](docs/v2.0.0/Getting-Started.md#remove-polyline)
+       - [Add A Polygon](docs/v2.0.0/Getting-Started.md#add-a-polygon)
+       - [Remove Polygon](docs/v2.0.0/Getting-Started.md#remove-polygon)
+    * [Show User Location](docs/v2.0.0/Getting-Started.md#show-user-location)
+    * [Calculate distance between two points](docs/v2.0.0/Getting-Started.md#calculate-distance-between-points)
+    * [Proguard](docs/v2.0.0/Getting-Started.md#proguard)
 - [Map UI Settings](./docs/v2.0.0/Map-UI-Settings.md)
    * [Compass Settings](./docs/v2.0.0/Map-UI-Settings.md#Compass-Settings)
    * [Enable/Disable Zoom on double tap](./docs/v2.0.0/Map-UI-Settings.md#Enable-disable-zoom)
@@ -69,11 +68,11 @@ For more details of previous versions , [click here](https://github.com/MapmyInd
    * [Enable/Disable Zoom Gestures](./docs/v2.0.0/Map-UI-Settings.md#Enable-disable-zoom-gesture)
 - [SDK Error Codes](./docs/v2.0.0/SDK-Error-code.md)
 - [Set Country Regions](./docs/v2.0.0/Set-Regions.md)
-- [Set MapmyIndia MapStyle](./docs/v2.0.0/SDK-Error-code.md/Map-Style.md)
-  * [List of Available Styles](./docs/v2.0.0/SDK-Error-code.md/Map-Style.md#list-of-available-styles)
-  * [Set MapmyIndia Style](./docs/v2.0.0/SDK-Error-code.md/Map-Style.md#set-mapmyindia-style)
-  * [To enable/disable last selected style](./docs/v2.0.0/SDK-Error-code.md/Map-Style.md#To-enable-last-selected-style)
-  * [Get selected style](./docs/v2.0.0/SDK-Error-code.md/Map-Style.md#get-selected-style)
+- [Set MapmyIndia MapStyle](./docs/v2.0.0/Map-Style.md)
+  * [List of Available Styles](./docs/v2.0.0/Map-Style.md#list-of-available-styles)
+  * [Set MapmyIndia Style](./docs/v2.0.0/Map-Style.md#set-mapmyindia-style)
+  * [To enable/disable last selected style](./docs/v2.0.0/Map-Style.md#To-enable-last-selected-style)
+  * [Get selected style](./docs/v2.0.0/Map-Style.md#get-selected-style)
 - REST API Kit
    * [Search API's](./docs/v2.0.0/Search-Api.md)
       - [Auto Suggest](./docs/v2.0.0/Search-Api.md#auto-suggest)
