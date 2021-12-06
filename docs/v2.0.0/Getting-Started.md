@@ -495,7 +495,7 @@ mapmyIndiaMap.removePolygon(polygon!!)
 
 ##### Show the current user location
 
-Implement LocationEngineListener and override it's method
+Implement LocationEngineCallback and override it's method
 #### Java
 ```java
 LocationComponentOptions options = LocationComponentOptions.builder(context)
