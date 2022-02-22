@@ -161,4 +161,4 @@ Read about the latest updates & customer stories
   
 ​  
   
->  ©  Copyright  2021.  CE  Info  Systems  Pvt.  Ltd.  All  Rights  Reserved.  |  [Terms  &  Conditions](http://www.mapmyindia.com/api/terms-&-conditions).
+> © Copyright 2021. CE Info Systems Ltd. All Rights Reserved. | [Terms & Conditions](http://www.mapmyindia.com/api/terms-&-conditions).

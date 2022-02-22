@@ -38,6 +38,7 @@ public class MapmyIndiaDirectionWidgetSetting {
     private int logoSize = PlaceOptions.SIZE_MEDIUM;
     private Integer historyCount;
     private Double zoom;
+    private boolean isShowPOISearch = false;
 
     public Point getDestination() {
         return destination;
@@ -216,5 +217,11 @@ public class MapmyIndiaDirectionWidgetSetting {
         this.zoom = zoom;
     }
 
+    public boolean isShowPOISearch() {
+        return isShowPOISearch;
+    }
 
+    public void setShowPOISearch(boolean showPOISearch) {
+        isShowPOISearch = showPOISearch;
+    }
 }

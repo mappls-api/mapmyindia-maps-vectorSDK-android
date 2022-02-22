@@ -373,6 +373,12 @@
                             android:layout_height="wrap_content"
                             android:text="State"
                             />
+                        <RadioButton
+                            android:id="@+id/rb_poi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="POI"
+                            />
 
                     </RadioGroup>
 
@@ -448,10 +454,6 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#000000"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -582,41 +584,59 @@
                 android:layout_height="1dp"
                 android:background="#000000"/>
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:layout_margin="4dp">-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="4dp">
 
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:text="Background color"-->
-<!--                    android:textColor="#212121"-->
-<!--                    />-->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Enable Bridge"
+                    android:textColor="#212121"
+                    />
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="48dp"-->
-<!--                    android:layout_height="32dp"-->
-<!--                    android:background="@drawable/edit_text_background"-->
-<!--                    android:layout_weight="1">-->
-<!--                <View-->
-<!--                    android:id="@+id/view_background_color"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:background="@color/mapmyindia_demo_black"-->
-<!--                    android:layout_margin="2dp"-->
-<!--                    android:layout_weight="1"/>-->
+                <CheckBox
+                    android:id="@+id/cb_enable_bridge"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
 
-<!--                </LinearLayout>-->
+            </LinearLayout>
 
-<!--            </LinearLayout>-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"/>
 
-<!--            <View-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="1dp"-->
-<!--                android:background="#000000"/>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="4dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Enable Hyperlocal"
+                    android:textColor="#212121"
+                    />
+
+                <CheckBox
+                    android:id="@+id/cb_enable_hyperlocal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"/>
 
 
 

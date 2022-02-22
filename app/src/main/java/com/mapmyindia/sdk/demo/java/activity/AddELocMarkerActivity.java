@@ -125,9 +125,9 @@ public class AddELocMarkerActivity extends AppCompatActivity implements OnMapRea
     }
 
     @Override
-    public void onMapReady(MapmyIndiaMap mapboxMap) {
-        this.mapmyIndiaMap = mapboxMap;
-        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(28, 77), 5));
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
+        this.mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(28, 77), 5));
         mBinding.layoutEloc.setVisibility(View.VISIBLE);
     }
 

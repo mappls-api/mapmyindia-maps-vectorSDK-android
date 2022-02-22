@@ -209,6 +209,9 @@ class DirectionWidgetSettingActivity : AppCompatActivity() {
                 R.id.rb_blue_toolbar -> MapmyIndiaDirectionWidgetSetting.instance.toolbarColor = android.R.color.holo_blue_bright
             }
         }
+        mBinding.cbPoiSearch.setOnCheckedChangeListener { buttonView, isChecked ->
+            MapmyIndiaDirectionWidgetSetting.instance.isShowPOISearch = isChecked
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -331,5 +334,6 @@ class DirectionWidgetSettingActivity : AppCompatActivity() {
         } else if (MapmyIndiaDirectionWidgetSetting.instance.toolbarColor == android.R.color.holo_blue_bright) {
             mBinding.toolbarRG.check(mBinding.rbBlueToolbar.getId())
         }
+        mBinding.cbPoiSearch.isChecked = MapmyIndiaDirectionWidgetSetting.instance.isShowPOISearch
     }
 }

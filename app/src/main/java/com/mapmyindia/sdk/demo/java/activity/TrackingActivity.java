@@ -3,6 +3,7 @@ package com.mapmyindia.sdk.demo.java.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,8 @@ import com.mmi.services.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class TrackingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -104,9 +107,9 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     @Override
-    public void onMapReady(MapmyIndiaMap mapboxMap) {
-        this.mapmyIndiaMap = mapboxMap;
-        mapmyIndiaMap.setMaxZoomPreference(16);
+    public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
+        this.mapmyIndiaMap = mapmyIndiaMap;
+        this.mapmyIndiaMap.setMaxZoomPreference(16);
         mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
@@ -146,6 +149,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         MapmyIndiaDirectionManager.newInstance(builder.build()).call(new OnResponseCallback<DirectionsResponse>() {
             @Override
             public void onSuccess(DirectionsResponse directionsResponse) {
+                Timber.tag("TAG").e(directionsResponse.toJson());
 
                 if (directionsResponse != null && directionsResponse.routes() != null && directionsResponse.routes().size() > 0) {
                     DirectionsRoute directionsRoute = directionsResponse.routes().get(0);

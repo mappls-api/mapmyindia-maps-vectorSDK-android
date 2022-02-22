@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.Gson;
 import com.mapmyindia.sdk.demo.R;
 import com.mapmyindia.sdk.demo.java.settings.MapmyIndiaPlaceWidgetSetting;
 import com.mapmyindia.sdk.maps.MapView;
@@ -22,8 +21,15 @@ import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory;
 import com.mapmyindia.sdk.maps.geometry.LatLng;
 import com.mapmyindia.sdk.plugins.places.autocomplete.PlaceAutocomplete;
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions;
-import com.mapmyindia.sdk.plugins.places.common.PlaceConstants;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.autosuggest.model.ELocation;
+import com.mmi.services.api.autosuggest.model.SuggestedSearchAtlas;
+import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearby;
+import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearbyManager;
+import com.mmi.services.api.nearby.model.NearbyAtlasResponse;
+import com.mmi.services.api.nearby.model.NearbyAtlasResult;
+
+import java.util.ArrayList;
 
 public class FullModeActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MapView mapView;
@@ -54,6 +60,8 @@ public class FullModeActivity extends AppCompatActivity implements OnMapReadyCal
                             .logoSize(MapmyIndiaPlaceWidgetSetting.getInstance().getLogoSize())
                             .backgroundColor(getResources().getColor(MapmyIndiaPlaceWidgetSetting.getInstance().getBackgroundColor()))
                             .toolbarColor(getResources().getColor(MapmyIndiaPlaceWidgetSetting.getInstance().getToolbarColor()))
+                            .hyperLocal(MapmyIndiaPlaceWidgetSetting.getInstance().isEnableHyperLocal())
+                            .bridge(MapmyIndiaPlaceWidgetSetting.getInstance().isEnableBridge())
                             .build();
 
                     PlaceAutocomplete.IntentBuilder builder = new PlaceAutocomplete.IntentBuilder();
@@ -68,6 +76,43 @@ public class FullModeActivity extends AppCompatActivity implements OnMapReadyCal
                 }
             }
         });
+
+    }
+
+    private void callHateOs(String hyperlink) {
+        MapmyIndiaHateosNearby hateosNearby = MapmyIndiaHateosNearby.builder()
+                .hyperlink(hyperlink)
+                .build();
+        MapmyIndiaHateosNearbyManager.newInstance(hateosNearby).call(new OnResponseCallback<NearbyAtlasResponse>() {
+            @Override
+            public void onSuccess(NearbyAtlasResponse nearbyAtlasResponse) {
+                if (nearbyAtlasResponse != null) {
+                    ArrayList<NearbyAtlasResult> nearByList = nearbyAtlasResponse.getSuggestedLocations();
+                    if (nearByList.size() > 0) {
+                        addMarker(nearByList);
+                    }
+                } else {
+                    Toast.makeText(FullModeActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Toast.makeText(FullModeActivity.this, s, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    private void addMarker(ArrayList<NearbyAtlasResult> nearByList) {
+        mapmyIndiaMap.clear();
+        for (NearbyAtlasResult marker : nearByList) {
+            if (marker.getLatitude() != null && marker.getLongitude() != null) {
+                mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(marker.getLatitude(), marker.getLongitude())).title(marker.getPlaceName()));
+            } else {
+                mapmyIndiaMap.addMarker(new MarkerOptions().eLoc(marker.eLoc).title(marker.getPlaceName()));
+            }
+        }
 
     }
 
@@ -88,14 +133,21 @@ public class FullModeActivity extends AppCompatActivity implements OnMapReadyCal
         if (requestCode == 101) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
-                    ELocation eLocation = new Gson().fromJson(data.getStringExtra(PlaceConstants.RETURNING_ELOCATION_DATA), ELocation.class);
-                    if (mapmyIndiaMap != null) {
-                        textView.setText(eLocation.placeName);
-                        mapmyIndiaMap.clear();
-                        if (eLocation.latitude != null && eLocation.longitude != null) {
-                            LatLng latLng = new LatLng(Double.parseDouble(eLocation.latitude), Double.parseDouble(eLocation.longitude));
-                            mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
-                            mapmyIndiaMap.addMarker(new MarkerOptions().position(latLng).title(eLocation.placeName).snippet(eLocation.placeAddress));
+                    ELocation eLocation = PlaceAutocomplete.getPlace(data);
+                    if(eLocation != null) {
+                        if (mapmyIndiaMap != null) {
+                            textView.setText(eLocation.placeName);
+                            mapmyIndiaMap.clear();
+                            if (eLocation.latitude != null && eLocation.longitude != null) {
+                                LatLng latLng = new LatLng(Double.parseDouble(eLocation.latitude), Double.parseDouble(eLocation.longitude));
+                                mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+                                mapmyIndiaMap.addMarker(new MarkerOptions().position(latLng).title(eLocation.placeName).snippet(eLocation.placeAddress));
+                            }
+                        }
+                    } else {
+                        SuggestedSearchAtlas suggestedSearchAtlas = PlaceAutocomplete.getSuggestedSearch(data);
+                        if(suggestedSearchAtlas != null) {
+                            callHateOs(suggestedSearchAtlas.hyperLink);
                         }
                     }
                 }

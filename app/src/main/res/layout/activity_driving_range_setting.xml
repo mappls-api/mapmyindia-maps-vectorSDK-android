@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/setting_layout"
+        tools:context=".DrivingRangeSettingActivity">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Set as Current Location"
+                        android:textColor="#212121"
+                        android:layout_gravity="center"
+                        />
+
+                    <CheckBox
+                        android:id="@+id/cb_current_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        />
+
+
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Location"
+                        android:textColor="#212121"
+                        />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/et_latitude"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Latitude"
+                            android:layout_margin="2dp"
+                            android:padding="8dp"
+                            android:inputType="numberDecimal"
+                            android:background="@drawable/edit_text_background"/>
+
+                        <EditText
+                            android:id="@+id/et_longitude"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:hint="Longitude"
+                            android:padding="8dp"
+                            android:inputType="numberDecimal"
+                            android:background="@drawable/edit_text_background"/>
+
+
+
+                        <Button
+                            android:id="@+id/btn_search"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="4dp"
+                            android:padding="4dp"
+                            android:background="@drawable/bg_background_btn"
+                            android:textColor="#FFFFFF"
+                            android:text="Search"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_save_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="#FFFFFF"
+                    android:text="Save Location"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="4dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:layout_weight="1"
+                    android:text="Range Type"/>
+
+                <RadioGroup
+                    android:id="@+id/rg_range_type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/rb_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Time (in min.)"
+                        />
+                    <RadioButton
+                        android:id="@+id/rb_distance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Distance (in km.)"
+                        />
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:textColor="#212121"
+                    android:text="Contour"/>
+
+                <LinearLayout
+                    android:id="@+id/history_count_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Value"
+                        android:textColor="#212121"
+                        />
+
+                    <EditText
+                        android:id="@+id/et_contour_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:hint="Value"
+                        android:inputType="number"
+                        android:layout_margin="2dp"
+                        android:background="@drawable/edit_text_background"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:id="@+id/btn_save_contour_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="4dp"
+                        android:padding="4dp"
+                        android:background="@drawable/bg_background_btn"
+                        android:textColor="@color/mapmyindia_demo_white"
+                        android:text="Save Contour Value"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#212121"
+                        android:text="Color"/>
+
+                    <RadioGroup
+                        android:id="@+id/contour_color_RG"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/rb_contour_red"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Red"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_contour_green"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Green"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_contour_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Blue"
+                            />
+
+                    </RadioGroup>
+
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Driving Profile"
+                        android:textColor="#212121"
+                        />
+                    <EditText
+                        android:id="@+id/et_driving_profile"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:hint="Driving Profile"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_driving_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Driving Profile"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="4dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Show Locations"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/show_locations_switch"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="4dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Show Polygon"
+                        android:textColor="@color/mapmyindia_demo_black"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/show_polygon_switch"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Denoise"
+                        />
+                    <EditText
+                        android:id="@+id/et_denoise"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal"
+                        android:layout_height="wrap_content"
+                        android:hint="Denoise"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_denoise"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Denoise"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Generalize"
+                        />
+                    <EditText
+                        android:id="@+id/et_generalize"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal"
+                        android:layout_height="wrap_content"
+                        android:hint="Generalize"
+                        android:layout_margin="2dp"
+                        android:padding="8dp"
+                        android:background="@drawable/edit_text_background"/>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_generalize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:background="@drawable/bg_background_btn"
+                    android:textColor="@color/mapmyindia_demo_white"
+                    android:text="Save Generalize"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="4dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="1"
+                        android:text="Speed Type"/>
+
+                    <RadioGroup
+                        android:id="@+id/rg_speed_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/rb_optimal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Optimal"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_predective"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Predective"
+                            />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_predective"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="4dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="1"
+                        android:text="Predective Type"/>
+
+                    <RadioGroup
+                        android:id="@+id/rg_predective_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/rb_current"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Current Time"
+                            />
+                        <RadioButton
+                            android:id="@+id/rb_custom"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Custom Time"
+                            />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <DatePicker
+                    android:id="@+id/date_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner"
+                    android:layout_margin="4dp"/>
+
+                <TimePicker
+                    android:id="@+id/time_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:calendarViewShown="false"
+                    android:timePickerMode="spinner"
+                    android:layout_margin="4dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"
+                    android:layout_marginBottom="4dp"/>
+            </LinearLayout>
+        </ScrollView>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -90,6 +90,7 @@ class PlaceAutocompleteSettingActivity : AppCompatActivity() {
                 R.id.rb_sub_sub_locality -> MapmyIndiaPlaceWidgetSetting.instance.pod = AutoSuggestCriteria.POD_SUB_SUB_LOCALITY
                 R.id.rb_locality -> MapmyIndiaPlaceWidgetSetting.instance.pod = AutoSuggestCriteria.POD_LOCALITY
                 R.id.rb_village -> MapmyIndiaPlaceWidgetSetting.instance.pod = AutoSuggestCriteria.POD_VILLAGE
+                R.id.rb_poi -> MapmyIndiaPlaceWidgetSetting.instance.pod = AutoSuggestCriteria.POD_POI
             }
         })
         mBinding.btnHint.setOnClickListener(View.OnClickListener {
@@ -120,6 +121,12 @@ class PlaceAutocompleteSettingActivity : AppCompatActivity() {
                 R.id.rb_green_toolbar -> MapmyIndiaPlaceWidgetSetting.instance.toolbarColor = android.R.color.holo_green_dark
                 R.id.rb_blue_toolbar -> MapmyIndiaPlaceWidgetSetting.instance.toolbarColor = android.R.color.holo_blue_bright
             }
+        }
+        mBinding.cbEnableBridge.setOnCheckedChangeListener { _, isChecked ->
+            MapmyIndiaPlaceWidgetSetting.instance.isBridgeEnable = isChecked
+        }
+        mBinding.cbEnableHyperlocal.setOnCheckedChangeListener { _, isChecked ->
+            MapmyIndiaPlaceWidgetSetting.instance.isHyperLocalEnable = isChecked
         }
     }
 
@@ -171,6 +178,8 @@ class PlaceAutocompleteSettingActivity : AppCompatActivity() {
                 mBinding.rgPod.check(mBinding.rbSubSubLocality.getId())
             } else if ( MapmyIndiaPlaceWidgetSetting.instance.pod.equals(AutoSuggestCriteria.POD_VILLAGE, ignoreCase = true)) {
                 mBinding.rgPod.check(mBinding.rbVillage.getId())
+            } else if(MapmyIndiaPlaceWidgetSetting.instance.pod.equals(AutoSuggestCriteria.POD_POI)) {
+                mBinding.rgPod.check(mBinding.rbPoi.id)
             }
         } else {
             mBinding.rgPod.clearCheck()
@@ -215,6 +224,8 @@ class PlaceAutocompleteSettingActivity : AppCompatActivity() {
                 mBinding.toolbarRG.check(mBinding.rbBlueToolbar.id)
             }
         }
+        mBinding.cbEnableBridge.isChecked = MapmyIndiaPlaceWidgetSetting.instance.isBridgeEnable
+        mBinding.cbEnableHyperlocal.isChecked = MapmyIndiaPlaceWidgetSetting.instance.isHyperLocalEnable
 
     }
 }

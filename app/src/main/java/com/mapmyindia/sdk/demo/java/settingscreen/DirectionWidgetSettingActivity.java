@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,16 +39,16 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
     }
 
     private void initCallback() {
-        if (MapmyIndiaDirectionWidgetSetting.getInstance().getExcludes()==null){
-            excludes=new ArrayList<>();
-        }else {
-            excludes=MapmyIndiaDirectionWidgetSetting.getInstance().getExcludes();
-            for (String item:excludes){
-                if (item.equalsIgnoreCase(DirectionsCriteria.EXCLUDE_FERRY)){
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getExcludes() == null) {
+            excludes = new ArrayList<>();
+        } else {
+            excludes = MapmyIndiaDirectionWidgetSetting.getInstance().getExcludes();
+            for (String item : excludes) {
+                if (item.equalsIgnoreCase(DirectionsCriteria.EXCLUDE_FERRY)) {
                     mBinding.cbFerry.setChecked(true);
-                }else  if (item.equalsIgnoreCase(DirectionsCriteria.EXCLUDE_MOTORWAY)){
+                } else if (item.equalsIgnoreCase(DirectionsCriteria.EXCLUDE_MOTORWAY)) {
                     mBinding.cbMotorway.setChecked(true);
-                }else  if (item.equalsIgnoreCase(DirectionsCriteria.EXCLUDE_TOLL)){
+                } else if (item.equalsIgnoreCase(DirectionsCriteria.EXCLUDE_TOLL)) {
                     mBinding.cbToll.setChecked(true);
                 }
             }
@@ -68,30 +69,30 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
         });
 
 
-            mBinding.cbFerry.setOnCheckedChangeListener((buttonView, isChecked) -> {
-               if (isChecked){
-                   excludes.add(DirectionsCriteria.EXCLUDE_FERRY);
-               }else {
-                   excludes.remove(DirectionsCriteria.EXCLUDE_FERRY);
-               }
-               MapmyIndiaDirectionWidgetSetting.getInstance().setExcludes(excludes);
-            });
-            mBinding.cbToll.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked){
-                    excludes.add(DirectionsCriteria.EXCLUDE_TOLL);
-                }else {
-                    excludes.remove(DirectionsCriteria.EXCLUDE_TOLL);
-                }
-                MapmyIndiaDirectionWidgetSetting.getInstance().setExcludes(excludes);
-            });
-            mBinding.cbMotorway.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked){
-                    excludes.add(DirectionsCriteria.EXCLUDE_MOTORWAY);
-                }else {
-                    excludes.remove(DirectionsCriteria.EXCLUDE_MOTORWAY);
-                }
-                MapmyIndiaDirectionWidgetSetting.getInstance().setExcludes(excludes);
-            });
+        mBinding.cbFerry.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                excludes.add(DirectionsCriteria.EXCLUDE_FERRY);
+            } else {
+                excludes.remove(DirectionsCriteria.EXCLUDE_FERRY);
+            }
+            MapmyIndiaDirectionWidgetSetting.getInstance().setExcludes(excludes);
+        });
+        mBinding.cbToll.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                excludes.add(DirectionsCriteria.EXCLUDE_TOLL);
+            } else {
+                excludes.remove(DirectionsCriteria.EXCLUDE_TOLL);
+            }
+            MapmyIndiaDirectionWidgetSetting.getInstance().setExcludes(excludes);
+        });
+        mBinding.cbMotorway.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                excludes.add(DirectionsCriteria.EXCLUDE_MOTORWAY);
+            } else {
+                excludes.remove(DirectionsCriteria.EXCLUDE_MOTORWAY);
+            }
+            MapmyIndiaDirectionWidgetSetting.getInstance().setExcludes(excludes);
+        });
 
         mBinding.rgVertical.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == mBinding.rbTop.getId()) {
@@ -131,7 +132,7 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
         });
 
         mBinding.btnSaveLocation.setOnClickListener(v -> {
-            if((!TextUtils.isEmpty(mBinding.etLatitude.getText().toString().trim())) && (!TextUtils.isEmpty(mBinding.etLongitude.getText().toString().trim()))) {
+            if ((!TextUtils.isEmpty(mBinding.etLatitude.getText().toString().trim())) && (!TextUtils.isEmpty(mBinding.etLongitude.getText().toString().trim()))) {
                 MapmyIndiaDirectionWidgetSetting.getInstance().setLocation(Point.fromLngLat(Double.parseDouble(mBinding.etLongitude.getText().toString().trim()), Double.parseDouble(mBinding.etLatitude.getText().toString().trim())));
             } else {
                 MapmyIndiaDirectionWidgetSetting.getInstance().setLocation(null);
@@ -140,7 +141,7 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
         });
 
         mBinding.btnSaveHistoryCount.setOnClickListener(v -> {
-            if((!TextUtils.isEmpty(mBinding.etHistoryCount.getText().toString()))) {
+            if ((!TextUtils.isEmpty(mBinding.etHistoryCount.getText().toString()))) {
                 MapmyIndiaDirectionWidgetSetting.getInstance().setHistoryCount(Integer.parseInt(mBinding.etHistoryCount.getText().toString()));
             } else {
                 MapmyIndiaDirectionWidgetSetting.getInstance().setHistoryCount(null);
@@ -149,7 +150,7 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
         });
 
         mBinding.btnSaveFilter.setOnClickListener(v -> {
-            if(!TextUtils.isEmpty(mBinding.etFilter.getText().toString().trim())) {
+            if (!TextUtils.isEmpty(mBinding.etFilter.getText().toString().trim())) {
                 MapmyIndiaDirectionWidgetSetting.getInstance().setFilter(mBinding.etFilter.getText().toString().trim());
             } else {
                 MapmyIndiaDirectionWidgetSetting.getInstance().setFilter(null);
@@ -159,10 +160,9 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
 
         mBinding.cbEnableHistory.setOnCheckedChangeListener((buttonView, isChecked) -> {
             MapmyIndiaDirectionWidgetSetting.getInstance().setEnableHistory(isChecked);
-            if (isChecked){
+            if (isChecked) {
                 mBinding.historyCountLayout.setVisibility(View.VISIBLE);
-            }else
-            {
+            } else {
                 mBinding.historyCountLayout.setVisibility(View.GONE);
             }
 
@@ -173,7 +173,7 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
         });
 
         mBinding.rgResources.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId){
+            switch (checkedId) {
                 case R.id.rb_route:
                     MapmyIndiaDirectionWidgetSetting.getInstance().setResource(DirectionsCriteria.RESOURCE_ROUTE);
                     break;
@@ -186,7 +186,7 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
             }
         });
         mBinding.rgProfiles.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId){
+            switch (checkedId) {
                 case R.id.rb_driving:
                     MapmyIndiaDirectionWidgetSetting.getInstance().setProfile(DirectionsCriteria.PROFILE_DRIVING);
                     break;
@@ -201,8 +201,8 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
                     break;
             }
         });
-         mBinding.rgOverviews.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId){
+        mBinding.rgOverviews.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
                 case R.id.rb_full:
                     MapmyIndiaDirectionWidgetSetting.getInstance().setOverview(DirectionsCriteria.OVERVIEW_FULL);
                     break;
@@ -246,7 +246,7 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
 
 
         mBinding.btnHint.setOnClickListener(v -> {
-            if(!TextUtils.isEmpty(mBinding.etHint.getText().toString().trim())) {
+            if (!TextUtils.isEmpty(mBinding.etHint.getText().toString().trim())) {
                 MapmyIndiaDirectionWidgetSetting.getInstance().setHint(mBinding.etHint.getText().toString().trim());
                 Toast.makeText(DirectionWidgetSettingActivity.this, "Hint save successfully", Toast.LENGTH_SHORT).show();
             } else {
@@ -255,7 +255,7 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
             }
         });
         mBinding.btnZoom.setOnClickListener(v -> {
-            if(!TextUtils.isEmpty(mBinding.etZoom.getText().toString().trim())) {
+            if (!TextUtils.isEmpty(mBinding.etZoom.getText().toString().trim())) {
                 MapmyIndiaDirectionWidgetSetting.getInstance().setZoom(Double.parseDouble(mBinding.etZoom.getText().toString().trim()));
                 Toast.makeText(DirectionWidgetSettingActivity.this, "zoom save successfully", Toast.LENGTH_SHORT).show();
             }
@@ -300,6 +300,12 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
                     break;
             }
         });
+        mBinding.cbPoiSearch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                MapmyIndiaDirectionWidgetSetting.getInstance().setShowPOISearch(isChecked);
+            }
+        });
 
     }
 
@@ -323,7 +329,7 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
         mBinding.cbDefault.setChecked(MapmyIndiaDirectionWidgetSetting.getInstance().isDefault());
         mBinding.disableView.setVisibility(MapmyIndiaDirectionWidgetSetting.getInstance().isDefault() ? View.VISIBLE : View.GONE);
 
-        if (MapmyIndiaDirectionWidgetSetting.getInstance().getHistoryCount()!=null){
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getHistoryCount() != null) {
             mBinding.etHistoryCount.setText(MapmyIndiaDirectionWidgetSetting.getInstance().getHistoryCount().toString());
         }
 
@@ -349,69 +355,69 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
             mBinding.rgLogoSize.check(R.id.rb_large);
         }
 
-        if(MapmyIndiaDirectionWidgetSetting.getInstance().getLocation() != null) {
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getLocation() != null) {
             mBinding.etLatitude.setText(String.valueOf(MapmyIndiaDirectionWidgetSetting.getInstance().getLocation().latitude()));
             mBinding.etLongitude.setText(String.valueOf(MapmyIndiaDirectionWidgetSetting.getInstance().getLocation().longitude()));
         }
-        if(MapmyIndiaDirectionWidgetSetting.getInstance().getFilter() != null) {
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getFilter() != null) {
             mBinding.etFilter.setText(MapmyIndiaDirectionWidgetSetting.getInstance().getFilter());
         }
 
         mBinding.cbEnableHistory.setChecked(MapmyIndiaDirectionWidgetSetting.getInstance().isEnableHistory());
-        if (!MapmyIndiaDirectionWidgetSetting.getInstance().isEnableHistory()){
+        if (!MapmyIndiaDirectionWidgetSetting.getInstance().isEnableHistory()) {
             mBinding.historyCountLayout.setVisibility(View.GONE);
-        }else {
+        } else {
             mBinding.historyCountLayout.setVisibility(View.VISIBLE);
         }
 
-        if (MapmyIndiaDirectionWidgetSetting.getInstance().getResource()!=null){
-            if(MapmyIndiaDirectionWidgetSetting.getInstance().getResource().equalsIgnoreCase(DirectionsCriteria.RESOURCE_ROUTE)) {
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getResource() != null) {
+            if (MapmyIndiaDirectionWidgetSetting.getInstance().getResource().equalsIgnoreCase(DirectionsCriteria.RESOURCE_ROUTE)) {
                 mBinding.rgResources.check(mBinding.rbRoute.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getResource().equalsIgnoreCase(DirectionsCriteria.RESOURCE_ROUTE_ETA)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getResource().equalsIgnoreCase(DirectionsCriteria.RESOURCE_ROUTE_ETA)) {
                 mBinding.rgResources.check(mBinding.rbRouteEta.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getResource().equalsIgnoreCase(DirectionsCriteria.RESOURCE_ROUTE_TRAFFIC)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getResource().equalsIgnoreCase(DirectionsCriteria.RESOURCE_ROUTE_TRAFFIC)) {
                 mBinding.rgResources.check(mBinding.rbRouteTraffic.getId());
             }
         }
 
-        if (MapmyIndiaDirectionWidgetSetting.getInstance().getProfile()!=null){
-            if(MapmyIndiaDirectionWidgetSetting.getInstance().getProfile().equalsIgnoreCase(DirectionsCriteria.PROFILE_DRIVING)) {
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getProfile() != null) {
+            if (MapmyIndiaDirectionWidgetSetting.getInstance().getProfile().equalsIgnoreCase(DirectionsCriteria.PROFILE_DRIVING)) {
                 mBinding.rgProfiles.check(mBinding.rbDriving.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getProfile().equalsIgnoreCase(DirectionsCriteria.PROFILE_WALKING)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getProfile().equalsIgnoreCase(DirectionsCriteria.PROFILE_WALKING)) {
                 mBinding.rgProfiles.check(mBinding.rbWalking.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getProfile().equalsIgnoreCase(DirectionsCriteria.PROFILE_BIKING)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getProfile().equalsIgnoreCase(DirectionsCriteria.PROFILE_BIKING)) {
                 mBinding.rgProfiles.check(mBinding.rbBiking.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getProfile().equalsIgnoreCase(DirectionsCriteria.PROFILE_TRUCKING)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getProfile().equalsIgnoreCase(DirectionsCriteria.PROFILE_TRUCKING)) {
                 mBinding.rgProfiles.check(mBinding.rbTrucking.getId());
             }
         }
 
-        if (MapmyIndiaDirectionWidgetSetting.getInstance().getOverview()!=null){
-            if(MapmyIndiaDirectionWidgetSetting.getInstance().getOverview().equalsIgnoreCase(DirectionsCriteria.OVERVIEW_FULL)) {
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getOverview() != null) {
+            if (MapmyIndiaDirectionWidgetSetting.getInstance().getOverview().equalsIgnoreCase(DirectionsCriteria.OVERVIEW_FULL)) {
                 mBinding.rgOverviews.check(mBinding.rbFull.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getOverview().equalsIgnoreCase(DirectionsCriteria.OVERVIEW_FALSE)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getOverview().equalsIgnoreCase(DirectionsCriteria.OVERVIEW_FALSE)) {
                 mBinding.rgOverviews.check(mBinding.rbNone.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getOverview().equalsIgnoreCase(DirectionsCriteria.OVERVIEW_SIMPLIFIED)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getOverview().equalsIgnoreCase(DirectionsCriteria.OVERVIEW_SIMPLIFIED)) {
                 mBinding.rgOverviews.check(mBinding.rbSimplified.getId());
             }
         }
 
-        if(MapmyIndiaDirectionWidgetSetting.getInstance().getPod() != null) {
-            if(MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_CITY)) {
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getPod() != null) {
+            if (MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_CITY)) {
                 mBinding.rgPod.check(mBinding.rbCity.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_DISTRICT)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_DISTRICT)) {
                 mBinding.rgPod.check(mBinding.rbDistrict.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_LOCALITY)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_LOCALITY)) {
                 mBinding.rgPod.check(mBinding.rbLocality.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_STATE)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_STATE)) {
                 mBinding.rgPod.check(mBinding.rbState.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_SUB_DISTRICT)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_SUB_DISTRICT)) {
                 mBinding.rgPod.check(mBinding.rbSubDistrict.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_SUB_LOCALITY)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_SUB_LOCALITY)) {
                 mBinding.rgPod.check(mBinding.rbSubLocality.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_SUB_SUB_LOCALITY)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_SUB_SUB_LOCALITY)) {
                 mBinding.rgPod.check(mBinding.rbSubSubLocality.getId());
-            } else if(MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_VILLAGE)) {
+            } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_VILLAGE)) {
                 mBinding.rgPod.check(mBinding.rbVillage.getId());
             }
         } else {
@@ -419,37 +425,38 @@ public class DirectionWidgetSettingActivity extends AppCompatActivity {
         }
 
         mBinding.etHint.setText(MapmyIndiaDirectionWidgetSetting.getInstance().getHint());
-        if (MapmyIndiaDirectionWidgetSetting.getInstance().getZoom()!=null){
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getZoom() != null) {
             mBinding.etZoom.setText(MapmyIndiaDirectionWidgetSetting.getInstance().getZoom().toString());
 
         }
         // mBinding.cbEnableTextSearch.setChecked(MapmyIndiaPlacePickerSetting.getInstance().isEnableTextSearch());
 
 
-        if (MapmyIndiaDirectionWidgetSetting.getInstance().getBackgroundColor()== android.R.color.white){
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getBackgroundColor() == android.R.color.white) {
             mBinding.backgroundRG.check(mBinding.rbWhite.getId());
-        }else  if (MapmyIndiaDirectionWidgetSetting.getInstance().getBackgroundColor()== android.R.color.black){
+        } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getBackgroundColor() == android.R.color.black) {
             mBinding.backgroundRG.check(mBinding.rbBlack.getId());
-        }else  if (MapmyIndiaDirectionWidgetSetting.getInstance().getBackgroundColor()== android.R.color.holo_red_light){
+        } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getBackgroundColor() == android.R.color.holo_red_light) {
             mBinding.backgroundRG.check(mBinding.rbRed.getId());
-        }else  if (MapmyIndiaDirectionWidgetSetting.getInstance().getBackgroundColor()== android.R.color.holo_green_dark){
+        } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getBackgroundColor() == android.R.color.holo_green_dark) {
             mBinding.backgroundRG.check(mBinding.rbGreen.getId());
-        }else  if (MapmyIndiaDirectionWidgetSetting.getInstance().getBackgroundColor()== android.R.color.holo_blue_bright){
+        } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getBackgroundColor() == android.R.color.holo_blue_bright) {
             mBinding.backgroundRG.check(mBinding.rbBlue.getId());
         }
 
 
-        if (MapmyIndiaDirectionWidgetSetting.getInstance().getToolbarColor()== android.R.color.white){
+        if (MapmyIndiaDirectionWidgetSetting.getInstance().getToolbarColor() == android.R.color.white) {
             mBinding.toolbarRG.check(mBinding.rbWhiteToolbar.getId());
-        }else  if (MapmyIndiaDirectionWidgetSetting.getInstance().getToolbarColor()== android.R.color.black){
+        } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getToolbarColor() == android.R.color.black) {
             mBinding.toolbarRG.check(mBinding.rbBlackToolbar.getId());
-        }else  if (MapmyIndiaDirectionWidgetSetting.getInstance().getToolbarColor()== android.R.color.holo_red_light){
+        } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getToolbarColor() == android.R.color.holo_red_light) {
             mBinding.toolbarRG.check(mBinding.rbRedToolbar.getId());
-        }else  if (MapmyIndiaDirectionWidgetSetting.getInstance().getToolbarColor()== android.R.color.holo_green_dark){
+        } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getToolbarColor() == android.R.color.holo_green_dark) {
             mBinding.toolbarRG.check(mBinding.rbGreenToolbar.getId());
-        }else  if (MapmyIndiaDirectionWidgetSetting.getInstance().getToolbarColor()== android.R.color.holo_blue_bright){
+        } else if (MapmyIndiaDirectionWidgetSetting.getInstance().getToolbarColor() == android.R.color.holo_blue_bright) {
             mBinding.toolbarRG.check(mBinding.rbBlueToolbar.getId());
         }
+        mBinding.cbPoiSearch.setChecked(MapmyIndiaDirectionWidgetSetting.getInstance().isShowPOISearch());
     }
 
 }

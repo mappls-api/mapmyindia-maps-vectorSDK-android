@@ -20,8 +20,10 @@ public class MapmyIndiaPlaceWidgetSetting {
     private String pod;
     private String hint = "Search Here";
     private boolean enableTextSearch;
+    private boolean enableHyperLocal;
     private int backgroundColor= android.R.color.white;
     private int toolbarColor= android.R.color.white;
+    private boolean enableBridge = false;
 
     public static MapmyIndiaPlaceWidgetSetting getInstance() {
         return OUR_INSTANCE;
@@ -121,5 +123,21 @@ public class MapmyIndiaPlaceWidgetSetting {
 
     public void setToolbarColor(int toolbarColor) {
         this.toolbarColor = toolbarColor;
+    }
+
+    public boolean isEnableBridge() {
+        return enableBridge;
+    }
+
+    public void setEnableBridge(boolean enableBridge) {
+        this.enableBridge = enableBridge;
+    }
+
+    public boolean isEnableHyperLocal() {
+        return enableHyperLocal;
+    }
+
+    public void setEnableHyperLocal(boolean enableHyperLocal) {
+        this.enableHyperLocal = enableHyperLocal;
     }
 }

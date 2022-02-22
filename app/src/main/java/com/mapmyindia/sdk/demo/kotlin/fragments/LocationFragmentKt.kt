@@ -20,10 +20,6 @@ import java.util.*
 class LocationFragmentKt: Fragment(), MapFeatureListAdapter.AdapterOnClick {
     lateinit var featureRecycleView: RecyclerView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.layout_mapfeatures_fragment, container, false)
     }
@@ -40,7 +36,7 @@ class LocationFragmentKt: Fragment(), MapFeatureListAdapter.AdapterOnClick {
         featuresArrayList.add(FeaturesList("Current Location", "Location camera options for render and tracking modes"))
         featuresArrayList.add(FeaturesList("Customize Current Location Icon", "To Change the default Current Location Icon"))
         featureRecycleView.layoutManager = LinearLayoutManager(context)
-        var mapFeaturesListAdapter: MapFeatureListAdapter = MapFeatureListAdapter(featuresArrayList,this)
+        var mapFeaturesListAdapter = MapFeatureListAdapter(featuresArrayList,this)
 
         featureRecycleView.adapter = mapFeaturesListAdapter
 

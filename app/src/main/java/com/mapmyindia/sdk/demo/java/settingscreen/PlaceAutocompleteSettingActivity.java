@@ -158,6 +158,9 @@ public class PlaceAutocompleteSettingActivity extends AppCompatActivity {
                     case R.id.rb_village:
                         MapmyIndiaPlaceWidgetSetting.getInstance().setPod(AutoSuggestCriteria.POD_VILLAGE);
                         break;
+                    case R.id.rb_poi:
+                        MapmyIndiaPlaceWidgetSetting.getInstance().setPod(AutoSuggestCriteria.POD_POI);
+                        break;
                 }
             }
         });
@@ -223,7 +226,18 @@ public class PlaceAutocompleteSettingActivity extends AppCompatActivity {
                     break;
             }
         });
-
+        mBinding.cbEnableBridge.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                MapmyIndiaPlaceWidgetSetting.getInstance().setEnableBridge(isChecked);
+            }
+        });
+        mBinding.cbEnableHyperlocal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                MapmyIndiaPlaceWidgetSetting.getInstance().setEnableHyperLocal(isChecked);
+            }
+        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -280,6 +294,8 @@ public class PlaceAutocompleteSettingActivity extends AppCompatActivity {
                 mBinding.rgPod.check(mBinding.rbSubSubLocality.getId());
             } else if(MapmyIndiaPlaceWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_VILLAGE)) {
                 mBinding.rgPod.check(mBinding.rbVillage.getId());
+            } else if(MapmyIndiaPlaceWidgetSetting.getInstance().getPod().equalsIgnoreCase(AutoSuggestCriteria.POD_POI)) {
+                mBinding.rgPod.check(mBinding.rbPoi.getId());
             }
         } else {
             mBinding.rgPod.clearCheck();
@@ -313,5 +329,7 @@ public class PlaceAutocompleteSettingActivity extends AppCompatActivity {
         }else  if (MapmyIndiaPlaceWidgetSetting.getInstance().getToolbarColor()== android.R.color.holo_blue_bright){
             mBinding.toolbarRG.check(mBinding.rbBlueToolbar.getId());
         }
+        mBinding.cbEnableBridge.setChecked(MapmyIndiaPlaceWidgetSetting.getInstance().isEnableBridge());
+        mBinding.cbEnableHyperlocal.setChecked(MapmyIndiaPlaceWidgetSetting.getInstance().isEnableHyperLocal());
     }
 }

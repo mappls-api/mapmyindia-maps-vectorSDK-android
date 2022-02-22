@@ -28,6 +28,7 @@ class MapmyIndiaDirectionWidgetSetting {
     var logoSize = PlaceOptions.SIZE_MEDIUM
     var historyCount: Int? = null
     var zoom: Double? = null
+    var isShowPOISearch: Boolean = false;
 
     companion object {
         val instance = MapmyIndiaDirectionWidgetSetting()

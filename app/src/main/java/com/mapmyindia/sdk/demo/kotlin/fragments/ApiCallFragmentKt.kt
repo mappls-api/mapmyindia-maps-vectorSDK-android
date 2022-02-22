@@ -44,6 +44,7 @@ class ApiCallFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick{
         featuresArrayList.add(FeaturesList("Hateos Nearby Api", "Nearby places using hateos api"))
         featuresArrayList.add(FeaturesList("POI Along Route Api", "user will be able to get the details of POIs of a particular category along his set route"))
         featuresArrayList.add(FeaturesList("Place Detail", "To get the place details from eLoc"))
+        featuresArrayList.add(FeaturesList("Nearby Report", "To get the nearby reports on the map"))
         featureRecycleView.layoutManager = LinearLayoutManager(context)
         var mapFeaturesListAdapter: com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter = com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter(featuresArrayList,this)
 
@@ -56,35 +57,39 @@ class ApiCallFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick{
             var autoSuggestIntent = Intent(context, AutoSuggestActivity::class.java)
             startActivity(autoSuggestIntent)
         } else if(position==1){
-            var geocodeIntent : Intent = Intent(context, GeoCodeActivity::class.java)
+            var geocodeIntent = Intent(context, GeoCodeActivity::class.java)
             startActivity(geocodeIntent)
 
         }else if(position==2){
-            var reversegeoCodeIntent :Intent= Intent(context,ReverseGeocodeActivity::class.java)
+            var reversegeoCodeIntent = Intent(context,ReverseGeocodeActivity::class.java)
             startActivity(reversegeoCodeIntent)
 
         }else if(position==3){
-            var nearByIntent :Intent= Intent(context,NearByActivity::class.java)
+            var nearByIntent = Intent(context,NearByActivity::class.java)
             startActivity(nearByIntent)
 
         }else if(position==4){
-            var directionIntent :Intent= Intent(context,DirectionActivity::class.java)
+            var directionIntent = Intent(context,DirectionActivity::class.java)
             startActivity(directionIntent)
 
         }else if(position==5){
-            var distanceIntent :Intent= Intent(context,DistanceActivity::class.java)
+            var distanceIntent = Intent(context,DistanceActivity::class.java)
             startActivity(distanceIntent)
 
         }else if(position==6){
-            var distanceIntent :Intent= Intent(context,HateOsNearbyActivity::class.java)
+            var distanceIntent = Intent(context,HateOsNearbyActivity::class.java)
             startActivity(distanceIntent)
 
         }else if(position==7){
-            var distanceIntent :Intent= Intent(context,PoiAlongRouteActivity::class.java)
+            var distanceIntent = Intent(context,PoiAlongRouteActivity::class.java)
             startActivity(distanceIntent)
 
         }else if(position==8){
-            var distanceIntent :Intent= Intent(context,PlaceDetailActivity::class.java)
+            var distanceIntent = Intent(context,PlaceDetailActivity::class.java)
+            startActivity(distanceIntent)
+
+        }else if(position==9){
+            var distanceIntent = Intent(context,NearbyReportActivity::class.java)
             startActivity(distanceIntent)
 
         }

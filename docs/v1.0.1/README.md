@@ -10,7 +10,7 @@ Powered with India's most comprehensive and robust mapping functionalities.
 
 2. The sample code is provided to help you understand the basic functionality of MapmyIndia maps & REST APIs working on **Android** native development platform.
 
-4. Explore through [238 nations](https://github.com/MapmyIndia/mapmyindia-rest-api/blob/master/docs/countryISO.md) with **Global Search, Routing and Mapping APIs & SDKs** by MapmyIndia.
+4. Explore through [238 nations](https://github.com/mappls-api/mapmyindia-rest-api/blob/master/docs/countryISO.md) with **Global Search, Routing and Mapping APIs & SDKs** by MapmyIndia.
 
 ## [Documentation History](#Documentation-History)
 
@@ -124,4 +124,4 @@ Need support? contact us!
 Read about the latest updates & customer stories
 
 
-> © Copyright 2021. CE Info Systems Pvt. Ltd. All Rights Reserved. | [Terms & Conditions](http://www.mapmyindia.com/api/terms-&-conditions).
+> © Copyright 2021. CE Info Systems Ltd. All Rights Reserved. | [Terms & Conditions](http://www.mapmyindia.com/api/terms-&-conditions).

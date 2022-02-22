@@ -48,13 +48,15 @@ public class DirectionWidgetActivity extends AppCompatActivity {
 
 
             optionsBuilder.searchPlaceOption(options)
+                    .showDefaultMap(true)
                     .showStartNavigation(MapmyIndiaDirectionWidgetSetting.getInstance().isShowStartNavigation())
                     .steps(MapmyIndiaDirectionWidgetSetting.getInstance().isSteps())
                     .resource(MapmyIndiaDirectionWidgetSetting.getInstance().getResource())
                     .profile(MapmyIndiaDirectionWidgetSetting.getInstance().getProfile())
                     .excludes(MapmyIndiaDirectionWidgetSetting.getInstance().getExcludes())
                     .overview(MapmyIndiaDirectionWidgetSetting.getInstance().getOverview())
-            .showAlternative(MapmyIndiaDirectionWidgetSetting.getInstance().isShowAlternative());
+            .showAlternative(MapmyIndiaDirectionWidgetSetting.getInstance().isShowAlternative())
+            .searchAlongRoute(MapmyIndiaDirectionWidgetSetting.getInstance().isShowPOISearch());
         }
 
         DirectionFragment directionFragment = DirectionFragment.newInstance(optionsBuilder.build());
@@ -63,7 +65,7 @@ public class DirectionWidgetActivity extends AppCompatActivity {
 
         getSupportFragmentManager().
                 beginTransaction().
-                replace(mBinding.fragmentConatiner.getId(), directionFragment, DirectionFragment.class.getSimpleName()).
+                add(mBinding.fragmentConatiner.getId(), directionFragment, DirectionFragment.class.getSimpleName()).
                 commit();
 
         directionFragment.setDirectionCallback(new DirectionCallback() {

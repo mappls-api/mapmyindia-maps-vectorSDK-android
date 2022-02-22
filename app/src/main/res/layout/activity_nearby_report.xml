@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_container">
+
+
+        <com.mapmyindia.sdk.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_nearby_report"
+            />
+
+
+        <TextView
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:minHeight="40dp"
+            android:layout_margin="12dp"
+
+            />
+
+        <FrameLayout
+            android:id="@+id/selection_box"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:alpha="0.5"
+            android:background="#A4A4E5"/>
+
+
+        <TextView
+            android:id="@+id/tv_nearby_report"
+            android:layout_width="match_parent"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="Search Nearby Report"
+            android:textColor="#ffffff" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

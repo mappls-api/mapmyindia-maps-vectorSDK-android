@@ -1,6 +1,7 @@
 package com.mapmyindia.sdk.demo.java.activity;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +18,16 @@ import com.mapmyindia.sdk.maps.geometry.LatLng;
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapmyindia.sdk.plugins.places.autocomplete.ui.PlaceAutocompleteFragment;
 import com.mapmyindia.sdk.plugins.places.autocomplete.ui.PlaceSelectionListener;
+import com.mapmyindia.sdk.plugins.places.autocomplete.ui.SuggestedSearchSelectionListener;
+import com.mmi.services.api.OnResponseCallback;
 import com.mmi.services.api.autosuggest.model.ELocation;
+import com.mmi.services.api.autosuggest.model.SuggestedSearchAtlas;
+import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearby;
+import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearbyManager;
+import com.mmi.services.api.nearby.model.NearbyAtlasResponse;
+import com.mmi.services.api.nearby.model.NearbyAtlasResult;
+
+import java.util.ArrayList;
 
 public class CardModeFragmentAutocompleteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -53,6 +63,8 @@ public class CardModeFragmentAutocompleteActivity extends AppCompatActivity impl
                     .attributionVerticalAlignment(MapmyIndiaPlaceWidgetSetting.getInstance().getSignatureHorizontal())
                     .logoSize(MapmyIndiaPlaceWidgetSetting.getInstance().getLogoSize())
                     .backgroundColor(getResources().getColor(MapmyIndiaPlaceWidgetSetting.getInstance().getBackgroundColor()))
+                    .bridge(MapmyIndiaPlaceWidgetSetting.getInstance().isEnableBridge())
+                    .hyperLocal(MapmyIndiaPlaceWidgetSetting.getInstance().isEnableHyperLocal())
                     .build(PlaceOptions.MODE_CARDS);
         }
         PlaceAutocompleteFragment placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(placeOptions);
@@ -74,9 +86,52 @@ public class CardModeFragmentAutocompleteActivity extends AppCompatActivity impl
             }
         });
 
+        placeAutocompleteFragment.setSuggestedSearchSelectionListener(new SuggestedSearchSelectionListener() {
+            @Override
+            public void onSuggestedSearchSelected(SuggestedSearchAtlas suggestedSearchAtlas) {
+                callHateOs(suggestedSearchAtlas.hyperLink);
+            }
+        });
 
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, placeAutocompleteFragment, PlaceAutocompleteFragment.class.getSimpleName())
                 .commit();
+    }
+
+    private void callHateOs(String hyperlink) {
+        MapmyIndiaHateosNearby hateosNearby = MapmyIndiaHateosNearby.builder()
+                .hyperlink(hyperlink)
+                .build();
+        MapmyIndiaHateosNearbyManager.newInstance(hateosNearby).call(new OnResponseCallback<NearbyAtlasResponse>() {
+            @Override
+            public void onSuccess(NearbyAtlasResponse nearbyAtlasResponse) {
+                if (nearbyAtlasResponse != null) {
+                    ArrayList<NearbyAtlasResult> nearByList = nearbyAtlasResponse.getSuggestedLocations();
+                    if (nearByList.size() > 0) {
+                        addMarker(nearByList);
+                    }
+                } else {
+                    Toast.makeText(CardModeFragmentAutocompleteActivity.this, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Toast.makeText(CardModeFragmentAutocompleteActivity.this, s, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    private void addMarker(ArrayList<NearbyAtlasResult> nearByList) {
+        mapmyIndiaMap.clear();
+        for (NearbyAtlasResult marker : nearByList) {
+            if (marker.getLatitude() != null && marker.getLongitude() != null) {
+                mapmyIndiaMap.addMarker(new MarkerOptions().position(new LatLng(marker.getLatitude(), marker.getLongitude())).title(marker.getPlaceName()));
+            } else {
+                mapmyIndiaMap.addMarker(new MarkerOptions().eLoc(marker.eLoc).title(marker.getPlaceName()));
+            }
+        }
+
     }
 
     @Override

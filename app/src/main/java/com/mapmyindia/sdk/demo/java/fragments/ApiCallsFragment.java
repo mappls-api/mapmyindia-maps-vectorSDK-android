@@ -19,6 +19,7 @@ import com.mapmyindia.sdk.demo.java.activity.DistanceActivity;
 import com.mapmyindia.sdk.demo.java.activity.GeoCodeActivity;
 import com.mapmyindia.sdk.demo.java.activity.HateOsNearbyActivity;
 import com.mapmyindia.sdk.demo.java.activity.NearByActivity;
+import com.mapmyindia.sdk.demo.java.activity.NearbyReportActivity;
 import com.mapmyindia.sdk.demo.java.activity.PlaceDetailActivity;
 import com.mapmyindia.sdk.demo.java.activity.PoiAlongRouteActivity;
 import com.mapmyindia.sdk.demo.java.activity.ReverseGeocodeActivity;
@@ -82,6 +83,9 @@ public class ApiCallsFragment extends Fragment {
                 }else if (position == 8) {
                     Intent getDistanceIntent = new Intent(getContext(), PlaceDetailActivity.class);
                     startActivity(getDistanceIntent);
+                }else if (position == 9) {
+                    Intent getDistanceIntent = new Intent(getContext(), NearbyReportActivity.class);
+                    startActivity(getDistanceIntent);
                 }
             }
         });
@@ -96,6 +100,7 @@ public class ApiCallsFragment extends Fragment {
         featuresArrayList.add(new FeaturesList("Hateos Nearby Api", "Nearby places using hateos api"));
         featuresArrayList.add(new FeaturesList("POI Along Route Api", "user will be able to get the details of POIs of a particular category along his set route"));
         featuresArrayList.add(new FeaturesList("Place Detail", "To get the place details from eLoc"));
+        featuresArrayList.add(new FeaturesList("Nearby Report", "To get the nearby reports on the map"));
 
 
     }

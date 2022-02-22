@@ -2,6 +2,7 @@ package com.mapmyindia.sdk.demo.kotlin.activity
 
 import android.location.Location
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.mapmyindia.sdk.demo.R
@@ -16,7 +17,13 @@ import com.mapmyindia.sdk.maps.geometry.LatLng
 import com.mapmyindia.sdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapmyindia.sdk.plugins.places.autocomplete.ui.PlaceAutocompleteFragment
 import com.mapmyindia.sdk.plugins.places.autocomplete.ui.PlaceSelectionListener
+import com.mmi.services.api.OnResponseCallback
 import com.mmi.services.api.autosuggest.model.ELocation
+import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearby
+import com.mmi.services.api.hateaosnearby.MapmyIndiaHateosNearbyManager
+import com.mmi.services.api.nearby.model.NearbyAtlasResponse
+import com.mmi.services.api.nearby.model.NearbyAtlasResult
+import java.util.ArrayList
 
 
 class CardModeFragmentAutocompleteActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -38,40 +45,100 @@ class CardModeFragmentAutocompleteActivity : AppCompatActivity(), OnMapReadyCall
             PlaceOptions.builder().build(PlaceOptions.MODE_CARDS)
         } else {
             PlaceOptions.builder()
-                    .location(MapmyIndiaPlaceWidgetSetting.instance.location)
-                    .filter(MapmyIndiaPlaceWidgetSetting.instance.filter)
-                    .saveHistory(MapmyIndiaPlaceWidgetSetting.instance.isEnableHistory)
-                    .enableTextSearch(MapmyIndiaPlaceWidgetSetting.instance.isEnableTextSearch)
-                    .hint(MapmyIndiaPlaceWidgetSetting.instance.hint)
-                    .pod(MapmyIndiaPlaceWidgetSetting.instance.pod)
-                    .attributionHorizontalAlignment(MapmyIndiaPlaceWidgetSetting.instance.signatureVertical)
-                    .attributionVerticalAlignment(MapmyIndiaPlaceWidgetSetting.instance.signatureHorizontal)
-                    .logoSize(MapmyIndiaPlaceWidgetSetting.instance.logoSize)
-                    .backgroundColor(resources.getColor(MapmyIndiaPlaceWidgetSetting.instance.backgroundColor))
-                    .toolbarColor(resources.getColor(MapmyIndiaPlaceWidgetSetting.instance.toolbarColor))
-                    .build(PlaceOptions.MODE_CARDS)
+                .location(MapmyIndiaPlaceWidgetSetting.instance.location)
+                .filter(MapmyIndiaPlaceWidgetSetting.instance.filter)
+                .saveHistory(MapmyIndiaPlaceWidgetSetting.instance.isEnableHistory)
+                .enableTextSearch(MapmyIndiaPlaceWidgetSetting.instance.isEnableTextSearch)
+                .hint(MapmyIndiaPlaceWidgetSetting.instance.hint)
+                .pod(MapmyIndiaPlaceWidgetSetting.instance.pod)
+                .attributionHorizontalAlignment(MapmyIndiaPlaceWidgetSetting.instance.signatureVertical)
+                .attributionVerticalAlignment(MapmyIndiaPlaceWidgetSetting.instance.signatureHorizontal)
+                .logoSize(MapmyIndiaPlaceWidgetSetting.instance.logoSize)
+                .backgroundColor(resources.getColor(MapmyIndiaPlaceWidgetSetting.instance.backgroundColor))
+                .toolbarColor(resources.getColor(MapmyIndiaPlaceWidgetSetting.instance.toolbarColor))
+                .bridge(MapmyIndiaPlaceWidgetSetting.instance.isBridgeEnable)
+                .hyperLocal(MapmyIndiaPlaceWidgetSetting.instance.isHyperLocalEnable)
+                .build(PlaceOptions.MODE_CARDS)
         }
 
-            val placeAutocompleteFragment: PlaceAutocompleteFragment = PlaceAutocompleteFragment.newInstance(placeOptions)
-            placeAutocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
-                override fun onCancel() {
+        val placeAutocompleteFragment: PlaceAutocompleteFragment =
+            PlaceAutocompleteFragment.newInstance(placeOptions)
+        placeAutocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+            override fun onCancel() {
 
+            }
+
+            override fun onPlaceSelected(eLocation: ELocation?) {
+                if (mapmyIndiaMap != null) {
+                    mapmyIndiaMap?.clear()
+                    val latLng =
+                        LatLng(eLocation?.latitude?.toDouble()!!, eLocation.longitude?.toDouble()!!)
+                    mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0))
+                    mapmyIndiaMap?.addMarker(
+                        MarkerOptions().position(latLng).setTitle(eLocation.placeName)
+                            .setSnippet(eLocation.placeAddress)
+                    )
                 }
+            }
 
-                override fun onPlaceSelected(eLocation: ELocation?) {
-                    if (mapmyIndiaMap != null) {
-                        mapmyIndiaMap?.clear()
-                        val latLng = LatLng(eLocation?.latitude?.toDouble()!!, eLocation.longitude?.toDouble()!!)
-                        mapmyIndiaMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0))
-                        mapmyIndiaMap?.addMarker(MarkerOptions().position(latLng).setTitle(eLocation.placeName).setSnippet(eLocation.placeAddress))
+        })
+        placeAutocompleteFragment.setSuggestedSearchSelectionListener {
+            callHateOs(it.hyperLink)
+        }
+        supportFragmentManager.beginTransaction().add(
+            R.id.fragment_container,
+            placeAutocompleteFragment,
+            PlaceAutocompleteFragment::class.java.simpleName
+        )
+            .commit()
+
+
+    }
+
+    private fun callHateOs(hyperlink: String) {
+        val hateOs = MapmyIndiaHateosNearby.builder()
+            .hyperlink(hyperlink)
+            .build()
+        MapmyIndiaHateosNearbyManager.newInstance(hateOs).call(object :
+            OnResponseCallback<NearbyAtlasResponse> {
+            override fun onSuccess(nearbyAtlasResponse: NearbyAtlasResponse?) {
+                if (nearbyAtlasResponse != null) {
+                    val nearByList = nearbyAtlasResponse.suggestedLocations
+                    if (nearByList.size > 0) {
+                        addMarker(nearByList)
                     }
+                } else {
+                    Toast.makeText(this@CardModeFragmentAutocompleteActivity, "Not able to get value, Try again.", Toast.LENGTH_SHORT).show()
                 }
+            }
 
-            })
-            supportFragmentManager.beginTransaction().add(R.id.fragment_container, placeAutocompleteFragment, PlaceAutocompleteFragment::class.java.simpleName)
-                    .commit()
+            override fun onError(p0: Int, p1: String?) {
+                Toast.makeText(this@CardModeFragmentAutocompleteActivity, p1?:"Something went wrong", Toast.LENGTH_SHORT).show()
+            }
 
+        })
+    }
 
+    private fun addMarker(nearByList: ArrayList<NearbyAtlasResult>) {
+        mapmyIndiaMap?.clear()
+        for (marker in nearByList) {
+            if (marker.getLatitude() != null && marker.getLongitude() != null) {
+                mapmyIndiaMap?.addMarker(
+                    MarkerOptions().position(
+                        LatLng(
+                            marker.getLatitude(),
+                            marker.getLongitude()
+                        )
+                    ).title(marker.getPlaceName())
+                )
+            } else {
+                mapmyIndiaMap?.addMarker(
+                    MarkerOptions().eLoc(
+                        marker.eLoc
+                    ).title(marker.getPlaceName())
+                )
+            }
+        }
     }
 
     override fun onMapError(p0: Int, p1: String?) {}
@@ -79,7 +146,8 @@ class CardModeFragmentAutocompleteActivity : AppCompatActivity(), OnMapReadyCall
     override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
 
-        mapmyIndiaMap.cameraPosition = CameraPosition.Builder().target(LatLng(28.0, 77.0)).zoom(4.0).build()
+        mapmyIndiaMap.cameraPosition =
+            CameraPosition.Builder().target(LatLng(28.0, 77.0)).zoom(4.0).build()
         callAutoComplete()
 
     }

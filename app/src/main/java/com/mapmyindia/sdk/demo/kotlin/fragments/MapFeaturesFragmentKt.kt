@@ -40,7 +40,7 @@ class MapFeaturesFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick {
         featuresArrayList.add(FeaturesList("Map Gestures", "Gestures detection for map view"))
         featuresArrayList.add(FeaturesList("Map Styles", "To change and update MapmyIndia Styles"))
         featureRecycleView.layoutManager = LinearLayoutManager(context)
-        var mapFeaturesListAdapter: MapFeatureListAdapter = MapFeatureListAdapter(featuresArrayList, this)
+        var mapFeaturesListAdapter = MapFeatureListAdapter(featuresArrayList, this)
 
         featureRecycleView.adapter = mapFeaturesListAdapter
 
