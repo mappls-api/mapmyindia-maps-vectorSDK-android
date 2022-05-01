@@ -90,7 +90,7 @@ For more details of previous versions , [click here](docs/v2.0.1/Version-History
     * [Feedback API](docs/v2.0.1/Feedback.md)
     * [Nearby Reports](docs/v2.0.1/Nearby-Report.md)
 - [MapmyIndia GeoAnalytics](docs/v2.0.1/Geoanalytics.md)
-- [Place Autocomple Widget](docs/v2.0.1/Place-Autocomplete.md)
+- [Place Autocomplete Widget](docs/v2.0.1/Place-Autocomplete.md)
     * [PlaceAutocompleteFragment](docs/v2.0.1/Place-Autocomplete.md#place-autocomplete-fragment)
     * [PlaceAutocompleteActivity](docs/v2.0.1/Place-Autocomplete.md#place-autocomplete-activity)
 - [MapmyIndia Safety Plugin](docs/v2.0.1/Safety-Plugin.md)
