@@ -354,6 +354,7 @@ class GeoAnalyticsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
+        mapmyIndiaMap.uiSettings?.setLogoMargins(0, 0, 0, 200)
         geoAnalyticsPlugin = MapmyIndiaGeoAnalyticsPlugin(mBinding.mapView, mapmyIndiaMap)
         init()
     }

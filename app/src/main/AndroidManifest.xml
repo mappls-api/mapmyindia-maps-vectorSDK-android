@@ -18,276 +18,297 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".java.activity.ClusterMarkerActivity"
+            android:exported="false"
+            android:label="Marker Clustering Java"/>
+        <activity
+            android:name=".kotlin.activity.ClusterMarkerActivity"
+            android:exported="false"
+            android:label="Marker Clustering Kotlin"/>
+        <activity
             android:name=".java.activity.DrivingRangePluginActivity"
-            android:label="Driving Range Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Driving Range Java" />
         <activity
             android:name=".java.activity.DrivingRangeActivity"
-            android:parentActivityName=".java.activity.DrivingRangePluginActivity"
+            android:exported="false"
             android:label="Driving Range Java"
-            android:exported="false" />
+            android:parentActivityName=".java.activity.DrivingRangePluginActivity" />
         <activity
             android:name=".java.settingscreen.DrivingRangeSettingActivity"
-            android:parentActivityName=".java.activity.DrivingRangePluginActivity"
+            android:exported="false"
             android:label="Driving Range Setting Java"
-            android:exported="false" />
+            android:parentActivityName=".java.activity.DrivingRangePluginActivity" />
         <activity
             android:name=".kotlin.activity.DrivingRangeActivity"
+            android:exported="false"
             android:label="Driving Range Kotlin"
-            android:parentActivityName=".kotlin.activity.DrivingRangePluginActivity"
-            android:exported="false" />
+            android:parentActivityName=".kotlin.activity.DrivingRangePluginActivity" />
         <activity
             android:name=".kotlin.activity.DrivingRangePluginActivity"
-            android:label="Driving Range Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Driving Range Kotlin" />
         <activity
             android:name=".kotlin.activity.NearbyReportActivity"
-            android:label="Nearby Report Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Nearby Report Kotlin" />
         <activity
             android:name=".java.activity.NearbyReportActivity"
-            android:label="Nearby Report"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Nearby Report" />
         <activity
             android:name=".kotlin.activity.GeoAnalyticsActivity"
-            android:label="GeoAnalytics Plugin Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="GeoAnalytics Plugin Kotlin" />
         <activity
             android:name=".java.activity.GeoAnalyticsActivity"
-            android:label="GeoAnalytics Plugin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="GeoAnalytics Plugin" />
         <activity
             android:name=".java.activity.StyleActivity"
-            android:label="MapmyIndia Style"
-            android:exported="false" />
+            android:exported="false"
+            android:label="MapmyIndia Style" />
         <activity
             android:name=".kotlin.activity.StyleActivity"
-            android:label="MapmyIndia Style Kotlin"
+            android:exported="false"
+            android:label="MapmyIndia Style Kotlin" />
+        <activity
+            android:name=".java.settingscreen.GeofenceWidgetSettingsActivity"
             android:exported="false" />
-        <activity android:name=".java.settingscreen.GeofenceWidgetSettingsActivity"
+        <activity
+            android:name=".kotlin.settingscreen.GeofenceWidgetSettingsActivity"
             android:exported="false" />
-        <activity android:name=".kotlin.settingscreen.GeofenceWidgetSettingsActivity"
+        <activity
+            android:name=".java.settingscreen.DirectionWidgetSettingActivity"
             android:exported="false" />
-        <activity android:name=".java.settingscreen.DirectionWidgetSettingActivity"
+        <activity
+            android:name=".kotlin.settingscreen.DirectionWidgetSettingActivity"
             android:exported="false" />
-        <activity android:name=".kotlin.settingscreen.DirectionWidgetSettingActivity"
+        <activity
+            android:name=".java.settingscreen.PlacePickerSettingsActivity"
             android:exported="false" />
-        <activity android:name=".java.settingscreen.PlacePickerSettingsActivity"
-            android:exported="false" />
-        <activity android:name=".kotlin.settingscreen.PlacePickerSettingsActivity"
+        <activity
+            android:name=".kotlin.settingscreen.PlacePickerSettingsActivity"
             android:exported="false" />
         <activity
             android:name=".kotlin.settingscreen.DrivingRangeSettingActivity"
-            android:label="Driving Range Setting Kotlin"
             android:exported="false"
+            android:label="Driving Range Setting Kotlin"
             android:parentActivityName=".kotlin.activity.DrivingRangePluginActivity" />
-        <activity android:name=".kotlin.activity.TrackingActivity"
-            android:exported="false"/>
-        <activity android:name=".java.activity.TrackingActivity"
+        <activity
+            android:name=".kotlin.activity.TrackingActivity"
             android:exported="false" />
-        <activity android:name=".java.activity.InputActivity"
+        <activity
+            android:name=".java.activity.TrackingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".java.activity.InputActivity"
             android:exported="false" />
         <activity
             android:name=".kotlin.activity.SafetyStripActivity"
-            android:label="Safety Strip Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Safety Strip Kotlin" />
         <activity
             android:name=".java.settingscreen.PlaceAutocompleteSettingActivity"
+            android:exported="false"
             android:label="Place Widget Setting"
-            android:parentActivityName=".java.activity.PlaceAutoCompleteActivity"
-            android:exported="false" />
+            android:parentActivityName=".java.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".kotlin.settingscreen.PlaceAutocompleteSettingActivity"
-            android:label="Place Widget Setting"
             android:exported="false"
+            android:label="Place Widget Setting"
             android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".kotlin.activity.NearbyPluginActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="false" />
-        <activity android:name=".kotlin.activity.NearbyUiActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".kotlin.activity.NearbyUiActivity"
             android:exported="false" />
         <activity
             android:name=".java.activity.NearbyPluginActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="false" />
-        <activity android:name=".java.activity.NearbyUiActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".java.activity.NearbyUiActivity"
             android:exported="false" />
         <activity
             android:name=".kotlin.activity.DirectionWidgetActivity"
+            android:exported="false"
             android:label="Direction Widget Kotlin"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="false" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".java.activity.DirectionWidgetActivity"
+            android:exported="false"
             android:label="Direction Widget"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="false" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".kotlin.activity.DirectionUiActivity"
-            android:label="Direction UI Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Direction UI Kotlin" />
         <activity
             android:name=".java.activity.DirectionUiActivity"
-            android:label="Direction UI"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Direction UI" />
         <activity
             android:name=".java.activity.MapFragmentActivity"
-            android:label="Map Fragment Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Map Fragment Java" />
         <activity
             android:name=".kotlin.activity.MapFragmentActivity"
-            android:label="Map Fragment Kotlin"
             android:exported="false"
+            android:label="Map Fragment Kotlin"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".kotlin.activity.GeoFenceActivity"
-            android:label="GeoFence Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="GeoFence Kotlin" />
         <activity
             android:name=".java.activity.SafetyStripActivity"
-            android:label="Safety Strip Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Safety Strip Java" />
         <activity
             android:name=".kotlin.activity.BasicGeofenceActivity"
-            android:label="Basic Geofence Sample Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Basic Geofence Sample Kotlin" />
         <activity
             android:name=".kotlin.activity.GeoFenceDetailActivity"
-            android:label="Geofence Detail Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Geofence Detail Kotlin" />
         <activity
             android:name=".kotlin.activity.GeoFenceCustomActivity"
-            android:label="Custom Geofence Sample Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Custom Geofence Sample Kotlin" />
         <activity
             android:name=".kotlin.activity.PickerActivity"
-            android:label="Place Picker Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Place Picker Kotlin" />
         <activity
             android:name=".kotlin.activity.ScalebarActivity"
-            android:label="Scalebar Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Scalebar Kotlin" />
         <activity
             android:name=".kotlin.activity.DirectionStepActivity"
-            android:label="Direction Step Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Direction Step Kotlin" />
         <activity
             android:name=".kotlin.activity.InteractiveLayerActivity"
-            android:label="Interactive Layer Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Interactive Layer Kotlin" />
         <activity
             android:name=".kotlin.activity.GesturesActivity"
-            android:label="Map Gestures Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Map Gestures Kotlin" />
         <activity
             android:name=".java.activity.PickerActivity"
-            android:label="Place Picker Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Place Picker Java" />
         <activity
             android:name=".java.activity.ScalebarActivity"
-            android:label="Scalebar Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Scalebar Java" />
         <activity
             android:name=".java.activity.InteractiveLayerActivity"
-            android:label="Interactive Layer Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Interactive Layer Java" />
         <activity
             android:name=".java.activity.DirectionStepActivity"
-            android:label="Direction Step Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Direction Step Java" />
         <activity
             android:name=".java.activity.GesturesActivity"
-            android:label="Map Gestures Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Map Gestures Java" />
         <activity
             android:name=".java.activity.GeoFenceActivity"
-            android:label="Geofence Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Geofence Java" />
         <activity
             android:name=".java.activity.GeoFenceCustomActivity"
-            android:label="Custom Geofence Java"
-            android:exported="false"/>
+            android:exported="false"
+            android:label="Custom Geofence Java" />
         <activity
             android:name=".java.activity.BasicGeoFenceActivity"
-            android:label="Basic Geofence Java"
             android:exported="false"
+            android:label="Basic Geofence Java"
             android:parentActivityName=".java.activity.GeoFenceActivity" />
         <activity
             android:name=".kotlin.activity.FullModeActivity"
-            android:label="FullMode Activity Kotlin"
             android:exported="false"
+            android:label="FullMode Activity Kotlin"
             android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".kotlin.activity.CardModeActivity"
-            android:label="CardMode Activity Kotlin"
             android:exported="false"
+            android:label="CardMode Activity Kotlin"
             android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".kotlin.activity.FullModeFragmentAutocompleteActivity"
-            android:label="FullMode Fragment Kotlin"
             android:exported="false"
+            android:label="FullMode Fragment Kotlin"
             android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".kotlin.activity.CardModeFragmentAutocompleteActivity"
-            android:label="CardMode Fragment Kotlin"
             android:exported="false"
+            android:label="CardMode Fragment Kotlin"
             android:parentActivityName=".kotlin.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".kotlin.activity.PlaceAutoCompleteActivity"
-            android:label="Place AutoComplete Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Place AutoComplete Kotlin" />
         <activity
             android:name=".kotlin.activity.HeatMapActivity"
-            android:label="Heat Map Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Heat Map Kotlin" />
         <activity
             android:name=".java.activity.HeatMapActivity"
-            android:label="Heat Map"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Heat Map" />
         <activity
             android:name=".java.activity.MarkerDraggingActivity"
-            android:label="Marker Dragging Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Marker Dragging Java" />
         <activity
             android:name=".java.activity.CarAnimationActivity"
-            android:label="Car Animation Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Car Animation Java" />
         <activity
             android:name=".java.activity.SemiCirclePolylineActivity"
-            android:label="Semi Circle Polyline Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Semi Circle Polyline Java" />
         <activity
             android:name=".java.activity.GradientPolylineActivity"
-            android:label="Gradient Polyline Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Gradient Polyline Java" />
         <activity
             android:name=".java.activity.MarkerRotationTransitionActivity"
-            android:label="Marker Rotation &amp; Transition Java"
-            android:exported="false" />
-        <activity android:name=".java.activity.PlaceAutoCompleteActivity"
+            android:exported="false"
+            android:label="Marker Rotation &amp; Transition Java" />
+        <activity
+            android:name=".java.activity.PlaceAutoCompleteActivity"
             android:exported="false" />
         <activity
             android:name=".java.activity.CardModeFragmentAutocompleteActivity"
-            android:label="CardMode Fragment Java"
             android:exported="false"
+            android:label="CardMode Fragment Java"
             android:parentActivityName=".java.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".java.activity.CardModeActivity"
-            android:label="CardMode Activiy Java"
             android:exported="false"
+            android:label="CardMode Activiy Java"
             android:parentActivityName=".java.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".java.activity.FullModeActivity"
-            android:label="FullMode Activity Java"
             android:exported="false"
+            android:label="FullMode Activity Java"
             android:parentActivityName=".java.activity.PlaceAutoCompleteActivity" />
         <activity
             android:name=".java.activity.FullModeFragmentAutocompleteActivity"
-            android:label="FullMode Fragment Java"
             android:exported="false"
+            android:label="FullMode Fragment Java"
             android:parentActivityName=".java.activity.PlaceAutoCompleteActivity" />
-        <activity android:name=".kotlin.activity.SplashActivity"
+        <activity
+            android:name=".kotlin.activity.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -297,235 +318,236 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="false" />
-        <activity android:name=".kotlin.activity.FeatureListActivityKotlin"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".kotlin.activity.FeatureListActivityKotlin"
             android:exported="false" />
         <activity
             android:name=".kotlin.activity.AddCustomMarkerActivity"
-            android:label="Custom Marker Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Custom Marker Kotlin" />
         <activity
             android:name=".kotlin.activity.AddMarkerActivity"
-            android:label="Add Marker Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Add Marker Kotlin" />
         <activity
             android:name=".kotlin.activity.CameraActivity"
-            android:label="Camera Features Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Camera Features Kotlin" />
         <activity
             android:name=".kotlin.activity.MapClickActivity"
-            android:label="Map Click Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Map Click Kotlin" />
         <activity
             android:name=".kotlin.activity.MapLongClickActivity"
-            android:label="Map Long Click Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Map Long Click Kotlin" />
         <activity
             android:name=".kotlin.activity.PolylineActivity"
-            android:label="Add Polyline Kotline"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Add Polyline Kotline" />
         <activity
             android:name=".kotlin.activity.PolygonActivity"
-            android:label="Add Polygon Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Add Polygon Kotlin" />
         <activity
             android:name=".kotlin.activity.CurrentLocationActivity"
-            android:label="Current Location Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Current Location Kotlin" />
         <activity
             android:name=".kotlin.activity.AutoSuggestActivity"
-            android:label="AutoSuggest Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="AutoSuggest Kotlin" />
         <activity
             android:name=".kotlin.activity.GeoCodeActivity"
-            android:label="GeoCode Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="GeoCode Kotlin" />
         <activity
             android:name=".kotlin.activity.ReverseGeocodeActivity"
-            android:label="Reverse GeoCode Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Reverse GeoCode Kotlin" />
         <activity
             android:name=".kotlin.activity.NearByActivity"
-            android:label="Nearby Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Nearby Kotlin" />
         <activity
             android:name=".kotlin.activity.DirectionActivity"
-            android:label="Direction Kotlin"
-            android:exported="false"/>
+            android:exported="false"
+            android:label="Direction Kotlin" />
         <activity
             android:name=".kotlin.activity.DistanceActivity"
-            android:label="Distance Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Distance Kotlin" />
         <activity
             android:name=".kotlin.activity.GradientPolylineActivity"
-            android:label="Gradient Polyline Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Gradient Polyline Kotlin" />
         <activity
             android:name=".kotlin.activity.MarkerDraggingActivity"
-            android:label="Marker Dragging Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Marker Dragging Kotlin" />
         <activity
             android:name=".kotlin.activity.SemiCirclePolylineActivity"
-            android:label="Semi circle Kotlin"
-            android:exported="false"/>
+            android:exported="false"
+            android:label="Semi circle Kotlin" />
         <activity
             android:name=".java.activity.CameraActivity"
-            android:label="Camera Feature Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Camera Feature Java" />
         <activity android:name=".java.activity.FeaturesListActivity" />
         <activity
             android:name=".java.activity.MapClickActivity"
-            android:label="Map Click Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Map Click Java" />
         <activity
             android:name=".java.activity.MapLongClickActivity"
-            android:label="Map Long Click Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Map Long Click Java" />
         <activity
             android:name=".java.activity.AddMarkerActivity"
-            android:label="Add Marker Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Add Marker Java" />
         <activity
             android:name=".java.activity.AddCustomMarkerActivity"
-            android:label="Custom Marker Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Custom Marker Java" />
         <activity
             android:name=".java.activity.PolylineActivity"
-            android:label="Polyline Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Polyline Java" />
         <activity
             android:name=".java.activity.PolygonActivity"
-            android:label="Polygon Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Polygon Java" />
         <activity
             android:name=".java.activity.CurrentLocationActivity"
-            android:label="Current Location Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Current Location Java" />
         <activity
             android:name=".java.activity.AutoSuggestActivity"
-            android:label="AutoSuggest Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="AutoSuggest Java" />
         <activity
             android:name=".java.activity.GeoCodeActivity"
-            android:label="GeoCode Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="GeoCode Java" />
         <activity
             android:name=".java.activity.ReverseGeocodeActivity"
-            android:label="Reverse GeoCode Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Reverse GeoCode Java" />
         <activity
             android:name=".java.activity.NearByActivity"
-            android:label="Nearby Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Nearby Java" />
         <activity
             android:name=".java.activity.SafetyPluginActivity"
-            android:label="Safety Plugin Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Safety Plugin Java" />
         <activity
             android:name=".java.activity.SnakeMotionPolylineActivity"
-            android:label="Snake Polyline Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Snake Polyline Java" />
         <activity
             android:name=".java.activity.HateOsNearbyActivity"
-            android:label="HateOs Nearby Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="HateOs Nearby Java" />
         <activity
             android:name=".java.activity.PoiAlongRouteActivity"
-            android:label="POI Along Route Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="POI Along Route Java" />
         <activity
             android:name=".java.activity.AddELocCustomMarkerActivity"
-            android:label="ELoc Custom Marker Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="ELoc Custom Marker Java" />
         <activity
             android:name=".kotlin.activity.AddELocCustomMarkerActivity"
-            android:label="ELoc Custom Marker Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="ELoc Custom Marker Kotlin" />
         <activity
             android:name=".java.activity.AddELocMarkerActivity"
-            android:label="Eloc Marker Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Eloc Marker Java" />
         <activity
             android:name=".kotlin.activity.AddELocMarkerActivity"
-            android:label="Eloc Marker Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Eloc Marker Kotlin" />
         <activity
             android:name=".java.activity.PlaceDetailActivity"
-            android:label="Place Detail Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Place Detail Java" />
         <activity
             android:name=".kotlin.activity.PlaceDetailActivity"
-            android:label="Place Detail Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Place Detail Kotlin" />
         <activity
             android:name=".java.activity.ELocCameraActivity"
-            android:label="Eloc Camera Feature Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Eloc Camera Feature Java" />
         <activity
             android:name=".kotlin.activity.ELocCameraActivity"
-            android:label="Eloc Camera Feature Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Eloc Camera Feature Kotlin" />
         <activity
             android:name=".java.activity.DirectionActivity"
-            android:label="Direction Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Direction Java" />
         <activity
             android:name=".java.activity.DistanceActivity"
-            android:label="Distance Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Distance Java" />
         <activity
             android:name=".kotlin.activity.MarkerRotationTransitionActivity"
-            android:label="Marker Rotation &amp; Transition Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Marker Rotation &amp; Transition Kotlin" />
         <activity
             android:name=".kotlin.activity.CarAnimationActivity"
-            android:label="Car Animation Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Car Animation Kotlin" />
         <activity
             android:name=".java.activity.AddCustomInfoWindowActivity"
-            android:label="Custom Info Window Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Custom Info Window Java" />
         <activity
             android:name=".java.activity.IndoorActivity"
-            android:label="Indoor Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Indoor Java" />
         <activity
             android:name=".kotlin.activity.IndoorActivity"
-            android:label="Indoor Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Indoor Kotlin" />
         <activity
             android:name=".kotlin.activity.AddCustomInfoWindowActivity"
-            android:label="Custom Info Window Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Custom Info Window Kotlin" />
         <activity
             android:name=".kotlin.activity.SafetyPluginActivity"
-            android:label="Safety Plugin Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Safety Plugin Kotlin" />
         <activity
             android:name=".kotlin.activity.SnakeMotionPolylineActivity"
-            android:label="Snake Polyline Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Snake Polyline Kotlin" />
         <activity
             android:name=".kotlin.activity.HateOsNearbyActivity"
-            android:label="Hate OS Nearby Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Hate OS Nearby Kotlin" />
         <activity
             android:name=".kotlin.activity.PoiAlongRouteActivity"
-            android:label="POI Along Route Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="POI Along Route Kotlin" />
         <activity
             android:name=".java.activity.LocationCameraActivity"
-            android:label="Location Camera Option Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Location Camera Option Java" />
         <activity
             android:name=".kotlin.activity.LocationCameraActivity"
-            android:label="Location Camera Option Kotlin"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Location Camera Option Kotlin" />
         <activity
             android:name=".java.activity.CustomCurrentLocationIconActivity"
-            android:label="Custom Current Location Icon Java"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Custom Current Location Icon Java" />
     </application>
 
 </manifest>

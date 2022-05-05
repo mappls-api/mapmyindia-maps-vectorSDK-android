@@ -18,6 +18,7 @@ import com.mapmyindia.sdk.demo.java.activity.AddCustomMarkerActivity;
 import com.mapmyindia.sdk.demo.java.activity.AddELocCustomMarkerActivity;
 import com.mapmyindia.sdk.demo.java.activity.AddELocMarkerActivity;
 import com.mapmyindia.sdk.demo.java.activity.AddMarkerActivity;
+import com.mapmyindia.sdk.demo.java.activity.ClusterMarkerActivity;
 import com.mapmyindia.sdk.demo.java.activity.MarkerDraggingActivity;
 import com.mapmyindia.sdk.demo.java.adapter.MapFeatureListAdapter;
 import com.mapmyindia.sdk.demo.java.model.FeaturesList;
@@ -75,6 +76,10 @@ public class MarkersFeaturesFragment extends Fragment {
                     Intent markerDraggingIntent= new Intent(getContext(), AddELocCustomMarkerActivity.class);
                     startActivity(markerDraggingIntent);
                 }
+                else if(position==6){
+                    Intent markerDraggingIntent= new Intent(getContext(), ClusterMarkerActivity.class);
+                    startActivity(markerDraggingIntent);
+                }
 
             }
         });
@@ -86,6 +91,7 @@ public class MarkersFeaturesFragment extends Fragment {
         featuresArrayList.add(new FeaturesList("Marker Dragging", "Drag a marker"));
         featuresArrayList.add(new FeaturesList("Add Marker Using ELoc", "Way to add marker using eLoc"));
         featuresArrayList.add(new FeaturesList("Add Custom Marker Using ELoc", "Way to add custom marker using eLoc"));
+        featuresArrayList.add(new FeaturesList("Cluster Marker", "Way to add multiple markers and grouped the marker on zoom out"));
 
     }
 }

@@ -190,7 +190,9 @@ public class GeoAnalyticsActivity extends AppCompatActivity implements OnMapRead
     public void onMapReady(@NonNull MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
         geoAnalyticsPlugin = new MapmyIndiaGeoAnalyticsPlugin(mBinding.mapView, mapmyIndiaMap);
-
+        if (mapmyIndiaMap.getUiSettings() != null) {
+            mapmyIndiaMap.getUiSettings().setLogoMargins(0, 0, 0, 200);
+        }
         init();
     }
 

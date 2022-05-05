@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +47,8 @@ import com.mmi.services.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class PoiAlongRouteActivity extends AppCompatActivity implements OnMapReadyCallback, MapmyIndiaMap.OnMapLongClickListener {
 
@@ -109,13 +110,15 @@ public class PoiAlongRouteActivity extends AppCompatActivity implements OnMapRea
     @Override
     public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
-
+        if (mapmyIndiaMap.getUiSettings() != null) {
+            mapmyIndiaMap.getUiSettings().setLogoMargins(0, 0, 0, 250);
+        }
         mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                 28.594475, 77.202432), 10));
         findViewById(R.id.details_layout).setVisibility(View.VISIBLE);
         mapmyIndiaMap.addOnMapLongClickListener(this);
         if (CheckInternet.isNetworkAvailable(PoiAlongRouteActivity.this)) {
-            Log.v("route", "calling");
+            Timber.tag("route").v("calling");
             getDirections();
         } else {
             Toast.makeText(this, getString(R.string.pleaseCheckInternetConnection), Toast.LENGTH_SHORT).show();

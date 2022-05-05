@@ -107,6 +107,7 @@ class StyleActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         Timber.tag("onMapReady").e("SUCCESS")
         this.mapmyIndiaMap = mapmyIndiaMap
+        mapmyIndiaMap.uiSettings?.setLogoMargins(0, 0, 0, 200)
         this.mapmyIndiaMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(28.6466772, 76.8130614), 12.0))
             Timber.e(Gson().toJson(this.mapmyIndiaMap?.mapmyIndiaAvailableStyles))
             adapter.setStyleList(this.mapmyIndiaMap?.mapmyIndiaAvailableStyles)

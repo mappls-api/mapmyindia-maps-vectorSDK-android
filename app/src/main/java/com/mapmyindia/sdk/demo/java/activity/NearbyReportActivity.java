@@ -173,6 +173,9 @@ public class NearbyReportActivity extends AppCompatActivity implements OnMapRead
     @Override
     public void onMapReady(@NonNull MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
+        if (mapmyIndiaMap.getUiSettings() != null) {
+            mapmyIndiaMap.getUiSettings().setLogoMargins(0, 0, 0, 100);
+        }
         mapmyIndiaMap.setCameraPosition(new CameraPosition.Builder().target(new LatLng(28.550716, 77.268928)).zoom(12).build());
         mBinding.tvNearbyReport.setVisibility(View.VISIBLE);
         mBinding.selectionBox.setVisibility(View.VISIBLE);

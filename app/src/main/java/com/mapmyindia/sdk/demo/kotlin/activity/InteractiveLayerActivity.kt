@@ -72,7 +72,7 @@ class InteractiveLayerActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(28.0, 77.0), 5.0))
-
+        mapmyIndiaMap.uiSettings?.setLogoMargins(0, 0, 0, 200)
 
         mapmyIndiaMap.setOnInteractiveLayerClickListener(object : MapmyIndiaMap.OnInteractiveLayerClickListener {
             override fun onInteractiveLayerClicked(interactiveItemDetails: InteractiveItemDetails?) {

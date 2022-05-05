@@ -85,9 +85,8 @@ class SafetyStripActivity : AppCompatActivity(), OnMapReadyCallback, LocationEng
     @SuppressLint("MissingPermission")
     override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
-
-        val padding: IntArray
-        padding = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        mapmyIndiaMap.uiSettings?.setLogoMargins(0, 0, 0, 120)
+        val padding: IntArray = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             intArrayOf(0, 750, 0, 0)
         } else {
             intArrayOf(0, 250, 0, 0)

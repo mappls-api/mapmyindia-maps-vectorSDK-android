@@ -74,7 +74,9 @@ public class InteractiveLayerActivity extends AppCompatActivity implements OnMap
     public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
         mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(28, 77), 5));
-
+        if (mapmyIndiaMap.getUiSettings() != null) {
+            mapmyIndiaMap.getUiSettings().setLogoMargins(0, 0, 0, 200);
+        }
 
         mapmyIndiaMap.setOnInteractiveLayerClickListener(new MapmyIndiaMap.OnInteractiveLayerClickListener() {
             @Override

@@ -13,6 +13,7 @@ import com.mapmyindia.sdk.demo.java.model.FeaturesList
 import com.mapmyindia.sdk.demo.kotlin.activity.AddCustomMarkerActivity
 import com.mapmyindia.sdk.demo.kotlin.activity.AddELocCustomMarkerActivity
 import com.mapmyindia.sdk.demo.kotlin.activity.AddELocMarkerActivity
+import com.mapmyindia.sdk.demo.kotlin.activity.ClusterMarkerActivity
 import com.mapmyindia.sdk.demo.kotlin.adapter.MapFeatureListAdapter
 import java.util.*
 
@@ -42,6 +43,7 @@ class MarkerFeatureFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick
         featuresArrayList.add(FeaturesList("Marker Dragging", "Drag a marker"))
         featuresArrayList.add(FeaturesList("Add Marker Using ELoc", "Way to add marker using eLoc"))
         featuresArrayList.add(FeaturesList("Add Custom Marker Using ELoc", "Way to add custom marker using eLoc"))
+        featuresArrayList.add(FeaturesList("Cluster Marker", "Way to add multiple markers and grouped the marker on zoom out"))
         featureRecycleView.layoutManager = LinearLayoutManager(context)
         var mapFeaturesListAdapter: MapFeatureListAdapter = MapFeatureListAdapter(featuresArrayList, this)
 
@@ -68,6 +70,9 @@ class MarkerFeatureFragmentKt : Fragment(), MapFeatureListAdapter.AdapterOnClick
             startActivity(markerDraggingIntent)
         } else if (position == 5) {
             val markerDraggingIntent = Intent(context, AddELocCustomMarkerActivity::class.java)
+            startActivity(markerDraggingIntent)
+        } else if (position == 6) {
+            val markerDraggingIntent = Intent(context, ClusterMarkerActivity::class.java)
             startActivity(markerDraggingIntent)
         }
 

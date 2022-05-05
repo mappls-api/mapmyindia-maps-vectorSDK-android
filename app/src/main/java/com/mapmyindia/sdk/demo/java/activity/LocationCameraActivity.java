@@ -3,6 +3,7 @@ package com.mapmyindia.sdk.demo.java.activity;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -66,6 +67,9 @@ public class LocationCameraActivity extends AppCompatActivity implements OnMapRe
     @Override
     public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap;
+        if (mapmyIndiaMap.getUiSettings() != null) {
+            mapmyIndiaMap.getUiSettings().setLogoMargins(0, 0, 0, 100);
+        }
         mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
@@ -168,7 +172,9 @@ public class LocationCameraActivity extends AppCompatActivity implements OnMapRe
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(LocationCameraActivity.this, btn_mode);
                 popupMenu.getMenuInflater().inflate(R.menu.location_mode_menu, popupMenu.getMenu());
-                popupMenu.setGravity(Gravity.BOTTOM);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    popupMenu.setGravity(Gravity.BOTTOM);
+                }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -188,7 +194,9 @@ public class LocationCameraActivity extends AppCompatActivity implements OnMapRe
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(LocationCameraActivity.this, btn_tracking);
                 popupMenu.getMenuInflater().inflate(R.menu.tracking_mode_menu, popupMenu.getMenu());
-                popupMenu.setGravity(Gravity.BOTTOM);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    popupMenu.setGravity(Gravity.BOTTOM);
+                }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {

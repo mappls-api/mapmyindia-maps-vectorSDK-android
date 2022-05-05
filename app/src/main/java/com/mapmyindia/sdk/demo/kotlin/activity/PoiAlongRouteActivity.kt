@@ -44,6 +44,7 @@ import com.mmi.services.utils.Constants
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 import java.util.*
 
 class PoiAlongRouteActivity: AppCompatActivity(), OnMapReadyCallback, MapmyIndiaMap.OnMapLongClickListener {
@@ -105,9 +106,9 @@ class PoiAlongRouteActivity: AppCompatActivity(), OnMapReadyCallback, MapmyIndia
         mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
                 28.594475, 77.202432), 10.0))
         findViewById<View>(R.id.details_layout).visibility = View.VISIBLE
-
+        mapmyIndiaMap.uiSettings?.setLogoMargins(0, 0, 0, 250)
         if (CheckInternet.isNetworkAvailable(this@PoiAlongRouteActivity)) {
-            Log.v("route", "calling")
+            Timber.tag("route").v("calling")
             getDirections()
         } else {
             Toast.makeText(this, getString(R.string.pleaseCheckInternetConnection), Toast.LENGTH_SHORT).show()

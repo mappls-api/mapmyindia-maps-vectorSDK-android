@@ -205,6 +205,7 @@ class NearbyReportActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
+        mapmyIndiaMap.uiSettings?.setLogoMargins(0, 0, 0, 100)
         mapmyIndiaMap.cameraPosition =
             CameraPosition.Builder().target(LatLng(28.550716, 77.268928)).zoom(12.0).build()
         mBinding.tvNearbyReport.visibility = View.VISIBLE

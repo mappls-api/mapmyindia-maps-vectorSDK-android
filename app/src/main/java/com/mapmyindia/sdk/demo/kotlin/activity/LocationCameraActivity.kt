@@ -50,6 +50,7 @@ class LocationCameraActivity : AppCompatActivity(), OnMapReadyCallback, Location
 
     override fun onMapReady(mapmyIndiaMap: MapmyIndiaMap) {
         this.mapmyIndiaMap = mapmyIndiaMap
+        mapmyIndiaMap.uiSettings?.setLogoMargins(0, 0, 0, 100)
         mapmyIndiaMap.getStyle {
             enableLocation(it)
         }

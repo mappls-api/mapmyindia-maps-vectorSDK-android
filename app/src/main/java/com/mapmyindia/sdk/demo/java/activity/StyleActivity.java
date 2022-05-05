@@ -114,6 +114,9 @@ public class StyleActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(MapmyIndiaMap mapmyIndiaMap) {
         Timber.tag("onMapReady").e("SUCCESS");
         this.mapmyIndiaMap = mapmyIndiaMap;
+        if (mapmyIndiaMap.getUiSettings() != null) {
+            mapmyIndiaMap.getUiSettings().setLogoMargins(0, 0, 0, 200);
+        }
         this.mapmyIndiaMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(28.6466772,76.8130614), 12));
         if (adapter != null) {
             Timber.e(new Gson().toJson(this.mapmyIndiaMap.getMapmyIndiaAvailableStyles()));

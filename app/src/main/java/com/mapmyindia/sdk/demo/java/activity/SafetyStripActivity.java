@@ -125,8 +125,11 @@ public class SafetyStripActivity extends AppCompatActivity implements OnMapReady
     } else {
       padding = new int[] {0, 250, 0, 0};
     }
+      if (mapmyIndiaMap.getUiSettings() != null) {
+        mapmyIndiaMap.getUiSettings().setLogoMargins(0, 0, 0, 120);
+      }
 
-        mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
+      mapmyIndiaMap.getStyle(new Style.OnStyleLoaded() {
           @Override
           public void onStyleLoaded(@NonNull Style style) {
 
